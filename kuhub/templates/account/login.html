@@ -1,0 +1,19 @@
+{% load socialaccount %}
+<html>
+  <head>
+    <title>Login page</title>
+  </head>
+  <body>
+    <h1>Login Page</h1>
+    <h3>Login with social account</h3>
+    <button onclick="document.location='{% provider_login_url 'google' %}'">
+       Google
+    </button>
+    {% csrf_token %}
+    <table style="padding: 2ex;">
+    {{ form.as_table }}
+    </table>
+    <button type="submit">Login</button>
+  or <a href="/accounts/signup"> Sing Up </a>.
+  </body>
+</html>
