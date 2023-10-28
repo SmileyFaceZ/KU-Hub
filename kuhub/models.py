@@ -20,7 +20,7 @@ class Tags(models.Model):
 
 
 class Post(models.Model):
-    user_id = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    username = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     post_content = models.CharField(max_length=200)
     post_date = models.DateTimeField('date posted', null=True, blank=True)
     post_likes = models.IntegerField(default=0)
@@ -42,7 +42,6 @@ class PostComments(models.Model):
 
 class PostDownload(models.Model):
     post_id = models.ForeignKey('Post', on_delete=models.CASCADE)
-    user_id = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     download_date = models.DateTimeField(
         'date downloaded',
         null=True,
