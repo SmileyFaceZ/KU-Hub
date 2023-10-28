@@ -1,2 +1,3 @@
 # Packages required by this application
 Django >= 4.1, <5.0
+django-allauth
