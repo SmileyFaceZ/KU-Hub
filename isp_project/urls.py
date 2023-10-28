@@ -22,4 +22,5 @@ urlpatterns = [
     path("", RedirectView.as_view(url="kuhub/")),
     path("admin/", admin.site.urls),
     path("kuhub/", include("kuhub.urls")),
+    path('accounts/', include('allauth.urls')),
 ]
