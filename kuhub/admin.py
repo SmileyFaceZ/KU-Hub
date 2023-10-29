@@ -1,5 +1,5 @@
 from django.contrib import admin
-from kuhub.models import \
+from kuhub import \
     UserFollower, Post, PostComments, Tags, PostDownload, PostReport
 
 # Register your models here.
