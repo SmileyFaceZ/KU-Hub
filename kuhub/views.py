@@ -1,4 +1,4 @@
-from kuhub.models import Post
+from kuhub import Post
 from django.views import generic
 
 # Create your views here.
