@@ -1,3 +1,5 @@
+[![Unit Testing](https://github.com/SmileyFaceZ/KU-Hub/actions/workflows/kuhub-app.yml/badge.svg)](https://github.com/SmileyFaceZ/KU-Hub/actions/workflows/kuhub-app.yml)
+
 # KU-Hub
 
 KU-Hub is a **community platform** that allows users to **share** summary sheets, **review** the subject, share **tricks**, or even give **encouragement** to each other. 
