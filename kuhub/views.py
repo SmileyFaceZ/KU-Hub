@@ -15,11 +15,11 @@ class ReviewHubView(generic.ListView):
 
 class SummaryHubView(generic.ListView):
     template_name = 'kuhub/summary.html'
-    context_object_name = 'latest_post_list'
+    context_object_name = 'summary_post_list'
 
     def get_queryset(self):
         """Return recently published summary posts."""
-        return Post.objects.order_by('-post_date')
+        return Post.objects.filter(tag_id=2).order_by('-post_date')
 
 
 class TricksHubView(generic.ListView):
