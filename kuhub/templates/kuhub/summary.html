@@ -15,7 +15,7 @@
                     {% endif %}
                     {{ post.post_id.id }} |
                         {{ post.post_id.tag_id.tag_text }}
-                    <a href="{{ post.file.url }}" class="btn btn-outline-warning" download>Download File</a>
+                    <a href="{{ post.file.url }}" class="btn btn-outline-warning" id="download_link" download>Download File</a>
                     <a href="#" class="btn btn-outline-danger">Report</a>
                 </div>
                 <div class="card-body">
@@ -39,6 +39,14 @@
     {% else %}
         <h1>No posts are available.</h1>
     {% endif %}
-</div>
 
+</div>
+<script>
+document.getElementById("download_link").addEventListener("click", function(event) {
+    var confirmed = confirm("Are you sure you want to download this file❓");
+    if (!confirmed) {
+        event.preventDefault();
+    }
+});
+</script>
 {% endblock %}
