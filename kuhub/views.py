@@ -1,4 +1,4 @@
-from kuhub.models import Post
+from kuhub.models import Post, PostDownload
 from django.views import generic
 
 # Create your views here.
@@ -14,12 +14,13 @@ class ReviewHubView(generic.ListView):
 
 
 class SummaryHubView(generic.ListView):
+
     template_name = 'kuhub/summary.html'
-    context_object_name = 'latest_post_list'
+    context_object_name = 'summary_post_list'
 
     def get_queryset(self):
-        """Return recently published summary posts."""
-        return Post.objects.order_by('-post_date')
+        """Return summary posts queryset."""
+        return PostDownload.objects.select_related('post_id__tag_id').all()
 
 
 class TricksHubView(generic.ListView):
