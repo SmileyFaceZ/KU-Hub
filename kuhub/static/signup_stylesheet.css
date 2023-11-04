@@ -1,15 +1,16 @@
 
 body{
-    background: rgb(255, 255, 255) url("images/login-bg.jpg") no-repeat;
+    background: rgb(219, 93, 93) url("images/login-bg.jpg") ;
     background-position: right;
     background-size: auto 100%;
 }   
-section{
+.section{
     background-image: linear-gradient(to right,rgb(128, 176, 147), rgb(103, 135, 143));
-    width: 100%
+    width: 100%;
+    height: 127vh
 }   
 @media (min-width: 700px) {
-    section {
+    .section {
       width: 55%;
     }
   }
@@ -50,9 +51,10 @@ form input[type="email"] {
     border-radius: 10px ;
     color: white;
     padding: 50px;
+    padding-bottom: 20px;
     line-height: 150%;
     width: 450px;
-    height: 540px;
+    height: auto;
     position: absolute;
     top: 5%;
     left: 10%;
