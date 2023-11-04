@@ -1,9 +1,11 @@
-/* Style base.html */  
+/* Style base.html */
+.background {
+    background-color: rgb(213, 236, 236);
+}
 /* Make the icon rounded */
 .rounded-icon {
     border-radius: 50%;
 }
-
 /* Change the size of the menu button */
 .navbar .btn-primary {
     font-size: 16px;
@@ -11,7 +13,9 @@
     background-color: cadetblue;
     border-color: cadetblue;
 }
-
+.navbar {
+    background-color: whitesmoke;
+}
 /* Change the font color of the navigation links */
 .navbar-nav .nav-link {
     color: cadetblue;
@@ -30,7 +34,6 @@
 .offcanvas-body a i {
     margin-right: 15px;
 }
-
 /* Style the search input field */
 .navbar .form-control {
     border-radius: 25px;
@@ -38,7 +41,6 @@
     height: 35px;
     margin-top: auto;
 }
-
 .navbar .btn-outline-success {
     font-size: 16px;
     padding: 5px 10px;
@@ -46,10 +48,26 @@
     border-color: cadetblue;
     color: aliceblue;
 }
-
 .navbar .rounded-circle {
     position: absolute;
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
+}
+
+/* Style review.html */
+.card {
+    margin-top: 40px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.card .rounded-circle {
+    margin-top: 5px;
+    margin-right: 10px;
+}
+.card-title {
+    margin-top: 13px;
+    color: rgb(29, 29, 42);
+}
+.card-subtitle {
+    text-align: end;
 }
