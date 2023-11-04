@@ -1,0 +1,55 @@
+/* Style base.html */  
+/* Make the icon rounded */
+.rounded-icon {
+    border-radius: 50%;
+}
+
+/* Change the size of the menu button */
+.navbar .btn-primary {
+    font-size: 16px;
+    padding: 5px 10px;
+    background-color: cadetblue;
+    border-color: cadetblue;
+}
+
+/* Change the font color of the navigation links */
+.navbar-nav .nav-link {
+    color: cadetblue;
+    font-weight: 500; 
+}
+/* Decorate offcanvas */
+.offcanvas.offcanvas-start {
+    width: 0;
+    background-color: rgb(147, 198, 200);
+}
+.offcanvas-body {
+    margin-left: 20px;
+    color: whitesmoke;
+    line-height: 2;
+}
+.offcanvas-body a i {
+    margin-right: 15px;
+}
+
+/* Style the search input field */
+.navbar .form-control {
+    border-radius: 25px;
+    width: 300px;
+    height: 35px;
+    margin-top: auto;
+}
+
+.navbar .btn-outline-success {
+    font-size: 16px;
+    padding: 5px 10px;
+    background-color: cadetblue;
+    border-color: cadetblue;
+    color: aliceblue;
+}
+
+.navbar .rounded-circle {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
