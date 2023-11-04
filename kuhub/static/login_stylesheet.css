@@ -48,9 +48,9 @@ form input[type="email"] {
     padding: 50px;
     line-height: 150%;
     width: 450px;
-    height: 500px;
+    height: 540px;
     position: absolute;
-    top: 10%;
+    top: 5%;
     left: 10%;
 }
 table{
