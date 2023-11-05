@@ -34,8 +34,8 @@ class TricksHubView(generic.ListView):
 
 class EncouragementView(generic.ListView):
     template_name = 'kuhub/encourage.html'
-    context_object_name = 'latest_post_list'
+    context_object_name = 'posts_list'
 
     def get_queryset(self):
         """Return recently published encourage posts."""
-        return Post.objects.order_by('-post_date')
+        return Post.objects.filter(tag_id=4).order_by('-post_date')
