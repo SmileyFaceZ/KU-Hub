@@ -36,22 +36,30 @@
     <!--  When Click Menu Button  -->
     <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
         <div class="offcanvas-header">
-            <h4 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Menu</h4>
+            <h4 style="color: whitesmoke;" class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Menu</h4>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            <a href="#" class="h5 text-decoration-none m-3">
-                <i class="fa-solid fa-user"></i>Profile
-            </a><br>
-            <a href="#" class="h5 text-decoration-none m-3">
-                <i class="fa-regular fa-square-plus"></i>Create Post
-            </a><br>
-            <a href="#" class="h5 text-decoration-none m-3">
-                <i class="fa-solid fa-user-plus"></i>Follower
-            </a><br>
-            <a href="#" class="h5 text-decoration-none m-3">
-                <i class="fa-solid fa-download"></i>Download
-            </a><br>
+            {% if user.is_authenticated %}
+                <a href="#" class="h5 text-decoration-none m-3">
+                    <i style="margin-right: 15px; margin-bottom: 15px;" class="fa-solid fa-user"></i>Profile
+                </a><br>
+                <a href="#" class="h5 text-decoration-none m-3">
+                    <i style="margin-right: 15px; margin-bottom: 15px;" class="fa-regular fa-square-plus"></i>Create Post
+                </a><br>
+                <a href="#" class="h5 text-decoration-none m-3">
+                    <i style="margin-right: 10px; margin-bottom: 15px;" class="fa-solid fa-user-plus"></i>Follower
+                </a><br>
+                <a href="#" class="h5 text-decoration-none m-3">
+                    <i style="margin-right: 15px; margin-bottom: 7px;" class="fa-solid fa-download"></i>Download
+                </a><br>
+                <h5 style="color: whitesmoke;"></h5><a href="{% url 'account_logout' %}" class="h5 m-3">
+                    <i style="margin-right: 15px;" class="fa-solid fa-arrow-right-from-bracket"></i>Log out
+                </a><br>
+            {% else %}
+
+                <h5 style="color: whitesmoke;">Please<a href="{% url 'account_login' %}" class="h5 m-3">Log in</a><br></h5>
+            {% endif %}
         </div>
     </div>
 
