@@ -1,3 +1,4 @@
+"""Import admin class from django"""
 from django.contrib import admin
 from kuhub.models import \
     UserFollower, Post, PostComments, Tags, PostDownload, PostReport

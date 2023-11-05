@@ -1,11 +1,14 @@
+"""Import module tests from django."""
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 
 
 class UserAuthTest(TestCase):
+    """Tests for authenticated users."""
 
     def setUp(self):
+        """Set up method for user tests."""
         self.client = Client()
         self.username = "testuser"
         self.password = "testpassword1234"
@@ -17,6 +20,7 @@ class UserAuthTest(TestCase):
         )
 
     def test_login(self):
+        """Authenticated users can log in."""
         response = self.client.post(reverse('account_login'), {
             'login': self.username,
             'password': self.password

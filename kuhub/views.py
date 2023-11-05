@@ -1,10 +1,14 @@
-from kuhub.models import Post, PostDownload
+"""Import Post and PostDownload models"""
 from django.views import generic
+from kuhub.models import Post, PostDownload
 
 # Create your views here.
 
 
 class ReviewHubView(generic.ListView):
+    """
+    Redirect to Review-Hub page.
+    """
     template_name = 'kuhub/review.html'
     context_object_name = 'posts_list'
 
@@ -14,7 +18,9 @@ class ReviewHubView(generic.ListView):
 
 
 class SummaryHubView(generic.ListView):
-
+    """
+    Redirect to Summary-Hub page.
+    """
     template_name = 'kuhub/summary.html'
     context_object_name = 'summary_post_list'
 
@@ -24,6 +30,9 @@ class SummaryHubView(generic.ListView):
 
 
 class TricksHubView(generic.ListView):
+    """
+    Redirect to Tricks-Hub page.
+    """
     template_name = 'kuhub/tricks.html'
     context_object_name = 'posts_list'
 
@@ -33,6 +42,9 @@ class TricksHubView(generic.ListView):
 
 
 class EncouragementView(generic.ListView):
+    """
+    Redirect to Encouragement page.
+    """
     template_name = 'kuhub/encourage.html'
     context_object_name = 'posts_list'
 
