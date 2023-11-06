@@ -1,6 +1,9 @@
 """Import Post and PostDownload models"""
 from django.views import generic
 from kuhub.models import Post, PostDownload
+from django.contrib.auth.decorators import login_required
+from django.http import HttpRequest
+from django.shortcuts import render
 
 # Create your views here.
 
@@ -51,3 +54,8 @@ class EncouragementView(generic.ListView):
     def get_queryset(self):
         """Return recently published encourage posts."""
         return Post.objects.filter(tag_id=4).order_by('-post_date')
+
+
+@login_required
+def create_post(request: HttpRequest):
+    return render(request, 'kuhub/form.html')
