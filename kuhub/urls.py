@@ -4,7 +4,7 @@ from django.views.generic import RedirectView
 from kuhub import views
 
 
-APP_NAME = "kuhub"
+app_name = "kuhub"
 urlpatterns = [
     path('', RedirectView.as_view(url="review-hub/")),
     path('review-hub/', views.ReviewHubView.as_view(), name='review'),
