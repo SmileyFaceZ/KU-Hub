@@ -14,12 +14,13 @@
           <h1>KU Hub</h1>
         </div>
           <h2>Log in</h2>
-          <form style="width: 23rem;">
-            {% csrf_token %}
-            <table style="padding: 2ex;" class="text-white">
-              {{ form.as_table }}
-            </table>
-              <button type="submit">Login</button>
+          <form method="POST">
+            <form style="width: 23rem;">
+              {% csrf_token %}
+              <table style="padding: 2ex;" class="text-white">
+                {{ form.as_table }}
+              </table>
+                <button type="submit">Login</button>
               <h3>Or</h3>
               <button onclick="document.location='{% provider_login_url 'google' %}'">
                 Log in with <b>Google</b>
@@ -27,6 +28,7 @@
               <button onclick="document.location='/accounts/signup'">Sing Up</button>
     
             </div>
+          </form>
           </form>
         </div>
       </div>
