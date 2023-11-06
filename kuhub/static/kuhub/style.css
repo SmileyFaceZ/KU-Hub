@@ -1,0 +1,69 @@
+/* Style base.html */
+.background {
+    background-color: rgb(109, 179, 181);
+}
+/* Make the icon rounded */
+.rounded-icon {
+    border-radius: 50%;
+}
+/* Change the size of the menu button */
+.navbar .btn-primary {
+    font-size: 16px;
+    padding: 5px 10px;
+    background-color: rgb(0, 129, 112);
+    border-color: rgb(0, 129, 112);
+}
+.navbar {
+    background-color: whitesmoke;
+}
+/* Change the font color of the navigation links */
+.navbar-nav .nav-link {
+    color: rgb(0, 91, 65);
+    font-weight: 500; 
+}
+/* Decorate offcanvas */
+.offcanvas.offcanvas-start {
+    background-color: rgb(15, 169, 149);
+}
+.offcanvas-body {
+    margin-left: 20px;
+    color: whitesmoke;
+}
+
+/* Style the search input field */
+.navbar .form-control {
+    border-radius: 25px;
+    width: 300px;
+    height: 35px;
+    margin-top: auto;
+}
+.navbar .btn-outline-success {
+    font-size: 16px;
+    padding: 5px 10px;
+    background-color: rgb(0, 129, 112);
+    border-color: rgb(0, 129, 112);
+    color: aliceblue;
+}
+.navbar .rounded-circle {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Style review.html */
+.card {
+    margin-top: 40px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.card .rounded-circle {
+    margin-top: 5px;
+    margin-right: 10px;
+}
+.card-title {
+    margin-top: 13px;
+    color: rgb(29, 29, 42);
+}
+.card-subtitle {
+    text-align: end;
+}
