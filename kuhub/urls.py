@@ -1,6 +1,7 @@
+"""Import path from django"""
 from django.urls import path
-from kuhub import views
 from django.views.generic import RedirectView
+from kuhub import views
 
 
 app_name = "kuhub"
