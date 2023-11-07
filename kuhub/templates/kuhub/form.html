@@ -31,10 +31,9 @@
                 {{ form.review }}
             </div>
 
-            <div id="file-upload-error" class="text-danger" style="display: none;">Please upload a file.</div>
             <div class="mb-3" id="file-upload-container" style="display: none;">
-                <label class="form-label">Upload File</label>
-                <input type="file" name="file_upload" class="form-control">
+                <label class="form-label">Upload File (.pdf) / Picture (.jpg, .jpeg, .png)</label>
+                <input type="file" name="file_upload" id="file-upload-input" class="form-control" accept=".jpg, .jpeg, .png, .pdf">
             </div>
 
             <input type="submit" name="post" id="button_post" value="Post" class="btn btn-success">

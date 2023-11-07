@@ -1,10 +1,23 @@
 document.getElementById("id_tag_name").addEventListener("change", function() {
-    var selectedTag = this.value;
-    var fileUploadContainer = document.getElementById("file-upload-container");
+    var selected_tag = this.value;
+    var file_upload = document.getElementById("file-upload-container");
 
-    if (selectedTag === "Summary-Hub") {
-        fileUploadContainer.style.display = "block";
+    if (selected_tag === "Summary-Hub") {
+        file_upload.style.display = "block";
     } else {
-        fileUploadContainer.style.display = "none";
+        file_upload.style.display = "none";
+    }
+
+});
+
+document.getElementById("file-upload-form").addEventListener("change", function(event) {
+    var file_input = document.getElementById("file-upload-input");
+    var submit_button = document.getElementById("button_post");
+
+    if (document.getElementById("file-upload-container").style.display === "block"
+        && file_input.files.length === 0) {
+        submit_button.disabled = true;
+    } else {
+        submit_button.disabled = false;
     }
 });
