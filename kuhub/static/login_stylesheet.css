@@ -2,16 +2,19 @@
 body{
     background: rgb(255, 255, 255) url("images/login-bg.jpg") no-repeat;
     background-position: right;
-    background-size: auto 100%;
+    background-size: auto 150%;
 }   
 section{
     background-image: linear-gradient(to right,rgb(128, 176, 147), rgb(103, 135, 143));
-    width: 100%;
+    height: 100%;
     background-size: cover;
+    display: flex;
+    justify-content: center; /* Horizontally center the items */
+    align-items: center;
 }   
-@media (min-width: 700px) {
+@media (min-width: 1000px) {
     section {
-      width: 55%;
+        width: 55%;
     }
   }
 
@@ -39,7 +42,18 @@ form input[type="email"] {
     border-radius: 5px;
     text-indent: 10px;
   }
-
+.signup input[type="text"],
+.signup input[type="password"],
+.signup input[type="email"] {
+    background-color: rgba(228, 190, 190, 0);
+    border: 2px solid #ffffff;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    text-indent: 10px;
+    margin-left: 10px;
+    width: 325px;
+    height: 40px;
+  }
 .container{
     font-family: sans-serif;
     line-height: 200%;
@@ -49,14 +63,13 @@ form input[type="email"] {
     padding: 50px;
     line-height: 150%;
     width: 450px;
-    height: 540px;
-    position: absolute;
-    top: 5%;
-    left: 10%;
+    height: auto;
+
 }
 table{
     line-height: 200%;
     font-weight: lighter;
+    margin-bottom: 10px;
 }
 h3{
     text-align: center;
@@ -64,6 +77,7 @@ h3{
     position: relative;
     left: -10px;
     font-family: Arial, Helvetica, sans-serif;
+    margin-top: 10px;
 }
 button{
     margin-top: 10px;
