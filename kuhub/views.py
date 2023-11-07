@@ -3,11 +3,10 @@ from django.views import generic
 from kuhub.models import Post, PostDownload, Tags
 from kuhub.form import PostForm
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest
 from django.shortcuts import render
 from django.shortcuts import redirect
-from django.urls import reverse
 import datetime as dt
+from django.contrib import messages
 
 
 class ReviewHubView(generic.ListView):
@@ -31,7 +30,9 @@ class SummaryHubView(generic.ListView):
 
     def get_queryset(self):
         """Return summary posts queryset."""
-        return PostDownload.objects.select_related('post_id__tag_id').all()
+        return PostDownload.objects.select_related('post_id__tag_id').order_by(
+            '-post_id__post_date'
+        ).all()
 
 
 class TricksHubView(generic.ListView):
@@ -74,9 +75,12 @@ def create_post(request):
                 tag_id=Tags.objects.get(tag_text=data['tag_name'])
             )
 
+            messages.info(request, 'Create Post Successfully!')
+
             if data['tag_name'] == 'Review-Hub':
                 return redirect('kuhub:review')
-            elif data['tag_name'] == 'Summary-Hub':
+
+            if data['tag_name'] == 'Summary-Hub':
                 PostDownload.objects.create(
                     post_id=post,
                     file=request.FILES.get('file_upload'),
@@ -84,20 +88,26 @@ def create_post(request):
                     download_count=0,
                 )
                 return redirect('kuhub:summary')
-            elif data['tag_name'] == 'Tricks-Hub':
+
+            if data['tag_name'] == 'Tricks-Hub':
                 return redirect('kuhub:tricks')
-            elif data['tag_name'] == 'Encouragement':
+
+            if data['tag_name'] == 'Encouragement':
                 return redirect('kuhub:encourage')
 
         return render(
             request,
-            'kuhub/form.html',
-            {'form': form, 'error_message': 'Please upload a file.'}
+            template_name='kuhub/form.html',
+            context={'form': form}
         )
 
     context = {
         "tags_list": Tags.objects.all(),
         "form": PostForm(),
     }
-    return render(request, 'kuhub/form.html', context=context)
+    return render(
+        request,
+        template_name='kuhub/form.html',
+        context=context
+    )
 

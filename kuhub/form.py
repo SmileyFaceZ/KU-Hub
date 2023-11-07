@@ -8,7 +8,8 @@ class PostForm(forms.Form):
     ]
 
     SUBJECT_CHOICES = [
-        (subject.name_eng, subject.name_eng) for subject in Subject.objects.all()
+        (subject.course_code, subject.course_code + " " + subject.name_eng)
+        for subject in Subject.objects.all()
     ]
 
     tag_name = forms.ChoiceField(
