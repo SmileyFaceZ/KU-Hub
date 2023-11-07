@@ -8,15 +8,15 @@
         <div class="container-xs">
           <img src="{% static 'images/logo.png' %}" alt="logo">
           <h1>KU Hub</h1>
-        </div>
+            </div>
+            <h2>Sign Out</h2>
+            <h3>Are you sure you want to Sign Out?</h3>
             <form method="post">
                 {% csrf_token %}
-                <button type="submit" class="login-with-google-btn">
-                    Sign in with Google
+                <button type="submit">
+                    Sign Out
                 </button>
                 </form>
-            <h3>Or</h3>
-            <button onclick="document.location='/accounts/login'"> Log in with KU-Hub account </button>
       </div>
     </section>
   </body>
