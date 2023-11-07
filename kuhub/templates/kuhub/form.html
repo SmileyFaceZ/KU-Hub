@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+
 
 {% block title %}
     <title>Create Post</title>
@@ -6,26 +8,37 @@
 
 {% block content %}
     <div class="container mt-4">
-        <form action="{% url 'kuhub:create_post' %}" id="file-upload-form" method="post">
+        <form action="{% url 'kuhub:create_post' %}" id="file-upload-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="mb-3">
                 <label class="form-label">Tags</label>
-                {{ form.tag_name }}
+                <div style="width: 300px;">
+                    {{ form.tag_name }}
+                </div>
             </div>
+
             <div class="mb-3">
                 <label class="form-label">Subjects</label>
                 <div style="width: 500px;">
                     {{ form.subject }}
                 </div>
             </div>
+
             <div class="mb-3">
                 <label class="form-label">Review</label>
                 <br>
                 {{ form.review }}
             </div>
 
+            <div id="file-upload-error" class="text-danger" style="display: none;">Please upload a file.</div>
+            <div class="mb-3" id="file-upload-container" style="display: none;">
+                <label class="form-label">Upload File</label>
+                <input type="file" name="file_upload" class="form-control">
+            </div>
+
             <input type="submit" name="post" id="button_post" value="Post" class="btn btn-success">
         </form>
     </div>
+    <script src="{% static 'kuhub/js/upload-file.js' %}"></script>
 {% endblock %}

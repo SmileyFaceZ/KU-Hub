@@ -75,19 +75,25 @@ def create_post(request):
             )
 
             if data['tag_name'] == 'Review-Hub':
-                return redirect(reverse('kuhub:review'))
+                return redirect('kuhub:review')
             elif data['tag_name'] == 'Summary-Hub':
                 PostDownload.objects.create(
                     post_id=post,
-                    file='store/pdfs/Data_Algo_2.pdf',
+                    file=request.FILES.get('file_upload'),
                     download_date=dt.datetime.now(),
                     download_count=0,
                 )
-                return redirect(reverse('kuhub:summary'))
+                return redirect('kuhub:summary')
             elif data['tag_name'] == 'Tricks-Hub':
-                return redirect(reverse('kuhub:tricks'))
+                return redirect('kuhub:tricks')
             elif data['tag_name'] == 'Encouragement':
-                return redirect(reverse('kuhub:encourage'))
+                return redirect('kuhub:encourage')
+
+        return render(
+            request,
+            'kuhub/form.html',
+            {'form': form, 'error_message': 'Please upload a file.'}
+        )
 
     context = {
         "tags_list": Tags.objects.all(),
