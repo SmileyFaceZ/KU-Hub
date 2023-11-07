@@ -1,11 +1,13 @@
 """Import Post and PostDownload models"""
 from django.views import generic
-from kuhub.models import Post, PostDownload
+from kuhub.models import Post, PostDownload, Tags
+from kuhub.form import PostForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
 from django.shortcuts import render
-
-# Create your views here.
+from django.shortcuts import redirect
+from django.urls import reverse
+import datetime as dt
 
 
 class ReviewHubView(generic.ListView):
@@ -57,5 +59,39 @@ class EncouragementView(generic.ListView):
 
 
 @login_required
-def create_post(request: HttpRequest):
-    return render(request, 'kuhub/form.html')
+def create_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+
+            post = Post.objects.create(
+                username=request.user,
+                post_content=data['review'],
+                post_date=dt.datetime.now(),
+                post_likes=0,
+                post_dislikes=0,
+                tag_id=Tags.objects.get(tag_text=data['tag_name'])
+            )
+
+            if data['tag_name'] == 'Review-Hub':
+                return redirect(reverse('kuhub:review'))
+            elif data['tag_name'] == 'Summary-Hub':
+                PostDownload.objects.create(
+                    post_id=post,
+                    file='store/pdfs/Data_Algo_2.pdf',
+                    download_date=dt.datetime.now(),
+                    download_count=0,
+                )
+                return redirect(reverse('kuhub:summary'))
+            elif data['tag_name'] == 'Tricks-Hub':
+                return redirect(reverse('kuhub:tricks'))
+            elif data['tag_name'] == 'Encouragement':
+                return redirect(reverse('kuhub:encourage'))
+
+    context = {
+        "tags_list": Tags.objects.all(),
+        "form": PostForm(),
+    }
+    return render(request, 'kuhub/form.html', context=context)
+
