@@ -1,66 +1,66 @@
-"""Import Post and PostDownload models"""
-from django.views import generic
-from kuhub.models import Post, PostDownload, Tags
-from kuhub.form import PostForm
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from django.shortcuts import redirect
+"""Contains view functions for handling requests.
+
+related to Review-Hub, Summary-Hub and Tricks-Hub
+in the kuhub web application.
+"""
 import datetime as dt
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
+from django.views import generic
+from kuhub.forms import PostForm
+from kuhub.models import Post, PostDownload, Tags
 
 
 class ReviewHubView(generic.ListView):
-    """
-    Redirect to Review-Hub page.
-    """
+    """Redirect to Review-Hub page for review posts."""
+
     template_name = 'kuhub/review.html'
     context_object_name = 'posts_list'
 
     def get_queryset(self):
-        """Return recently published review posts."""
+        """Return Post objects with tag_id=1 and order by post_date."""
         return Post.objects.filter(tag_id=1).order_by('-post_date')
 
 
 class SummaryHubView(generic.ListView):
-    """
-    Redirect to Summary-Hub page.
-    """
+    """Redirect to Summary-Hub page for summary posts."""
+
     template_name = 'kuhub/summary.html'
     context_object_name = 'summary_post_list'
 
     def get_queryset(self):
-        """Return summary posts queryset."""
+        """Return PostDownload objects with tag_id=2 and order by post_date."""
         return PostDownload.objects.select_related('post_id__tag_id').order_by(
             '-post_id__post_date'
         ).all()
 
 
 class TricksHubView(generic.ListView):
-    """
-    Redirect to Tricks-Hub page.
-    """
+    """Redirect to Tricks-Hub page for tricks posts."""
+
     template_name = 'kuhub/tricks.html'
     context_object_name = 'posts_list'
 
     def get_queryset(self):
-        """Return recently published trick posts."""
+        """Return Post objects with tag_id=3 and order by post_date."""
         return Post.objects.filter(tag_id=3).order_by('-post_date')
 
 
 class EncouragementView(generic.ListView):
-    """
-    Redirect to Encouragement page.
-    """
+    """Redirect to Encouragement page for encouragement posts."""
+
     template_name = 'kuhub/encourage.html'
     context_object_name = 'posts_list'
 
     def get_queryset(self):
-        """Return recently published encourage posts."""
+        """Return Post objects with tag_id=4 and order by post_date."""
         return Post.objects.filter(tag_id=4).order_by('-post_date')
 
 
 @login_required
 def create_post(request):
+    """Create post of each tag type and redirect to each tag page."""
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
@@ -110,4 +110,3 @@ def create_post(request):
         template_name='kuhub/form.html',
         context=context
     )
-
