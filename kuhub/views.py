@@ -6,6 +6,8 @@ in the kuhub web application.
 import datetime as dt
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import QuerySet
+from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from django.views import generic
 from kuhub.forms import PostForm
@@ -15,10 +17,10 @@ from kuhub.models import Post, PostDownload, Tags
 class ReviewHubView(generic.ListView):
     """Redirect to Review-Hub page for review posts."""
 
-    template_name = 'kuhub/review.html'
-    context_object_name = 'posts_list'
+    template_name: str = 'kuhub/review.html'
+    context_object_name: str = 'posts_list'
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Post]:
         """Return Post objects with tag_id=1 and order by post_date."""
         return Post.objects.filter(tag_id=1).order_by('-post_date')
 
@@ -26,10 +28,10 @@ class ReviewHubView(generic.ListView):
 class SummaryHubView(generic.ListView):
     """Redirect to Summary-Hub page for summary posts."""
 
-    template_name = 'kuhub/summary.html'
-    context_object_name = 'summary_post_list'
+    template_name: str = 'kuhub/summary.html'
+    context_object_name: str = 'summary_post_list'
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[PostDownload]:
         """Return PostDownload objects with tag_id=2 and order by post_date."""
         return PostDownload.objects.select_related('post_id__tag_id').order_by(
             '-post_id__post_date'
@@ -39,10 +41,10 @@ class SummaryHubView(generic.ListView):
 class TricksHubView(generic.ListView):
     """Redirect to Tricks-Hub page for tricks posts."""
 
-    template_name = 'kuhub/tricks.html'
-    context_object_name = 'posts_list'
+    template_name: str = 'kuhub/tricks.html'
+    context_object_name: str = 'posts_list'
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Post]:
         """Return Post objects with tag_id=3 and order by post_date."""
         return Post.objects.filter(tag_id=3).order_by('-post_date')
 
@@ -50,16 +52,16 @@ class TricksHubView(generic.ListView):
 class EncouragementView(generic.ListView):
     """Redirect to Encouragement page for encouragement posts."""
 
-    template_name = 'kuhub/encourage.html'
-    context_object_name = 'posts_list'
+    template_name: str = 'kuhub/encourage.html'
+    context_object_name: str = 'posts_list'
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Post]:
         """Return Post objects with tag_id=4 and order by post_date."""
         return Post.objects.filter(tag_id=4).order_by('-post_date')
 
 
 @login_required
-def create_post(request):
+def create_post(request: HttpRequest):
     """Create post of each tag type and redirect to each tag page."""
     if request.method == 'POST':
         form = PostForm(request.POST)
@@ -101,12 +103,11 @@ def create_post(request):
             context={'form': form}
         )
 
-    context = {
-        "tags_list": Tags.objects.all(),
-        "form": PostForm(),
-    }
     return render(
         request,
         template_name='kuhub/form.html',
-        context=context
+        context={
+            "tags_list": Tags.objects.all(),
+            "form": PostForm(),
+        }
     )
