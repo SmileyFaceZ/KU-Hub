@@ -75,7 +75,7 @@ def create_post(request):
                 tag_id=Tags.objects.get(tag_text=data['tag_name'])
             )
 
-            messages.info(request, 'Create Post Successfully!')
+            messages.success(request, 'Create Post Successfully!')
 
             if data['tag_name'] == 'Review-Hub':
                 return redirect('kuhub:review')

@@ -69,5 +69,14 @@
 <body class="background">
     {% block content %}
     {% endblock %}
+    <button type="button" class="btn btn-success rounded-circle btn-floating btn-lg"
+            style="
+            position: fixed;
+            bottom: 30px;
+            right: 30px;">
+        <a href="{% url 'kuhub:create_post' %}" style="color: white;">
+            <i class="fas fa-circle-plus"></i>
+        </a>
+    </button>
 </body>
 </html>
