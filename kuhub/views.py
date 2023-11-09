@@ -1,6 +1,7 @@
 """Import Post and PostDownload models"""
 from django.views import generic
-from kuhub.models import Post, PostDownload
+from kuhub.models import Post, PostDownload, Group
+
 
 # Create your views here.
 
@@ -45,9 +46,28 @@ class EncouragementView(generic.ListView):
     """
     Redirect to Encouragement page.
     """
-    template_name = 'kuhub/encourage.html'
+    template_name = 'kuhub/group.html'
     context_object_name = 'posts_list'
 
     def get_queryset(self):
         """Return recently published encourage posts."""
         return Post.objects.filter(tag_id=4).order_by('-post_date')
+
+class GroupView(generic.ListView):
+    """
+    Redirect to Group-Hub page.
+    """
+    template_name = 'kuhub/group.html'
+    context_object_name = 'group_list'
+
+    def get_queryset(self):
+        """Return most 100 recent group posts."""
+        return Group.objects.all().order_by('-create_date')[:100]
+
+    def get_context_data(self, **kwargs):
+        """Return user'group data as contect data"""
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            context['user_groups'] = self.request.user.group_set.all()
+        return context
+
