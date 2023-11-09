@@ -1,5 +1,6 @@
 from django import forms
 from kuhub.models import Tags, Subject
+from kuhub.models.profile import Profile
 
 
 class PostForm(forms.Form):
@@ -27,3 +28,9 @@ class PostForm(forms.Form):
         label='Review',
         required=True
     )
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['biography']

@@ -15,4 +15,5 @@ urlpatterns = [
          name='encouragement'
     ),
     path('create-post/', views.create_post, name='create_post'),
+    path('profile/settings/', views.profile_settings, name='profile_settings')
 ]

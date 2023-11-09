@@ -1,0 +1,29 @@
+<h1>Profile Settings</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+
+<p>Username: {{ user.username }}</p>
+<p>Followers: {{ followers.count }}</p>
+<p>Following: {{ following.count }}</p>
+
+<h2>Following</h2>
+<ul>
+    {% for follow in following %}
+        <li>{{ follow.user_followed.username }}</li>
+    {% empty %}
+        <li>You are not following anyone yet.</li>
+    {% endfor %}
+</ul>
+
+<h2>Followers</h2>
+<ul>
+    {% for follow in followers %}
+        <li>{{ follow.follower.username }}</li>
+    {% empty %}
+        <li>You have no followers yet.</li>
+    {% endfor %}
+</ul>
