@@ -1,5 +1,6 @@
 from django.db import models
 import datetime
+from django.utils import timezone
 
 class Group(models.Model):
     group_name = models.CharField(max_length=200)
@@ -7,7 +8,7 @@ class Group(models.Model):
     group_tags = models.ManyToManyField('Tags')
     group_description = models.CharField(max_length=255)
     create_date = models.DateField(default=datetime.date.today())
-    password = models.OneToOneField('GroupPassword', on_delete=models.CASCADE, null=True)
+    group_password = models.OneToOneField('GroupPassword', on_delete=models.CASCADE, null=True)
 
     def was_published_recently_post(self):
             """
@@ -16,7 +17,7 @@ class Group(models.Model):
             Returns:
                 bool: True if the post was published within the last day.
             """
-            now = datetime.date.today()
+            now = timezone.now().date()
             return now - datetime.timedelta(days=1) <= self.create_date <= now
 
     def __str__(self):
