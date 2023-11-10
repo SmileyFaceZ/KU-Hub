@@ -15,6 +15,13 @@
                     <ul>{{ group.group_name }}</ul>
                 {% endfor %}
             {% endif %}
+                {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
             </div>
         </div>
     </div>
@@ -49,13 +56,6 @@
         {% endfor %}
             </div>
         </div>
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
     {% else %}
         <h1>No group are available.</h1>
     {% endif %}
