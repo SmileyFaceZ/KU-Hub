@@ -133,6 +133,7 @@ def profile_settings(request):
 
     following = UserFollower.objects.filter(user_followed=user)
     followers = UserFollower.objects.filter(follower=user)
+    biography = Profile.objects.filter(biography=profile.biography)
 
     return render(request,
                   template_name='kuhub/profile_settings.html',
@@ -142,5 +143,6 @@ def profile_settings(request):
                     'profile': profile,
                     'following': following,
                     'followers': followers,
+                    'biography': biography
                      })
 
