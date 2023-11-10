@@ -1,6 +1,9 @@
 """Import Post and PostDownload models"""
 from django.views import generic
 from kuhub.models import Post, PostDownload
+from django.http import HttpRequest, JsonResponse
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -51,3 +54,39 @@ class EncouragementView(generic.ListView):
     def get_queryset(self):
         """Return recently published encourage posts."""
         return Post.objects.filter(tag_id=4).order_by('-post_date')
+
+
+@login_required
+def like_post(request: HttpRequest):
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id', 0)
+        post_obj = get_object_or_404(Post, id=post_id)
+        user = request.user
+
+        if user in post_obj.disliked.all():
+            post_obj.disliked.remove(user)
+
+        if user in post_obj.liked.all():
+            post_obj.liked.remove(user)
+        else:
+            post_obj.liked.add(user)
+
+    return redirect('kuhub:review')
+
+
+@login_required
+def dislike_post(request: HttpRequest):
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        post_obj = get_object_or_404(Post, id=post_id)
+        user = request.user
+
+        if user in post_obj.liked.all():
+            post_obj.liked.remove(user)
+
+        if user in post_obj.disliked.all():
+            post_obj.disliked.remove(user)
+        else:
+            post_obj.disliked.add(user)
+
+    return redirect('kuhub:review')

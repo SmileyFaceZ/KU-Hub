@@ -4,10 +4,22 @@
     <title>Review-Hub</title>
 {% endblock %}
 
-{% load static %}
-    <script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
 
 {% block content %}
+{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<link rel="stylesheet" href="{% static 'kuhub/style.css' %}">
+<script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
 <div class="container">
     {% if posts_list %}
         {% for post in posts_list %}
@@ -20,9 +32,24 @@
                     <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 5px;"></i>{{ post.post_date }}</h6>
                 </div>
                 <div class="card-footer custom-footer">
-                    <i class="fa-regular fa-thumbs-up"></i> {{ post.post_likes }} <i style="margin-right: 15px;"></i>
-                    <i class="fa-regular fa-thumbs-down"></i> {{ post.post_dislikes }} <i style="margin-right: 15px;"></i>
-                    <i class="fa-solid fa-download"></i> {{ post.downloads.first.download_count | default:0 }} <i style="margin-right: 15px;"></i>
+                    <div class="button-group">
+                        <form action="{% url 'kuhub:like_post' %}" method="POST" id='{{ post.id }}' class="like-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{ post.id }}">
+                            <button type="submit" class="btn btn-link like-btn" data-content="{{ post.pk }}">
+                                <i class="fa-regular fa-thumbs-up"></i>
+                            </button>
+                            {{ post.total_likes }}
+                        </form>
+                        <form action="{% url 'kuhub:dislike_post' %}" method="POST" class="dislike-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{ post.id }}">
+                            <button type="submit" class="btn btn-link" id="dislike_btn" data-content="{{ post.pk }}">
+                                <i class="fa-regular fa-thumbs-down"></i>
+                            </button>
+                            {{ post.total_dislikes }}
+                        </form>
+                    </div>
                 </div>
             </div>
         {% endfor %}
@@ -30,5 +57,4 @@
         <h1>No posts are available.</h1>
     {% endif %}
 </div>
-<link rel="stylesheet" href="{% static 'kuhub/style.css' %}">
 {% endblock %}
