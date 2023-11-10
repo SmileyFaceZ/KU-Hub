@@ -1,4 +1,6 @@
 """Import Post and PostDownload models"""
+import json
+
 from django.views import generic
 from kuhub.models import Post, PostDownload
 from django.http import HttpRequest, JsonResponse
@@ -58,9 +60,11 @@ class EncouragementView(generic.ListView):
 
 @login_required
 def like_post(request: HttpRequest):
-    if request.method == 'POST':
-        post_id = request.POST.get('post_id', 0)
-        post_obj = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST' \
+            and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        post_id = request.readline().decode('utf-8')
+        js_post = json.loads(post_id)
+        post_obj = get_object_or_404(Post, id=js_post['post_id'])
         user = request.user
 
         if user in post_obj.disliked.all():
@@ -71,14 +75,23 @@ def like_post(request: HttpRequest):
         else:
             post_obj.liked.add(user)
 
+        return JsonResponse(
+            {
+                'likes': post_obj.liked.all().count(),
+                'dislikes': post_obj.disliked.all().count()
+            }
+        )
+
     return redirect('kuhub:review')
 
 
 @login_required
 def dislike_post(request: HttpRequest):
-    if request.method == 'POST':
-        post_id = request.POST.get('post_id')
-        post_obj = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST' \
+            and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        post_id = request.readline().decode('utf-8')
+        js_post = json.loads(post_id)
+        post_obj: Post = get_object_or_404(Post, id=js_post['post_id'])
         user = request.user
 
         if user in post_obj.liked.all():
@@ -88,5 +101,12 @@ def dislike_post(request: HttpRequest):
             post_obj.disliked.remove(user)
         else:
             post_obj.disliked.add(user)
+
+        return JsonResponse(
+            {
+                'likes': post_obj.liked.all().count(),
+                'dislikes': post_obj.disliked.all().count()
+            }
+        )
 
     return redirect('kuhub:review')

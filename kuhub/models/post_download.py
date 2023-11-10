@@ -29,3 +29,14 @@ class PostDownload(models.Model):
         blank=True
     )
     download_count = models.IntegerField(default=0)
+
+    def total_likes(self):
+        return self.post_id.liked.all().count()
+
+    def total_dislikes(self):
+        return self.post_id.disliked.all().count()
+
+    def __str__(self):
+        return self.post_id.tag_id.tag_text + ' - ' \
+               + str(self.post_id.username) + ' - ' \
+               + self.post_id.post_content

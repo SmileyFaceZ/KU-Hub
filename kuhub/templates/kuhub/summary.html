@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <div class="container">
     {% if summary_post_list %}
         {% for post in summary_post_list %}
@@ -29,10 +30,17 @@
                     <h6 class="card-subtitle mb-2 text-muted">{{ post.post_id.post_date }}</h6>
 
                 </div>
-                <div class="card-footer">
-                    Likes: {{ post.post_id.post_likes }} |
-                    Dislikes: {{ post.post_id.post_dislikes }} |
-                    Download: {{ post.download_count }}
+                <div class="card-footer custom-footer">
+                    <div class="button-group">
+                        <button type="button" class="btn btn-link" data-content="{{ post.pk }}" onclick="like_button_click('{{ post.pk }}')">
+                            <i class="fa-regular fa-thumbs-up"></i>
+                        </button>
+                        <span id="likes-count-{{ post.pk }}">{{ post.total_likes }}</span>
+                        <button type="button" class="btn btn-link" data-content="{{ post.pk }}" onclick="dislike_button_click('{{ post.pk }}')">
+                            <i class="fa-regular fa-thumbs-down"></i>
+                        </button>
+                        <span id="dislikes-count-{{ post.pk }}">{{ post.total_dislikes }}</span>
+                    </div>
                 </div>
             </div>
         {% endfor %}
@@ -41,12 +49,64 @@
     {% endif %}
 
 </div>
+
 <script>
+function click_button(postId, response) {
+    console.log('Server response:', response);
+    let like_count = response.data.likes;
+    let dislike_count = response.data.dislikes;
+    console.log('Like Count:', like_count);
+    console.log('Dislike Count:', dislike_count);
+    document.getElementById('likes-count-' + postId).innerText = like_count;
+    document.getElementById('dislikes-count-' + postId).innerText = dislike_count;
+}
+
+function like_button_click(postId) {
+    axios({
+        url: '{% url "kuhub:like_post" %}',
+        method: 'POST',
+        data: {
+            'post_id': postId,
+        },
+        headers: {'X-Requested-With': 'XMLHttpRequest', 'cookie': document.cookie},
+        xsrfCookieName: 'csrftoken',
+        xsrfHeaderName: 'X-CSRFToken',
+        withCredentials: true,
+    })
+    .then(function (response) {
+        click_button(postId, response);
+    })
+    .catch(function (error) {
+        console.log('Error:', error);
+    });
+}
+
+function dislike_button_click(postId) {
+    axios({
+        url: '{% url "kuhub:dislike_post" %}',
+        method: 'POST',
+        data: {
+            'post_id': postId,
+        },
+        headers: {'X-Requested-With': 'XMLHttpRequest', 'cookie': document.cookie},
+        xsrfCookieName: 'csrftoken',
+        xsrfHeaderName: 'X-CSRFToken',
+        withCredentials: true,
+    })
+    .then(function (response) {
+        click_button(postId, response);
+    })
+    .catch(function (error) {
+        console.log('Error:', error);
+    });
+}
+
 document.getElementById("download_link").addEventListener("click", function(event) {
     var confirmed = confirm("Are you sure you want to download this file❓");
     if (!confirmed) {
         event.preventDefault();
     }
 });
+
 </script>
 {% endblock %}
