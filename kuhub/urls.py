@@ -14,4 +14,5 @@ urlpatterns = [
          views.EncouragementView.as_view(),
          name='encouragement'
     ),
+    path('create-post/', views.create_post, name='create_post'),
 ]

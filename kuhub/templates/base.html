@@ -44,7 +44,7 @@
                 <a href="#" class="h5 text-decoration-none m-3">
                     <i style="margin-right: 15px; margin-bottom: 15px;" class="fa-solid fa-user"></i>Profile
                 </a><br>
-                <a href="#" class="h5 text-decoration-none m-3">
+                <a href="{% url 'kuhub:create_post' %}" class="h5 text-decoration-none m-3">
                     <i style="margin-right: 15px; margin-bottom: 15px;" class="fa-regular fa-square-plus"></i>Create Post
                 </a><br>
                 <a href="#" class="h5 text-decoration-none m-3">
@@ -69,5 +69,14 @@
 <body class="background">
     {% block content %}
     {% endblock %}
+    <button type="button" class="btn btn-success rounded-circle btn-floating btn-lg"
+            style="
+            position: fixed;
+            bottom: 30px;
+            right: 30px;">
+        <a href="{% url 'kuhub:create_post' %}" style="color: white;">
+            <i class="fas fa-circle-plus"></i>
+        </a>
+    </button>
 </body>
 </html>
