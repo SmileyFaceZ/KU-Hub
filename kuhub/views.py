@@ -121,12 +121,10 @@ def profile_settings(request):
     profile = user.profile
 
     if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        form = ProfileForm(request.POST, request.FILES, instance=user.profile)
         if form.is_valid():
             form.save()
-            user.username = request.POST.get('username')
-            user.save()
-            return redirect('profile_settings')
+            return redirect('kuhub:profile_settings')
 
     else:
         form = ProfileForm(instance=profile)
