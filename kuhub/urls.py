@@ -10,8 +10,9 @@ urlpatterns = [
     path('review-hub/', views.ReviewHubView.as_view(), name='review'),
     path('summary-hub/', views.SummaryHubView.as_view(), name='summary'),
     path('tricks-hub/', views.TricksHubView.as_view(), name='tricks'),
-    path('encouragement/',
-         views.EncouragementView.as_view(),
-         name='encouragement'
+    path('group-hub/',
+         views.GroupView.as_view(),
+         name='groups'
     ),
+    path('<int:group_id>/join',views.join,name='join')
 ]
