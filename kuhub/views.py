@@ -7,8 +7,6 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-# Create your views here.
-
 
 class ReviewHubView(generic.ListView):
     """
@@ -22,6 +20,7 @@ class ReviewHubView(generic.ListView):
         return Post.objects.filter(tag_id=1).order_by('-post_date')
 
     def get_context_data(self, **kwargs):
+        """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
                                        for post in context['posts_list']]
@@ -43,6 +42,7 @@ class SummaryHubView(generic.ListView):
         return PostDownload.objects.select_related('post_id__tag_id').all()
 
     def get_context_data(self, **kwargs):
+        """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
                                        for post in context['summary_post_list']]
@@ -64,6 +64,7 @@ class TricksHubView(generic.ListView):
         return Post.objects.filter(tag_id=3).order_by('-post_date')
 
     def get_context_data(self, **kwargs):
+        """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
                                        for post in context['tricks_list']]
@@ -87,58 +88,60 @@ class EncouragementView(generic.ListView):
 
 @login_required
 def like_post(request: HttpRequest):
-    if request.method == 'POST' \
-            and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        post_id = request.readline().decode('utf-8')
-        js_post = json.loads(post_id)
-        post_obj = get_object_or_404(Post, id=js_post['post_id'])
-        user = request.user
+    """Increase the number of likes for a post when the user clicks the like."""
+    if request.user.is_authenticated:
+        if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            post_id = request.readline().decode('utf-8')
+            js_post = json.loads(post_id)
+            post_obj = get_object_or_404(Post, id=js_post['post_id'])
+            user = request.user
 
-        if user in post_obj.disliked.all():
-            post_obj.disliked.remove(user)
+            if user in post_obj.disliked.all():
+                post_obj.disliked.remove(user)
 
-        if user in post_obj.liked.all():
-            post_obj.liked.remove(user)
-        else:
-            post_obj.liked.add(user)
+            if user in post_obj.liked.all():
+                post_obj.liked.remove(user)
+            else:
+                post_obj.liked.add(user)
 
-        return JsonResponse(
-            {
-                'likes': post_obj.liked.all().count(),
-                'dislikes': post_obj.disliked.all().count(),
-                'like_style': post_obj.like_icon_style(user),
-                'dislike_style': post_obj.dislike_icon_style(user)
-            }
-        )
+            return JsonResponse(
+                {
+                    'likes': post_obj.liked.all().count(),
+                    'dislikes': post_obj.disliked.all().count(),
+                    'like_style': post_obj.like_icon_style(user),
+                    'dislike_style': post_obj.dislike_icon_style(user)
+                }
+            )
+        return redirect('kuhub:review')
 
-    return redirect('kuhub:review')
-
+    return redirect('account_login')
 
 @login_required
 def dislike_post(request: HttpRequest):
-    if request.method == 'POST' \
-            and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        post_id = request.readline().decode('utf-8')
-        js_post = json.loads(post_id)
-        post_obj: Post = get_object_or_404(Post, id=js_post['post_id'])
-        user = request.user
+    """Decrease the number of likes for a post when the user clicks the dislike."""
+    if request.user.is_authenticated:
+        if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            post_id = request.readline().decode('utf-8')
+            js_post = json.loads(post_id)
+            post_obj: Post = get_object_or_404(Post, id=js_post['post_id'])
+            user = request.user
 
+            if user in post_obj.liked.all():
+                post_obj.liked.remove(user)
 
-        if user in post_obj.liked.all():
-            post_obj.liked.remove(user)
+            if user in post_obj.disliked.all():
+                post_obj.disliked.remove(user)
+            else:
+                post_obj.disliked.add(user)
 
-        if user in post_obj.disliked.all():
-            post_obj.disliked.remove(user)
-        else:
-            post_obj.disliked.add(user)
+            return JsonResponse(
+                {
+                    'likes': post_obj.total_likes(),
+                    'dislikes': post_obj.total_dislikes(),
+                    'dislike_style': post_obj.dislike_icon_style(user),
+                    'like_style': post_obj.like_icon_style(user),
+                }
+            )
+        return redirect('kuhub:review')
 
-        return JsonResponse(
-            {
-                'likes': post_obj.total_likes(),
-                'dislikes': post_obj.total_dislikes(),
-                'dislike_style': post_obj.dislike_icon_style(user),
-                'like_style': post_obj.like_icon_style(user),
-            }
-        )
-
-    return redirect('kuhub:review')
+    return redirect('account_login')

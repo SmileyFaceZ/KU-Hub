@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Review-Hub</title>
+    <title>Summary-Hub</title>
 {% endblock %}
 
 {% block content %}
@@ -33,16 +33,28 @@
                 </div>
                 <div class="card-footer custom-footer">
                     <div class="button-group">
-                        <button type="button" class="btn btn-link" id="like-btn-{{post.post_id.pk}}" data-content="{{ post.post_id.pk }}" onclick="like_button_click('{{ post.post_id.pk }}')">
-                            <i class="{{ like_icon_styles|index:forloop.counter0 }}"></i>
-                        </button>
-                        <span id="likes-count-{{ post.post_id.pk }}">{{ post.post_id.total_likes }}</span>
+                        {% if user.is_authenticated %}
+                            <button type="button" class="btn btn-link" id="like-btn-{{ post.pk }}" data-content="{{ post.pk }}" onclick="like_button_click('{{ post.pk }}')">
+                                <i class="{{ like_icon_styles|index:forloop.counter0 }}"></i>
+                            </button>
+                            <span id="likes-count-{{ post.pk }}">{{ post.total_likes }}</span>
 
-                        <button type="button" class="btn btn-link" id="dislike-btn-{{post.post_id.pk}}" data-content="{{ post.post_id.pk }}" onclick="dislike_button_click('{{ post.post_id.pk }}')">
-                            <i class="{{ dislike_icon_styles|index:forloop.counter0 }}"></i>
-                        </button>
-                        <span id="dislikes-count-{{ post.post_id.pk }}">{{ post.post_id.total_dislikes }}</span>
-
+                            <button type="button" class="btn btn-link" id="dislike-btn-{{post.pk}}" data-content="{{ post.pk }}" onclick="dislike_button_click('{{ post.pk }}')">
+                                <i class="{{ dislike_icon_styles|index:forloop.counter0 }}"></i>
+                            </button>
+                            <span id="dislikes-count-{{ post.pk }}">{{ post.total_dislikes }}</span>
+                        {% else %}
+                            <form action="{% url 'account_login' %}">
+                                <button type="submit" class="btn btn-link">
+                                    <i class="fa-regular fa-thumbs-up"></i>
+                                </button>
+                                <span>{{ post.total_likes }}</span>
+                                <button type="submit" class="btn btn-link">
+                                    <i class="fa-regular fa-thumbs-down"></i>
+                                </button>
+                                <span>{{ post.total_dislikes }}</span>
+                            </form>
+                        {% endif %}
                     </div>
                 </div>
             </div>
