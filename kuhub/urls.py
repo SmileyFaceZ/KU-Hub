@@ -14,5 +14,5 @@ urlpatterns = [
          views.GroupView.as_view(),
          name='groups'
     ),
-    path('<int:group_id>/join',views.join,name='join')
+    path('<int:group_id>/join',views.join,name='join'),
 ]

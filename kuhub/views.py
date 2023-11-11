@@ -1,6 +1,8 @@
 """Import Post and PostDownload models"""
 from django.http import HttpResponseRedirect
 from django.views import generic
+from django.views.generic import TemplateView
+
 from kuhub.models import Post, PostDownload, Group
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -61,6 +63,7 @@ class GroupView(generic.ListView):
         if self.request.user.is_authenticated:
             context['user_groups'] = self.request.user.group_set.all()
         return context
+
 @login_required
 def join(request,group_id):
     """
@@ -77,4 +80,4 @@ def join(request,group_id):
     messages.success(request, "You join the group success!")
     return redirect(reverse('kuhub:groups'))
 
-# def group_join_popup(request)
+

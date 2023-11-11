@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Group-Hub</title>
+<title xmlns="http://www.w3.org/1999/html">Group-Hub</title>
 {% endblock %}
+<body>
 <div class="container">
 
 {% block content %}
@@ -14,14 +15,10 @@
                 {% for group in user_groups %}
                     <ul>{{ group.group_name }}</ul>
                 {% endfor %}
-            {% endif %}
-                {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+                {% endif %}
+                {% for message in messages %}
+                   <p>{{ message }}</p>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -46,10 +43,39 @@
                             <br>
                             <p class="card-text">{{ group.group_description }}</p>
                             <h6 class="card-subtitle mb-2 text-muted">{{ group.create_date }}</h6>
-                           <form method="post" action="{% url 'kuhub:join' group.id %}">
-                            {% csrf_token %}
-                            <input type="submit" value="Join">
-                              </form>
+                            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#myModal{{ group.id }}">
+                                Join
+                            </button>
+                            <!--create modal-->
+                                <div class="modal" id="myModal{{ group.id }}" data-backdrop="static" data-keyboard="false">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Group Joining</h4>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            </div>
+
+                                            <!-- Modal Body -->
+                                            <div class="modal-body">
+                                                <p>You are going to join <b>{{group.group_name}}</b></p>
+                                                {% if group.group_password %}
+                                                <p>need password</p>
+                                                {% endif %}
+                                            </div>
+
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer">
+                                                <form method="post" action="{% url 'kuhub:join' group.id %}">
+                                                    {% csrf_token %}
+                                                    <input type="submit" class="btn btn-primary" value="Join">
+                                                </form>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
                     </div>
              </div>
@@ -63,5 +89,9 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+</body>
 {% endblock %}
