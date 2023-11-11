@@ -30,7 +30,18 @@
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
-                <img class="rounded-circle" src="https://www.neeri.res.in/img/profile_image.jpg" style="width:45px;">
+                <a href="{% url 'kuhub:profile_settings' %}" class="me-2 rounded-circle">
+                    {% if user.is_authenticated %}
+                        {% if user.profile.display_photo %}
+                            <img src="{{ user.profile.display_photo.url }}" alt="Profile Photo" width="45px" height="50" class="rounded-icon">
+                        {% else %}
+                            <!-- Add a default profile photo here -->
+                            <img src="{% static 'media/media/store/profile_photos/IMG_7967.jpeg' %}" alt="Default Profile Photo" width="45px" height="50" class="rounded-icon">
+                        {% endif %}
+                    {% else %}
+                        <img src="{% static 'media/media/store/profile_photos/IMG_7967.jpeg' %}" alt="Default Profile Photo" width="45px" height="50" class="rounded-icon">
+                    {% endif %}
+                </a>
             </div>
         </div>
     </nav>
@@ -43,7 +54,7 @@
         </div>
         <div class="offcanvas-body">
             {% if user.is_authenticated %}
-                <a href="#" class="h5 text-decoration-none m-3">
+                <a href="{% url 'kuhub:profile_settings' %}" class="h5 text-decoration-none m-3">
                     <i style="margin-right: 15px; margin-bottom: 15px;" class="fa-solid fa-user"></i>Profile
                 </a><br>
                 <a href="{% url 'kuhub:create_post' %}" class="h5 text-decoration-none m-3">

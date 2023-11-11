@@ -12,8 +12,10 @@ from django.db.models import QuerySet
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
-from kuhub.forms import PostForm
-from kuhub.models import Post, PostDownload, Tags
+from kuhub.forms import PostForm, ProfileForm
+from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower
+from django.contrib.auth.models import User
+
 
 
 class ReviewHubView(generic.ListView):
@@ -208,3 +210,34 @@ def create_post(request: HttpRequest):
             "form": PostForm(),
         }
     )
+
+
+@login_required
+def profile_settings(request):
+    user = request.user
+    profile = user.profile
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=user.profile)
+        if form.is_valid():
+            form.save()
+            return redirect('kuhub:profile_settings')
+
+    else:
+        form = ProfileForm(instance=profile)
+
+    following = UserFollower.objects.filter(user_followed=user)
+    followers = UserFollower.objects.filter(follower=user)
+    biography = Profile.objects.filter(biography=profile.biography)
+
+    return render(request,
+                  template_name='kuhub/profile_settings.html',
+                  context={
+                    'form': form,
+                    'user': user,
+                    'profile': profile,
+                    'following': following,
+                    'followers': followers,
+                    'biography': biography
+                     })
+

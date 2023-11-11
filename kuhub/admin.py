@@ -1,7 +1,7 @@
 """Import admin class from django"""
 from django.contrib import admin
 from kuhub.models import \
-    UserFollower, Post, PostComments, Tags, PostDownload, PostReport, Subject
+    UserFollower, Post, PostComments, Tags, PostDownload, PostReport, Subject, Profile
 
 # Register your models here.
 
@@ -12,3 +12,4 @@ admin.site.register(Tags)
 admin.site.register(PostDownload)
 admin.site.register(PostReport)
 admin.site.register(Subject)
+admin.site.register(Profile)

@@ -17,4 +17,5 @@ urlpatterns = [
     path('liked/', views.like_post, name='like_post'),
     path('disliked/', views.dislike_post, name='dislike_post'),
     path('create-post/', views.create_post, name='create_post'),
+    path('profile/settings/', views.profile_settings, name='profile_settings')
 ]
