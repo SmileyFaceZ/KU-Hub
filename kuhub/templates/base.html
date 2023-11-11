@@ -30,7 +30,16 @@
                 </form>
                 <img class="rounded-circle" src="https://www.neeri.res.in/img/profile_image.jpg" style="width:45px;">
                 <a href="{% url 'kuhub:profile_settings' %}" class="me-2">
-                    <img src="{% if user.is_authenticated %}{{ user.profile.display_photo.url }}{% else %}{% static 'path/to/default_profile_photo.png' %}{% endif %}" alt="Profile Photo" width="50" height="50" class="rounded-icon">
+                    {% if user.is_authenticated %}
+                        {% if user.profile.display_photo %}
+                            <img src="{{ user.profile.display_photo.url }}" alt="Profile Photo" width="45px" height="50" class="rounded-icon">
+                        {% else %}
+                            <!-- Add a default profile photo here -->
+                            <img src="{% static 'media/media/store/profile_photos/IMG_7967.jpeg' %}" alt="Default Profile Photo" width="45px" height="50" class="rounded-icon">
+                        {% endif %}
+                    {% else %}
+                        <img src="{% static 'media/media/store/profile_photos/IMG_7967.jpeg' %}" alt="Default Profile Photo" width="45px" height="50" class="rounded-icon">
+                    {% endif %}
                 </a>
             </div>
         </div>
