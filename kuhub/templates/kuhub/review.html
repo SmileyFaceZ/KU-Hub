@@ -11,16 +11,22 @@
 
 {% if messages %}
     {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="font-family: 'Poppins'">
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     {% endfor %}
 {% endif %}
-<div class="container">
+<div class="container" style="font-family: 'Poppins'">
     {% if posts_list %}
         {% for post in posts_list %}
             <div class="card border border-1 rounded-4">
+                <div class="card-header">
+                    {% if post.was_published_recently_post %}
+                    <h3>NEW!</h3>
+                    {% endif %}
+                    <div class="tag-text">{{ post.tag_id.tag_text }}</div>
+                </div>
                 <div class="card-body">
                     <img class="float-start rounded-circle" src="https://images.unsplash.com/photo-1603984973710-e915353b35fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YW1hemluZyUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D&w=1000&q=80" width="45" height="45">
                     <h4 class="card-title">{{ post.username }}</h4>
