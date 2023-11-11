@@ -31,24 +31,29 @@ class PostDownload(models.Model):
     download_count = models.IntegerField(default=0)
 
     def total_likes(self):
+        """Return the total number of likes for a post."""
         return self.post_id.liked.all().count()
 
     def total_dislikes(self):
+        """Return the total number of dislikes for a post."""
         return self.post_id.disliked.all().count()
 
     def like_icon_style(self, user):
+        """Return the style of the like icon when the user clicks the like."""
         if user in self.post_id.liked.all():
             return 'fa-solid fa-thumbs-up'
         else:
             return 'far fa-thumbs-up'
 
     def dislike_icon_style(self, user):
+        """Return the style of the dislike icon when the user clicks the dislike."""
         if user in self.post_id.disliked.all():
             return 'fa-solid fa-thumbs-down'
         else:
             return 'far fa-thumbs-down'
 
     def __str__(self):
+        """Return a string with contain the tag, username, and post content."""
         return self.post_id.tag_id.tag_text + ' - ' \
                + str(self.post_id.username) + ' - ' \
                + self.post_id.post_content
