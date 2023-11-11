@@ -4,6 +4,7 @@
     {% load static %}
 
     <link rel="stylesheet" href="{% static 'kuhub/style.css' %}">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{% static 'kuhub/images/ku-icon.png' %}" type="image/png"  class="icon_img">
@@ -13,20 +14,20 @@
 
     <nav class="navbar navbar-expand-lg shadow">
         <div class="container-fluid">
-            <button class="btn btn-primary me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Menu</button>
+            <button class="btn btn-primary me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" style="font-family: 'Poppins'">Menu</button>
             <img src="{% static 'kuhub/ku-icon.png' %}" alt="ku-icon" width="50" height="50" class="me-2 rounded-icon">
 
             <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
                 <ul class="navbar-nav mb-2 mb-lg-0">
-                    <li class="nav-item"><a href="{% url 'kuhub:review' %}" class="nav-link">KU-Hub</a></li>
-                    <li class="nav-item"><a href="{% url 'kuhub:review' %}" class="nav-link">Review-Hub</a></li> 
-                    <li class="nav-item"><a href="{% url 'kuhub:summary' %}" class="nav-link">Summary-Hub</a></li>
-                    <li class="nav-item"><a href="{% url 'kuhub:tricks' %}" class="nav-link">Tricks-Hub</a></li>
-                    <li class="nav-item"><a href="{% url 'kuhub:encouragement' %}" class="nav-link">Encouragement</a></li>
+                    <li class="nav-item"><a href="{% url 'kuhub:review' %}" class="nav-link" style="font-family: 'Poppins'" >KU-Hub</a></li>
+                    <li class="nav-item"><a href="{% url 'kuhub:review' %}" class="nav-link" style="font-family: 'Poppins'">Review-Hub</a></li> 
+                    <li class="nav-item"><a href="{% url 'kuhub:summary' %}" class="nav-link" style="font-family: 'Poppins'">Summary-Hub</a></li>
+                    <li class="nav-item"><a href="{% url 'kuhub:tricks' %}" class="nav-link" style="font-family: 'Poppins'">Tricks-Hub</a></li>
+                    <li class="nav-item"><a href="{% url 'kuhub:encouragement' %}" class="nav-link" style="font-family: 'Poppins'">Encouragement</a></li>
                 </ul>
                 <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="font-family: 'Poppins'">
+                    <button class="btn btn-outline-success" type="submit" style="font-family: 'Poppins'">Search</button>
                 </form>
                 <img class="rounded-circle" src="https://www.neeri.res.in/img/profile_image.jpg" style="width:45px;">
             </div>
@@ -36,10 +37,10 @@
     <!--  When Click Menu Button  -->
     <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
         <div class="offcanvas-header">
-            <h4 style="color: whitesmoke;" class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Menu</h4>
+            <h4 style="color: whitesmoke; font-family: 'Poppins'" class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Menu</h4>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body">
+        <div class="offcanvas-body" style="font-family: 'Poppins'">
             {% if user.is_authenticated %}
                 <a href="#" class="h5 text-decoration-none m-3">
                     <i style="margin-right: 15px; margin-bottom: 15px;" class="fa-solid fa-user"></i>Profile
