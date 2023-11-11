@@ -36,6 +36,18 @@ class PostDownload(models.Model):
     def total_dislikes(self):
         return self.post_id.disliked.all().count()
 
+    def like_icon_style(self, user):
+        if user in self.post_id.liked.all():
+            return 'fa-solid fa-thumbs-up'
+        else:
+            return 'far fa-thumbs-up'
+
+    def dislike_icon_style(self, user):
+        if user in self.post_id.disliked.all():
+            return 'fa-solid fa-thumbs-down'
+        else:
+            return 'far fa-thumbs-down'
+
     def __str__(self):
         return self.post_id.tag_id.tag_text + ' - ' \
                + str(self.post_id.username) + ' - ' \

@@ -42,6 +42,15 @@ class SummaryHubView(generic.ListView):
         """Return summary posts queryset."""
         return PostDownload.objects.select_related('post_id__tag_id').all()
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['like_icon_styles'] = [post.like_icon_style(self.request.user)
+                                       for post in context['summary_post_list']]
+        context['dislike_icon_styles'] = [
+            post.dislike_icon_style(self.request.user) for post in
+            context['summary_post_list']]
+        return context
+
 
 class TricksHubView(generic.ListView):
     """
