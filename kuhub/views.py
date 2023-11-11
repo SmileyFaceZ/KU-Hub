@@ -57,11 +57,20 @@ class TricksHubView(generic.ListView):
     Redirect to Tricks-Hub page.
     """
     template_name = 'kuhub/tricks.html'
-    context_object_name = 'posts_list'
+    context_object_name = 'tricks_list'
 
     def get_queryset(self):
         """Return recently published trick posts."""
         return Post.objects.filter(tag_id=3).order_by('-post_date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['like_icon_styles'] = [post.like_icon_style(self.request.user)
+                                       for post in context['tricks_list']]
+        context['dislike_icon_styles'] = [
+            post.dislike_icon_style(self.request.user) for post in
+            context['tricks_list']]
+        return context
 
 
 class EncouragementView(generic.ListView):

@@ -5,10 +5,14 @@
 {% endblock %}
 
 {% block content %}
+{% load static %}
+{% load custom_filters %}
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <div class="container">
-    {% if posts_list %}
-        {% for post in posts_list %}
+    {% if tricks_list %}
+        {% for post in tricks_list %}
             <div class="card border border-dark border-3 m-2 rounded-3">
                 <div class="card-header">
                     {% if post.was_published_recently_post %}
@@ -25,12 +29,13 @@
                 </div>
                 <div class="card-footer custom-footer">
                     <div class="button-group">
-                        <button type="button" class="btn btn-link" data-content="{{ post.pk }}" onclick="like_button_click('{{ post.pk }}')">
-                            <i class="fa-regular fa-thumbs-up"></i>
+                        <button type="button" class="btn btn-link" id="like-btn-{{ post.pk }}" data-content="{{ post.pk }}" onclick="like_button_click('{{ post.pk }}')">
+                            <i class="{{ like_icon_styles|index:forloop.counter0 }}"></i>
                         </button>
                         <span id="likes-count-{{ post.pk }}">{{ post.total_likes }}</span>
-                        <button type="button" class="btn btn-link" data-content="{{ post.pk }}" onclick="dislike_button_click('{{ post.pk }}')">
-                            <i class="fa-regular fa-thumbs-down"></i>
+
+                        <button type="button" class="btn btn-link" id="dislike-btn-{{post.pk}}" data-content="{{ post.pk }}" onclick="dislike_button_click('{{ post.pk }}')">
+                            <i class="{{ dislike_icon_styles|index:forloop.counter0 }}"></i>
                         </button>
                         <span id="dislikes-count-{{ post.pk }}">{{ post.total_dislikes }}</span>
                     </div>
@@ -50,7 +55,10 @@ function click_button(postId, response) {
     console.log('Dislike Count:', dislike_count);
     document.getElementById('likes-count-' + postId).innerText = like_count;
     document.getElementById('dislikes-count-' + postId).innerText = dislike_count;
+    document.getElementById('like-btn-' + postId).innerHTML = '<i class="' + response.data.like_style + '"></i>';
+    document.getElementById('dislike-btn-' + postId).innerHTML = '<i class="' + response.data.dislike_style + '"></i>';
 }
+
 
 function like_button_click(postId) {
     axios({
