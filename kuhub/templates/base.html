@@ -28,7 +28,9 @@
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
-                <img class="rounded-circle" src="https://www.neeri.res.in/img/profile_image.jpg" style="width:45px;">
+                <a href="{% url 'kuhub:profile_settings' %}" class="me-2">
+                    <img src="{% if user.is_authenticated %}{{ user.profile.display_photo.url }}{% else %}{% static 'path/to/default_profile_photo.png' %}{% endif %}" alt="Profile Photo" width="50" height="50" class="rounded-icon">
+                </a>
             </div>
         </div>
     </nav>
