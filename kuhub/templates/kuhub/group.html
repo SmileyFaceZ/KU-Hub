@@ -25,7 +25,7 @@
             </div>
         </div>
     </div>
-    <div class="container" style="margin-left:18rem; position:absolute; top: 70px;">
+    <div class="container" style="margin-left:18%; position:absolute; top: 70px; width:80vw;">
     {% if group_list %}
     <div class="row">
         {% for group in group_list %}
@@ -33,7 +33,7 @@
                     <div class="card border border-dark border-3 m-2 rounded-3" style="max-width: 23rem;">
                         <div class="card-header">
                             {% if group.was_published_recently_post %}
-                                <h3>NEW!</h3>
+                                <h5>NEW!</h5>
                             {% endif %}
                             {{ group.id }} |
                             {% for tag in group.group_tags.all %}
@@ -42,7 +42,7 @@
                         </div>
                         <div class="card-body">
                             <img class="float-start rounded-circle" src="https://images.unsplash.com/photo-1603984973710-e915353b35fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YW1hemluZyUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D&w=1000&q=80" width="50" height="50">
-                            <h4 class="card-title m-auto h1">{{ group.group_name }}</h4>
+                            <h4 class="card-title m-auto h4">{{ group.group_name }}</h4>
                             <br>
                             <p class="card-text">{{ group.group_description }}</p>
                             <h6 class="card-subtitle mb-2 text-muted">{{ group.create_date }}</h6>
