@@ -3,7 +3,9 @@
 related to Review-Hub, Summary-Hub and Tricks-Hub
 in the kuhub web application.
 """
+import json
 import datetime as dt
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import QuerySet
