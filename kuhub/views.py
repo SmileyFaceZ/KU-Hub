@@ -8,10 +8,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import QuerySet
 from django.http import HttpRequest
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
 from kuhub.forms import PostForm, ProfileForm
-from kuhub.models import Post, PostDownload, Tags, Profile,UserFollower
+from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower
+from django.contrib.auth.models import User
 
 
 
@@ -142,3 +143,4 @@ def profile_settings(request):
                     'followers': followers,
                     'biography': biography
                      })
+
