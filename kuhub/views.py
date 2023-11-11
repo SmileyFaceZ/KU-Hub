@@ -88,9 +88,11 @@ class EncouragementView(generic.ListView):
 
 @login_required
 def like_post(request: HttpRequest):
-    """Increase the number of likes for a post when the user clicks the like."""
+    """Increase number of likes for a post when the user clicks the like."""
     if request.user.is_authenticated:
-        if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if (request.method == 'POST'
+                and request.headers.get(
+                    'X-Requested-With') == 'XMLHttpRequest'):
             post_id = request.readline().decode('utf-8')
             js_post = json.loads(post_id)
             post_obj = get_object_or_404(Post, id=js_post['post_id'])
@@ -116,11 +118,14 @@ def like_post(request: HttpRequest):
 
     return redirect('account_login')
 
+
 @login_required
 def dislike_post(request: HttpRequest):
-    """Decrease the number of likes for a post when the user clicks the dislike."""
+    """Decrease number of likes for a post when the user clicks the dislike."""
     if request.user.is_authenticated:
-        if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        if (request.method == 'POST'
+                and request.headers.get(
+                    'X-Requested-With') == 'XMLHttpRequest'):
             post_id = request.readline().decode('utf-8')
             js_post = json.loads(post_id)
             post_obj: Post = get_object_or_404(Post, id=js_post['post_id'])
