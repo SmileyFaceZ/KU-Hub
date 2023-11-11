@@ -1,10 +1,14 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Review-Hub</title>
+    <title>Summary-Hub</title>
 {% endblock %}
 
 {% block content %}
+
+{% load custom_filters %}
+{% load static %}
+
 {% if messages %}
     {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -13,6 +17,7 @@
         </div>
     {% endfor %}
 {% endif %}
+
 <div class="container">
     {% if summary_post_list %}
         {% for post in summary_post_list %}
@@ -37,10 +42,31 @@
                     <h6 class="card-subtitle mb-2 text-muted">{{ post.post_id.post_date }}</h6>
 
                 </div>
-                <div class="card-footer">
-                    Likes: {{ post.post_id.post_likes }} |
-                    Dislikes: {{ post.post_id.post_dislikes }} |
-                    Download: {{ post.download_count }}
+                <div class="card-footer custom-footer">
+                    <div class="button-group">
+                        {% if user.is_authenticated %}
+                            <button type="button" class="btn btn-link" id="like-btn-{{ post.pk }}" data-content="{{ post.pk }}" onclick="like_button_click('{{ post.pk }}')">
+                                <i class="{{ like_icon_styles|index:forloop.counter0 }}"></i>
+                            </button>
+                            <span id="likes-count-{{ post.pk }}">{{ post.total_likes }}</span>
+
+                            <button type="button" class="btn btn-link" id="dislike-btn-{{post.pk}}" data-content="{{ post.pk }}" onclick="dislike_button_click('{{ post.pk }}')">
+                                <i class="{{ dislike_icon_styles|index:forloop.counter0 }}"></i>
+                            </button>
+                            <span id="dislikes-count-{{ post.pk }}">{{ post.total_dislikes }}</span>
+                        {% else %}
+                            <form action="{% url 'account_login' %}">
+                                <button type="submit" class="btn btn-link">
+                                    <i class="fa-regular fa-thumbs-up"></i>
+                                </button>
+                                <span>{{ post.total_likes }}</span>
+                                <button type="submit" class="btn btn-link">
+                                    <i class="fa-regular fa-thumbs-down"></i>
+                                </button>
+                                <span>{{ post.total_dislikes }}</span>
+                            </form>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         {% endfor %}
@@ -50,11 +76,57 @@
 
 </div>
 <script>
-document.getElementById("download_link").addEventListener("click", function(event) {
-    var confirmed = confirm("Are you sure you want to download this file❓");
-    if (!confirmed) {
-        event.preventDefault();
-    }
-});
+function click_button(postId, response) {
+    console.log('Server response:', response);
+    let like_count = response.data.likes;
+    let dislike_count = response.data.dislikes;
+    console.log('Like Count:', like_count);
+    console.log('Dislike Count:', dislike_count);
+    document.getElementById('likes-count-' + postId).innerText = like_count;
+    document.getElementById('dislikes-count-' + postId).innerText = dislike_count;
+    document.getElementById('like-btn-' + postId).innerHTML = '<i class="' + response.data.like_style + '"></i>';
+    document.getElementById('dislike-btn-' + postId).innerHTML = '<i class="' + response.data.dislike_style + '"></i>';
+}
+
+
+function like_button_click(postId) {
+    axios({
+        url: '{% url "kuhub:like_post" %}',
+        method: 'POST',
+        data: {
+            'post_id': postId,
+        },
+        headers: {'X-Requested-With': 'XMLHttpRequest', 'cookie': document.cookie},
+        xsrfCookieName: 'csrftoken',
+        xsrfHeaderName: 'X-CSRFToken',
+        withCredentials: true,
+    })
+    .then(function (response) {
+        click_button(postId, response);
+    })
+    .catch(function (error) {
+        console.log('Error:', error);
+    });
+}
+
+function dislike_button_click(postId) {
+    axios({
+        url: '{% url "kuhub:dislike_post" %}',
+        method: 'POST',
+        data: {
+            'post_id': postId,
+        },
+        headers: {'X-Requested-With': 'XMLHttpRequest', 'cookie': document.cookie},
+        xsrfCookieName: 'csrftoken',
+        xsrfHeaderName: 'X-CSRFToken',
+        withCredentials: true,
+    })
+    .then(function (response) {
+        click_button(postId, response);
+    })
+    .catch(function (error) {
+        console.log('Error:', error);
+    });
+}
 </script>
 {% endblock %}
