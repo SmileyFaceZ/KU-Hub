@@ -46,7 +46,7 @@ class Post(models.Model):
         default=1
     )
 
-    def was_published_recently(self):
+    def was_published_recently(self) -> bool:
         """
         Checks if the post was published recently.
 
@@ -56,29 +56,29 @@ class Post(models.Model):
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.post_date <= now
 
-    def total_likes(self):
+    def total_likes(self) -> int:
         """Return the total number of likes for a post."""
         return self.liked.all().count()
 
-    def total_dislikes(self):
+    def total_dislikes(self) -> int:
         """Return the total number of dislikes for a post."""
         return self.disliked.all().count()
 
-    def like_icon_style(self, user):
+    def like_icon_style(self, user) -> str:
         """Return the style of the like icon when the user clicks the like."""
         if user in self.liked.all():
             return 'fa-solid fa-thumbs-up'
         else:
             return 'far fa-thumbs-up'
 
-    def dislike_icon_style(self, user):
+    def dislike_icon_style(self, user) -> str:
         """Return the style of the dislike icon when the user clicks the dislike."""
         if user in self.disliked.all():
             return 'fa-solid fa-thumbs-down'
         else:
             return 'far fa-thumbs-down'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string with contain the tag, username, and post content."""
         return self.tag_id.tag_text + ' - ' \
                + str(self.username) + ' - ' \
