@@ -1,10 +1,11 @@
 """Import Post and PostDownload models"""
+from django.http import HttpResponseRedirect
 from django.views import generic
 from kuhub.models import Post, PostDownload, Group
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-# Create your views here.
+from django.urls import reverse
 
 
 class ReviewHubView(generic.ListView):
@@ -69,11 +70,11 @@ def join(request,group_id):
     group = get_object_or_404(Group,pk=group_id)
     if user in group.group_member.all():
         messages.error(request, "You already a member of this group")
-        return render(request, 'kuhub/group.html')
+        return redirect(reverse('kuhub:groups'))
     if group.group_password:
         pass
     group.group_member.add(user)
     messages.success(request, "You join the group success!")
-    return render(request,'kuhub/group.html')
+    return redirect(reverse('kuhub:groups'))
 
 # def group_join_popup(request)

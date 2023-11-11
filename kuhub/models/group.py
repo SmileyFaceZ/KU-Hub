@@ -5,7 +5,7 @@ from django.utils import timezone
 class Group(models.Model):
     group_name = models.CharField(max_length=200)
     group_member = models.ManyToManyField('auth.User')
-    group_tags = models.ManyToManyField('Tags')
+    group_tags = models.ManyToManyField('GroupTags')
     group_description = models.CharField(max_length=255)
     create_date = models.DateField(default=datetime.date.today())
     group_password = models.OneToOneField('GroupPassword', on_delete=models.CASCADE, null=True, blank=True)
