@@ -1,16 +1,36 @@
-<h2>Register</h2>
-<form method="POST">
-    {% csrf_token %}
-    <table style="padding: 2ex;">
-    {{ form.as_table }}     {# this line shows the sign-up form #}
-    <tr>
-    <td colspan="2">
-    <button type="submit">Register</button>
-    </td>
-    </tr>
-    </table>
-</form>
-Or <a href="/accounts/login"> Login </a>.
-<div>
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+{% load static %}
+<link rel="stylesheet" href="{% static 'authentication_stylesheet.css' %}">
+<section>
+<div class="container">
+    <form method="POST">
+        <div class="container-xs">
+            <img src="{% static 'images/logo.png' %}" alt="logo">
+            <h1>KU Hub</h1>
+        </div>
+        <h2><b>Sign up</b></h2>
+        {% csrf_token %}
+        <div class="signup">
+        {% for field in form %}
+        <p>
+            {% if field.errors %}
+            <ul class="errorlist">
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {{ field }}
+        </p>
+        {% endfor %}
+            </div>
+    <div class="contain">
+    <button type="submit" >Sign Up</button>
+    </form>
+    <h3>Or</h3>
+    <button onclick="document.location='/accounts/login'"> Log in </button>
+    </div>
 </div>
+</div>
+</section>
