@@ -7,6 +7,8 @@
 
 {% block content %}
 {% load static %}
+{% load custom_filters %}
+
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <link rel="stylesheet" href="{% static 'kuhub/style.css' %}">
 <script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
@@ -33,15 +35,16 @@
                 </div>
                 <div class="card-footer custom-footer">
                     <div class="button-group">
-                        <button type="button" class="btn btn-link" id="like-btn" data-content="{{ post.pk }}" onclick="like_button_click('{{ post.pk }}')">
-                            <i class="far fa-thumbs-up" id="like-icon-{{post.pk}}"></i>
+                        <button type="button" class="btn btn-link" id="like-btn-{{ post.pk }}" data-content="{{ post.pk }}" onclick="like_button_click('{{ post.pk }}')">
+                            <i class="{{ like_icon_styles|index:forloop.counter0 }}"></i>
                         </button>
                         <span id="likes-count-{{ post.pk }}">{{ post.total_likes }}</span>
 
                         <button type="button" class="btn btn-link" id="dislike-btn-{{post.pk}}" data-content="{{ post.pk }}" onclick="dislike_button_click('{{ post.pk }}')">
-                            <i class="far fa-thumbs-down" id="dislike-icon-{{post.pk}}"></i>
+                            <i class="{{ dislike_icon_styles|index:forloop.counter0 }}"></i>
                         </button>
                         <span id="dislikes-count-{{ post.pk }}">{{ post.total_dislikes }}</span>
+
                     </div>
                 </div>
             </div>
@@ -59,7 +62,10 @@ function click_button(postId, response) {
     console.log('Dislike Count:', dislike_count);
     document.getElementById('likes-count-' + postId).innerText = like_count;
     document.getElementById('dislikes-count-' + postId).innerText = dislike_count;
+    document.getElementById('like-btn-' + postId).innerHTML = '<i class="' + response.data.like_style + '"></i>';
+    document.getElementById('dislike-btn-' + postId).innerHTML = '<i class="' + response.data.dislike_style + '"></i>';
 }
+
 
 function like_button_click(postId) {
     axios({

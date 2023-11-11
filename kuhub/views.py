@@ -21,6 +21,15 @@ class ReviewHubView(generic.ListView):
         """Return recently published review posts."""
         return Post.objects.filter(tag_id=1).order_by('-post_date')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['like_icon_styles'] = [post.like_icon_style(self.request.user)
+                                       for post in context['posts_list']]
+        context['dislike_icon_styles'] = [
+            post.dislike_icon_style(self.request.user) for post in
+            context['posts_list']]
+        return context
+
 
 class SummaryHubView(generic.ListView):
     """
@@ -78,7 +87,9 @@ def like_post(request: HttpRequest):
         return JsonResponse(
             {
                 'likes': post_obj.liked.all().count(),
-                'dislikes': post_obj.disliked.all().count()
+                'dislikes': post_obj.disliked.all().count(),
+                'like_style': post_obj.like_icon_style(user),
+                'dislike_style': post_obj.dislike_icon_style(user)
             }
         )
 
@@ -94,6 +105,7 @@ def dislike_post(request: HttpRequest):
         post_obj: Post = get_object_or_404(Post, id=js_post['post_id'])
         user = request.user
 
+
         if user in post_obj.liked.all():
             post_obj.liked.remove(user)
 
@@ -104,8 +116,10 @@ def dislike_post(request: HttpRequest):
 
         return JsonResponse(
             {
-                'likes': post_obj.liked.all().count(),
-                'dislikes': post_obj.disliked.all().count()
+                'likes': post_obj.total_likes(),
+                'dislikes': post_obj.total_dislikes(),
+                'dislike_style': post_obj.dislike_icon_style(user),
+                'like_style': post_obj.like_icon_style(user),
             }
         )
 
