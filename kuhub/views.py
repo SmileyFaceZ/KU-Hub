@@ -75,7 +75,11 @@ def join(request,group_id):
         messages.error(request, "You already a member of this group")
         return redirect(reverse('kuhub:groups'))
     if group.group_password:
-        pass
+        if request.method == 'POST':
+            password = request.POST['pass']
+            if not group.group_password.check_password(password):
+                messages.error(request, "Wrong password")
+                return redirect(reverse('kuhub:groups'))
     group.group_member.add(user)
     messages.success(request, "You join the group success!")
     return redirect(reverse('kuhub:groups'))

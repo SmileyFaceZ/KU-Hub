@@ -60,19 +60,19 @@
                                             <div class="modal-body">
                                                 <p>You are going to join <b>{{group.group_name}}</b></p>
                                                 {% if group.group_password %}
-                                                <p>need password</p>
-                                                {% endif %}
-                                            </div>
-
-                                            <!-- Modal Footer -->
-                                            <div class="modal-footer">
+                                                <p>Enter Password:</p>
+                                                 <form method="post" action="{% url 'kuhub:join' group.id %}">
+                                                    {% csrf_token %}
+                                                     <input type="text" name="pass" placeholder="Password">
+                                                    <input type="submit" class="btn btn-primary" value="Join">
+                                                     </form>
+                                                {% else %}
                                                 <form method="post" action="{% url 'kuhub:join' group.id %}">
                                                     {% csrf_token %}
                                                     <input type="submit" class="btn btn-primary" value="Join">
                                                 </form>
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                {% endif %}
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
