@@ -11,9 +11,8 @@ from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from django.views import generic
 from kuhub.forms import PostForm, ProfileForm
-from kuhub.models import Post, PostDownload, Tags
-from kuhub.models.profile import Profile
-from kuhub.models.user_follower import UserFollower
+from kuhub.models import Post, PostDownload, Tags, Profile,UserFollower
+
 
 
 class ReviewHubView(generic.ListView):
