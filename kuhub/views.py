@@ -142,4 +142,3 @@ def profile_settings(request):
                     'followers': followers,
                     'biography': biography
                      })
-
