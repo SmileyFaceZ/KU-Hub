@@ -6,13 +6,7 @@
 
 
 {% block content %}
-{% load static %}
 {% load custom_filters %}
-
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<link rel="stylesheet" href="{% static 'kuhub/style.css' %}">
-<script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 {% if messages %}
     {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
