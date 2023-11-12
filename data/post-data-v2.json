@@ -34,8 +34,8 @@
     "username": 4,
     "post_content": "This is a test post!",
     "post_date": "2023-10-27T10:00:44Z",
-    "post_likes": 6,
-    "post_dislikes": 1,
+    "liked": 6,
+    "disliked": 1,
     "tag_id": 1
   }
 },
@@ -46,8 +46,8 @@
     "username": 7,
     "post_content": "She was the type of girl who wanted to live in a pink house.",
     "post_date": "2023-10-28T10:02:39Z",
-    "post_likes": 2,
-    "post_dislikes": 2,
+    "liked": 2,
+    "disliked": 2,
     "tag_id": 2
   }
 },
@@ -58,8 +58,8 @@
     "username": 5,
     "post_content": "The fifty mannequin heads floating in the pool kind of freaked them out.",
     "post_date": "2023-10-28T10:02:59Z",
-    "post_likes": 0,
-    "post_dislikes": 0,
+    "liked": 0,
+    "disliked": 0,
     "tag_id": 4
   }
 },
@@ -70,8 +70,8 @@
     "username": 5,
     "post_content": "The paintbrush was angry at the color the artist chose to use.",
     "post_date": "2023-10-28T11:53:45Z",
-    "post_likes": 0,
-    "post_dislikes": 0,
+    "liked": 0,
+    "disliked": 0,
     "tag_id": 1
   }
 },
@@ -82,8 +82,8 @@
     "username": 6,
     "post_content": "This is a test post Summary-Hub!",
     "post_date": "2023-10-31T15:54:16Z",
-    "post_likes": 3,
-    "post_dislikes": 1,
+    "liked": 3,
+    "disliked": 1,
     "tag_id": 2
   }
 },
@@ -94,8 +94,8 @@
     "username": 9,
     "post_content": "This is a Test post Tricks-Hub!",
     "post_date": "2023-10-31T15:55:25Z",
-    "post_likes": 2,
-    "post_dislikes": 0,
+    "liked": 2,
+    "disliked": 0,
     "tag_id": 3
   }
 },
