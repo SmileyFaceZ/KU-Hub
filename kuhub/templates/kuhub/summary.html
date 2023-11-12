@@ -16,30 +16,31 @@
         </div>
     {% endfor %}
 {% endif %}
-<div class="container">
+<div class="container" style="font-family: 'Poppins'">
     {% if summary_post_list %}
         {% for post in summary_post_list %}
             <div class="card border border-1 rounded-4">
                 <div class="card-header">
-                    {% if post.post_id.was_published_recently_post %}
-                        <h3 style="font-family: 'Poppins'">NEW!</h3>
-                    {% endif %}
-                    <div class="tag-text" style="font-family: 'Poppins'">{{ post.post_id.tag_id.tag_text }}</div>
+                    <div class="tag-text">{{ post.post_id.tag_id.tag_text }}
+                        {% if post.post_id.was_published_recently_post %}
+                            <span class="badge" style="background-color: red; text-align: center; margin-left: 5px;">New!</span>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="card-body">
                     <img class="float-start rounded-circle" src="https://images.unsplash.com/photo-1603984973710-e915353b35fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YW1hemluZyUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D&w=1000&q=80" width="45" height="45">
-                    <h4 class="card-title" style="font-family: 'Poppins'">{{ post.post_id.username }}</h4>
+                    <h4 class="card-title" style="font-weight: 600;">{{ post.post_id.username }}</h4>
                     <br>
-                    <p class="card-text" style="font-family: 'Poppins'">{{ post.post_id.post_content }}</p>
-                    <p class="card-text" style="font-family: 'Poppins'">
+                    <p class="card-text">{{ post.post_id.post_content }}</p>
+                    <p class="card-text">
                         <a href="{{ post.file.url }}" class="btn btn-outline-primary" target="_blank">View File</a>
                         <a href="{{ post.file.url }}" class="btn btn-outline-warning" id="download_link" download>Download File</a>
                         <a href="#" class="btn btn-outline-danger">Report</a>
                     </p>
-                    <h6 class="card-subtitle mb-2 text-muted" style="font-family: 'Poppins'"><i class="fa-regular fa-clock" style="margin-right: 5px;"></i>{{ post.post_id.post_date }}</h6>
+                    <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 5px;"></i>{{ post.post_id.post_date }}</h6>
 
                 </div>
-                <div class="card-footer custom-footer" style="font-family: 'Poppins'">
+                <div class="card-footer custom-footer">
                     <i class="fa-regular fa-thumbs-up"></i> {{ post.post_id.post_likes | default:0 }} <i style="margin-right: 15px;"></i>
                     <i class="fa-regular fa-thumbs-down"></i> {{ post.post_id.post_dislikes | default:0 }} <i style="margin-right: 15px;"></i>
                     <i class="fa-solid fa-download"></i> {{ post.download_count | default:0 }} <i style="margin-right: 15px;"></i>
