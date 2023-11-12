@@ -1,11 +1,14 @@
-"""Contains view functions for handling requests.
-
+"""
+Contains view functions for handling requests.
 related to Review-Hub, Summary-Hub and Tricks-Hub
 in the kuhub web application.
 """
+from django.http import HttpResponseRedirect
+from django.views import generic
+from django.views.generic import TemplateView
 import json
 import datetime as dt
-
+from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import QuerySet
@@ -13,9 +16,8 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
 from kuhub.forms import PostForm, ProfileForm
-from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower
+from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group
 from django.contrib.auth.models import User
-
 
 
 class ReviewHubView(generic.ListView):
@@ -83,15 +85,43 @@ class TricksHubView(generic.ListView):
         return context
 
 
-class EncouragementView(generic.ListView):
-    """Redirect to Encouragement page for encouragement posts."""
+class GroupView(generic.ListView):
+    """
+    Redirect to Group-Hub page.
+    """
+    template_name = 'kuhub/group.html'
+    context_object_name = 'group_list'
 
-    template_name: str = 'kuhub/encourage.html'
-    context_object_name: str = 'posts_list'
+    def get_queryset(self):
+        """Return most 100 recent group posts."""
+        return Group.objects.all().order_by('-create_date')[:100]
 
-    def get_queryset(self) -> QuerySet[Post]:
-        """Return Post objects with tag_id=4 and order by post_date."""
-        return Post.objects.filter(tag_id=4).order_by('-post_date')
+    def get_context_data(self, **kwargs):
+        """Return user'group data as contect data"""
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            context['user_groups'] = self.request.user.group_set.all()
+        return context
+
+@login_required
+def join(request,group_id):
+    """
+    Join Group button
+    """
+    user = request.user
+    group = get_object_or_404(Group,pk=group_id)
+    if user in group.group_member.all():
+        messages.error(request, "You already a member of this group")
+        return redirect(reverse('kuhub:groups'))
+    if group.group_password:
+        if request.method == 'POST':
+            password = request.POST['pass']
+            if not group.group_password.check_password(password):
+                messages.error(request, "Wrong password")
+                return redirect(reverse('kuhub:groups'))
+    group.group_member.add(user)
+    messages.success(request, "You join the group success!")
+    return redirect(reverse('kuhub:groups'))
 
 
 @login_required
@@ -240,4 +270,5 @@ def profile_settings(request):
                     'followers': followers,
                     'biography': biography
                      })
+
 
