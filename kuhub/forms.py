@@ -42,9 +42,9 @@ class Groupform(forms.ModelForm):
         required=True
     )
     tag_name = forms.CharField(
-        choices=TAG_CHOICES,
+        widget=forms.Textarea(attrs={'cols': 100, 'rows': 3}),
         label='Tags :',
-        widget=forms.Select(attrs={'class': 'form-select'})
+        required=False
     )
     description = forms.CharField(
         widget=forms.Textarea(attrs={'cols': 100, 'rows': 3}),
