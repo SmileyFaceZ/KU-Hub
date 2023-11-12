@@ -35,7 +35,6 @@
                         {% if user.profile.display_photo %}
                             <img src="{{ user.profile.display_photo.url }}" alt="Profile Photo" width="45px" height="50" class="rounded-icon">
                         {% else %}
-                            <!-- Add a default profile photo here -->
                             <img src="{% static 'media/media/store/profile_photos/IMG_7967.jpeg' %}" alt="Default Profile Photo" width="45px" height="50" class="rounded-icon">
                         {% endif %}
                     {% else %}

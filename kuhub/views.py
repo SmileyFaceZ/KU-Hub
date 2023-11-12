@@ -17,7 +17,6 @@ from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower
 from django.contrib.auth.models import User
 
 
-
 class ReviewHubView(generic.ListView):
     """Redirect to Review-Hub page for review posts."""
 
@@ -159,6 +158,7 @@ def dislike_post(request: HttpRequest) -> JsonResponse:
 
     return redirect('account_login')
 
+
 @login_required
 def create_post(request: HttpRequest):
     """Create post of each tag type and redirect to each tag page."""
@@ -233,11 +233,39 @@ def profile_settings(request):
     return render(request,
                   template_name='kuhub/profile_settings.html',
                   context={
-                    'form': form,
-                    'user': user,
-                    'profile': profile,
-                    'following': following,
-                    'followers': followers,
-                    'biography': biography
-                     })
+                      'form': form,
+                      'user': user,
+                      'profile': profile,
+                      'following': following,
+                      'followers': followers,
+                      'biography': biography
+                  })
+
+
+def profile_view(request, username):
+
+    # Retrieve the user based on the username
+    user = get_object_or_404(User, username=username)
+
+    # Retrieve the user's profile
+    profile = get_object_or_404(Profile, user=user)
+
+    # Get followers and following counts
+    following_count = UserFollower.objects.filter(user_followed=user).count()
+    followers_count = UserFollower.objects.filter(follower=user).count()
+
+    # Check if the current user is following the viewed profile
+    is_following = False
+    if request.user.is_authenticated:
+        is_following = request.user.follower.filter(user_followed=user).exists()
+
+    context = {
+        'profile': profile,
+        'followers_count': followers_count,
+        'following_count': following_count,
+        'is_following': is_following,
+        'user': user
+    }
+
+    return render(request, 'kuhub/profile.html', context)
 

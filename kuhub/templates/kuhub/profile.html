@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>{{ profile.user.username }}'s Profile</title>
+{% endblock %}
+
+{% load static %}
+<script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
+
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="container mt-4">
+    <div class="alert alert-success" role="alert">
+        <div class="welcome-user-box">
+            <div class="profile-photo-container">
+                {% if profile.display_photo %}
+                    <img src="{{ profile.display_photo.url }}" alt="{{ profile.user.username }}'s Profile Photo" class="me-2 rounded-circle" width="100px" height="105">
+                {% else %}
+                    <img src="{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}" alt="Default Profile Photo" class="me-2 rounded-circle" width="100px" height="105">
+                {% endif %}
+            </div>
+            <div class="welcome-user-info">
+                <h2>{{ profile.user.username }}</h2>
+                <p>Followers: {{ profile.followers.count }} Following: {{ profile.following.count }}</p>
+                {% if user.is_authenticated and user != profile.user %}
+                    <button id="followBtn" class="btn btn-primary" onclick="toggleFollow({{ profile.user.id }})">Follow</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% if profile.biography %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <p class="card-text">Biography: {{ profile.biography }}</p>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+</div>
+
+<script>
+    function toggleFollow(userId) {
+        $.ajax({
+            url: '/path/to/toggle-follow/',  // Replace with your actual URL
+            method: 'POST',
+            data: { user_id: userId },
+            success: function (data) {
+                // Update button text and counts based on server response
+                $('#followBtn').text(data.is_following ? 'Unfollow' : 'Follow');
+                // Update followers count (assuming the server response includes it)
+                $('#followersCount').text(data.followers_count);
+            },
+            error: function (error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+</script>
+
+<style>
+    .welcome-user-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .profile-photo-container {
+        width: 80px;
+        height: 80px;
+        overflow: hidden;
+        border-radius: 50%;
+        margin-right: 20px;
+    }
+
+    .profile-photo {
+        width: 100%;
+        height: auto;
+    }
+
+    .welcome-user-info {
+        flex-grow: 1;
+    }
+
+    .card {
+        margin-top: 20px;
+    }
+</style>

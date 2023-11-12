@@ -7,6 +7,7 @@
 
 {% block content %}
 {% load custom_filters %}
+{% load static %}
 
 {% if messages %}
     {% for message in messages %}
@@ -22,7 +23,13 @@
         {% for post in posts_list %}
             <div class="card border border-1 rounded-4">
                 <div class="card-body">
-                    <img class="float-start rounded-circle" src="https://images.unsplash.com/photo-1603984973710-e915353b35fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YW1hemluZyUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D&w=1000&q=80" width="45" height="45">
+                    <a href="{% url 'kuhub:profile_view' username=post.username %}">
+                        {% if post.user.profile.display_photo %}
+                            <img class="Display-photo" src="{{ post.user.profile.display_photo.url }}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                        {% else %}
+                            <img class="Display-photo" src="{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                        {% endif %}
+                    </a>
                     <h4 class="card-title">{{ post.username }}</h4>
                     <br>
                     <p class="card-text">{{ post.post_content }}</p>
