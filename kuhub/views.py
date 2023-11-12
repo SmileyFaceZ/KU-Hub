@@ -132,7 +132,20 @@ def create_group(request):
     form = PostForm(request.POST)
     if form.is_valid():
         data = form.cleaned_data
-        if data['tags'] not in GroupTags.objects.all()
+        # if not have the tag in groupTag object create it
+        if data['tags'] not in GroupTags.objects.all():
+            GroupTags.objects.create(tag_text=data['tags'])
+        # create group object
+        if data['password']:
+            password = GroupPassword.objects.create(group_password=data['password'])
+            password.set_password(password.group_password)
+        Group.objects.create(
+            group_name=data['name'],
+            group_tags=GroupTags.objects.get(tag_text=data['tags']),
+            group_description=data['description'],
+            group_password=password,
+            group_member=user,
+        )
     return redirect(reverse('kuhub:groups'))
 
 @login_required
