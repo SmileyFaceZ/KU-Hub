@@ -254,6 +254,7 @@ def profile_view(request, username):
     # Get followers and following counts
     following = UserFollower.objects.filter(user_followed=user)
     followers = UserFollower.objects.filter(follower=user)
+    posts_list = Post.objects.filter(username=user)
 
     # Check if the current user is following the viewed profile
     is_following = False
@@ -265,7 +266,8 @@ def profile_view(request, username):
         'followers_count': following,
         'following_count': followers,
         'is_following': is_following,
-        'user': request.user
+        'user': request.user,
+        'posts_list': posts_list,
     }
 
     return render(request, 'kuhub/profile.html', context)
