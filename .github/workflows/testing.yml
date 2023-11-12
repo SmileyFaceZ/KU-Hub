@@ -21,7 +21,7 @@ jobs:
         image: postgres:latest
         env:
           POSTGRES_DB: kuhubdb
-          POSTGRES_USER: KU-Hub
+          POSTGRES_USER: user
           POSTGRES_PASSWORD: password
         ports:
           - 5432:5432
@@ -38,9 +38,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest
-          pip install -r requirements.txt
-          pip install "python-dotenv[cli]"
+          pip install flake8 pytest -r requirements.txt "python-dotenv[cli]"
+
 
       - name: Copy .env.example to .env
         run: cp .env.example .env
@@ -48,7 +47,7 @@ jobs:
       - name: Load environment variables
         run: |
           pip install python-dotenv
-          dotenv -f .env
+          dotenv
 
       - name: Lint with flake8
         run: |
@@ -56,4 +55,5 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=79 --statistics
 
       - name: Test with Django test
-        run: python manage.py test kuhub
+        run: python manage.py test kuhub --settings=isp_project.settings
+
