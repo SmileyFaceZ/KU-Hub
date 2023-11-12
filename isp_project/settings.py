@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config, Csv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +21,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-3#l7#_o8un#n*q#u7351(0+rmh#do9(dszorz)@0o0py80ch$i"
+SECRET_KEY = config("SECRET_KEY", default="secret-key-value-without-quotes")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", cast=bool, default=True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS", cast=Csv(), default="127.0.0.1,localhost"
+)
+
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # Application definition
@@ -101,13 +105,18 @@ WSGI_APPLICATION = "isp_project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+# To use Neon with Django, you have to create a Project on Neon and specify the project connection settings in your settings.py in the same way as for standalone Postgres.
 
+DATABASES = {
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': config("DATABASE_NAME", default="kuhubdb"),
+    'USER': config("DATABASE_USER", default="KU-Hub"),
+    'PASSWORD': config("DATABASE_PASSWORD", default="password"),
+    'HOST': config("HOST", default="localhost"),
+    'PORT': config("PORT", default="5432"),
+  }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -127,7 +136,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "Asia/Bangkok"
+TIME_ZONE = config("TIME_ZONE", default="Asia/Bangkok")
 
 USE_I18N = True
 
