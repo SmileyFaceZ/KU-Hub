@@ -15,6 +15,7 @@ from django.views import generic
 from kuhub.forms import PostForm, ProfileForm
 from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower
 from django.contrib.auth.models import User
+from django.views.decorators.http import require_POST
 
 
 class ReviewHubView(generic.ListView):
@@ -251,8 +252,8 @@ def profile_view(request, username):
     profile = get_object_or_404(Profile, user=user)
 
     # Get followers and following counts
-    following_count = UserFollower.objects.filter(user_followed=user).count()
-    followers_count = UserFollower.objects.filter(follower=user).count()
+    following = UserFollower.objects.filter(user_followed=user)
+    followers = UserFollower.objects.filter(follower=user)
 
     # Check if the current user is following the viewed profile
     is_following = False
@@ -261,11 +262,31 @@ def profile_view(request, username):
 
     context = {
         'profile': profile,
-        'followers_count': followers_count,
-        'following_count': following_count,
+        'followers_count': following,
+        'following_count': followers,
         'is_following': is_following,
-        'user': user
+        'user': request.user
     }
 
     return render(request, 'kuhub/profile.html', context)
 
+
+@login_required
+@require_POST
+def toggle_follow(request, user_id):
+    user_to_follow = User.objects.get(pk=user_id)
+    follower = request.user
+
+    is_following = UserFollower.objects.filter(user_followed=user_to_follow, follower=follower).exists()
+
+    if is_following:
+        # If already following, unfollow
+        UserFollower.objects.filter(user_followed=user_to_follow, follower=follower).delete()
+    else:
+        # If not following, follow
+        UserFollower.objects.create(user_followed=user_to_follow, follower=follower)
+
+    # Recalculate counts
+    followers_count = UserFollower.objects.filter(user_followed=user_to_follow).count()
+
+    return JsonResponse({'is_following': not is_following, 'followers_count': followers_count})

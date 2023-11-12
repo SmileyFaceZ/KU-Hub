@@ -29,9 +29,15 @@
             </div>
             <div class="welcome-user-info">
                 <h2>{{ profile.user.username }}</h2>
-                <p>Followers: {{ profile.followers.count }} Following: {{ profile.following.count }}</p>
+                <p>Followers: <span id="followersCount">{{ followers_count.count }}</span> Following: {{ following_count.count }}</p>
                 {% if user.is_authenticated and user != profile.user %}
-                    <button id="followBtn" class="btn btn-primary" onclick="toggleFollow({{ profile.user.id }})">Follow</button>
+                    <button id="followBtn" class="btn btn-primary" onclick="toggleFollow({{ profile.user.id }}, {{ is_following|yesno:"true,false" }})">
+                        {% if is_following %}
+                            Unfollow
+                        {% else %}
+                            Follow
+                        {% endif %}
+                    </button>
                 {% endif %}
             </div>
         </div>
@@ -44,20 +50,20 @@
             </div>
         </div>
     {% endif %}
-{% endblock %}
-
 </div>
 
 <script>
+    // Add this variable to store the initial following status
+    var initialFollowingStatus = {{ is_following|yesno:"true,false" }};
+
     function toggleFollow(userId) {
         $.ajax({
-            url: '/path/to/toggle-follow/',  // Replace with your actual URL
+            url: `/kuhub/toggle-follow/${userId}/`,
             method: 'POST',
-            data: { user_id: userId },
+            headers: { 'X-CSRFToken': getCookie('csrftoken') },
             success: function (data) {
                 // Update button text and counts based on server response
                 $('#followBtn').text(data.is_following ? 'Unfollow' : 'Follow');
-                // Update followers count (assuming the server response includes it)
                 $('#followersCount').text(data.followers_count);
             },
             error: function (error) {
@@ -65,6 +71,27 @@
             }
         });
     }
+
+    // Function to get the CSRF token from the cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Update the button text based on the initial following status
+    $(document).ready(function () {
+        $('#followBtn').text(initialFollowingStatus ? 'Unfollow' : 'Follow');
+    });
 </script>
 
 <style>
@@ -95,3 +122,5 @@
         margin-top: 20px;
     }
 </style>
+
+{% endblock %}
