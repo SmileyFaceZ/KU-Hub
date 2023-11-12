@@ -31,7 +31,9 @@ jobs:
     - name: Copy .env.example to .env
       run: cp .env.example .env
     - name: Load environment variables
-      run: pip install "python-dotenv[cli]" && dotenv -e .env
+      run: |
+        pip install python-dotenv
+        export $(cat .env | grep -v '^#' | xargs)
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
