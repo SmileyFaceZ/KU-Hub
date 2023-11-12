@@ -37,12 +37,12 @@ class ProfileForm(forms.ModelForm):
 
 class GroupForm(forms.Form):
     name = forms.CharField(
-        widget=forms.Textarea(attrs={'cols': 100, 'rows': 1}),
+        widget=forms.Textarea(attrs={'cols': 50, 'rows': 1}),
         label='Group name:',
         required=True
     )
     tag_name = forms.CharField(
-        widget=forms.Textarea(attrs={'cols': 100, 'rows': 3}),
+        widget=forms.Textarea(attrs={'cols': 70, 'rows': 1}),
         label='Tags :',
         required=False
     )
@@ -52,7 +52,7 @@ class GroupForm(forms.Form):
         required=False
     )
     password = forms.CharField(
-        widget=forms.Textarea(attrs={'cols': 100, 'rows': 1}),
+        widget=forms.Textarea(attrs={'cols': 50, 'rows': 1}),
         label='Password',
         required=False
     )
