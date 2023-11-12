@@ -76,6 +76,17 @@
                                         </div>
                                     </div>
                                 </div>
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#cardFooter{{ group.id }}" aria-expanded="true" aria-controls="cardFooter">
+                             Group's Member
+                            </button>
+                        </div>
+                        <div id="cardFooter{{ group.id }}" class="collapse">
+                            <div class="card-footer">
+                                {% for member in group.group_member.all %}
+                                    <ul>{{member}}</ul>
+                                {% endfor %}
+                                Member's number : {{group.group_member.all.count}}
+                            </div>
                         </div>
                     </div>
              </div>
