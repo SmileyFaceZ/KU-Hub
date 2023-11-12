@@ -99,6 +99,17 @@
 </div>
     </div>
 </div>
+<style>
+        #create_post {
+            display: none;
+        }
+    </style>
+<button type="button" class="btn btn-success rounded-circle btn-floating btn-lg" style="position: fixed; bottom: 30px; right: 30px;">
+    <a href="{% url 'kuhub:summary' %}" style="color: white; text-decoration: none;">
+        <i class="fas fa-circle-plus"></i>
+    </a>
+</button>
+
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
@@ -106,3 +117,4 @@
 
 </body>
 {% endblock %}
+
