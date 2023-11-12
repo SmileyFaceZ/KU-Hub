@@ -40,6 +40,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8 pytest
           pip install -r requirements.txt
+          pip install "python-dotenv[cli]"
 
       - name: Copy .env.example to .env
         run: cp .env.example .env
@@ -47,7 +48,7 @@ jobs:
       - name: Load environment variables
         run: |
           pip install python-dotenv
-          dotenv -f .env
+          python -m dotenv -f .env
 
       - name: Lint with flake8
         run: |
