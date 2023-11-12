@@ -136,6 +136,7 @@ def create_group(request):
         if data['tags'] not in GroupTags.objects.all():
             GroupTags.objects.create(tag_text=data['tags'])
         # create group object
+        password = None
         if data['password']:
             password = GroupPassword.objects.create(group_password=data['password'])
             password.set_password(password.group_password)
