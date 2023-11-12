@@ -16,7 +16,7 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
 from kuhub.forms import PostForm, ProfileForm, GroupForm
-from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group
+from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group, GroupTags, GroupPassword
 from django.contrib.auth.models import User
 
 
@@ -134,8 +134,7 @@ def create_group(request: HttpRequest):
         if form.is_valid():
             data = form.cleaned_data
             # if not have the tag in groupTag object create it
-            if data['tags'] not in GroupTags.objects.all():
-                GroupTags.objects.create(tag_text=data['tags'])
+            group_tag, created = GroupTags.objects.get_or_create(tag_text=data['tag_name'])
             # create group object
             password = None
             if data['password']:
@@ -143,12 +142,12 @@ def create_group(request: HttpRequest):
                 password.set_password(password.group_password)
             group = Group.objects.create(
                 group_name=data['name'],
-                group_tags=GroupTags.objects.get(tag_text=data['tags']),
                 group_description=data['description'],
                 group_password=password,
-                group_member=user,
             )
-            messages.success(f'Create group successful your group id is {group.id}')
+            group.group_tags.set([group_tag])
+            group.group_member.set([user])
+            messages.success(request, f'Create group successful your group id is {group.id}')
             return redirect(reverse('kuhub:groups'))
     return render(
         request,

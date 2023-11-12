@@ -35,7 +35,7 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ['biography', 'display_photo']
 
-class GroupForm(forms.ModelForm):
+class GroupForm(forms.Form):
     name = forms.CharField(
         widget=forms.Textarea(attrs={'cols': 100, 'rows': 1}),
         label='Group name:',

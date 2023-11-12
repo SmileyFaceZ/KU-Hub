@@ -104,8 +104,15 @@
             display: none;
         }
     </style>
-<button type="button" class="btn btn-success rounded-circle btn-floating btn-lg" data-toggle="modal" data-target="#creategroupModal" style="position: fixed; bottom: 30px; right: 30px;">
-</button>
+<button type="button" class="btn btn-success rounded-circle btn-floating btn-lg "
+            style="
+            position: fixed;
+            bottom: 30px;
+            right: 30px;">
+        <a href="{% url 'kuhub:create_group' %}" style="color: white;">
+            <i class="fas fa-circle-plus"></i>
+        </a>
+    </button>
 
 
 
