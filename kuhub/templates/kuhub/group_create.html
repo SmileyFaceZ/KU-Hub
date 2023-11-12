@@ -3,7 +3,7 @@
 
 
 {% block title %}
-    <title>Create Post</title>
+    <title>Create Group</title>
 {% endblock %}
 
 {% block content %}
@@ -12,19 +12,27 @@
             {% csrf_token %}
            <div class="mb-3">
             <label class="form-label">Group Name:</label>
+               <div>
                {{ form.name }}
+               </div>
             </div>
             <div class="mb-3">
                 <label class="form-label">Tags:</label>
+                <div>
                 {{ form.tag_name }}
+                </div>
             </div>
             <div class="mb-3">
                 <label class="form-label">Description:</label>
+                <div>
                 {{ form.description }}
+                </div>
             </div>
             <div class="mb-3">
                 <label class="form-label">Password:</label>
+                <div>
                 {{ form.password }}
+                    </div>
             </div>
         <input type="submit" value="Create" class="btn btn-success">
     </form>
