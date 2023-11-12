@@ -53,7 +53,6 @@
 </div>
 
 <script>
-    // Add this variable to store the initial following status
     var initialFollowingStatus = {{ is_following|yesno:"true,false" }};
 
     function toggleFollow(userId) {
@@ -99,14 +98,6 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-    }
-
-    .profile-photo-container {
-        width: 80px;
-        height: 80px;
-        overflow: hidden;
-        border-radius: 50%;
-        margin-right: 20px;
     }
 
     .profile-photo {
