@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Following</title>
+{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Followers</h1>
+    <div class="row row-cols-3">
+        {% for following in followings %}
+            <div class="col mb-3">
+                <a href="{% url 'kuhub:profile_view' username=following.user_followed.username %}" class="text-decoration-none">
+                    <div class="card border border-1 rounded-4 p-3 d-flex align-items-center">
+                        {% if follower.user_followed.profile.display_photo %}
+                            <img class="me-3 rounded-circle" src="{{ following.user_followed.profile.display_photo.url }}" width="45" height="45" alt="{{ following.user_followed.username }}'s Profile">
+                        {% else %}
+                            <img class="me-3 rounded-circle" src="{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}" width="45" height="45" alt="{{ following.user_followed.username }}'s Profile">
+                        {% endif %}
+                        <h4 class="card-title">{{ following.user_followed.username }}</h4>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

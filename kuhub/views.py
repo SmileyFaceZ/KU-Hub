@@ -295,6 +295,14 @@ def toggle_follow(request, user_id):
 @login_required
 def followers_page(request):
     user = request.user
-    followers = UserFollower.objects.filter(follower=user)
+    followers = UserFollower.objects.filter(user_followed=user)
 
     return render(request, "kuhub/followers_page.html", context={'followers': followers})
+
+
+@login_required
+def following_page(request):
+    user = request.user
+    following = UserFollower.objects.filter(follower=user)
+
+    return render(request, "kuhub/following_page.html", context={'followings': following})
