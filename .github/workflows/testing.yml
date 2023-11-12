@@ -28,6 +28,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         pip install -r requirements.txt
+    - name: Copy .env.example to .env
+      run: cp .env.example .env
+    - name: Load environment variables
+      run: pip install python-dotenv && dotenv -e .env
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -35,12 +39,4 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 79 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=79 --statistics
     - name: Test with Django test
-      env:
-        SECRET_KEY: github-actions
-        DATABASE_NAME: postgres
-        DATABASE_USERNAME: postgres
-        DATABASE_PASSWORD: password
-        DATABASE_HOST: localhost
-        DATABASE_PORT: 5432
-      run: |
-        python manage.py test kuhub
+      run: python manage.py test kuhub
