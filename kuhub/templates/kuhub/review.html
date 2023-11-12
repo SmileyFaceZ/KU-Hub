@@ -22,7 +22,7 @@
     {% if posts_list %}
         {% for post in posts_list %}
             <div class="card border border-1 rounded-4">
-                <div class="card-body">
+                <div class="float-start card-body">
                     <a href="{% url 'kuhub:profile_view' username=post.username %}">
                         {% if post.username.profile.display_photo %}
                             <img class="me-2 rounded-circle" src="{{ post.user.profile.display_photo.url }}" width="45" height="45" alt="{{ post.username }}'s Profile">

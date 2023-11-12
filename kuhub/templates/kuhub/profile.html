@@ -20,11 +20,11 @@
 <div class="container mt-4">
     <div class="alert alert-success" role="alert">
         <div class="welcome-user-box">
-            <div class="profile-photo-container">
+            <div class="float-start profile-photo-container">
                 {% if profile.display_photo %}
-                    <img src="{{ profile.display_photo.url }}" alt="{{ profile.user.username }}'s Profile Photo" class="me-2 rounded-circle" width="100px" height="105">
+                    <img src="{{ profile.display_photo.url }}" alt="{{ profile.user.username }}'s Profile Photo" class="float-start me-2 rounded-circle" width="100px" height="105">
                 {% else %}
-                    <img src="{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}" alt="Default Profile Photo" class="me-2 rounded-circle" width="100px" height="105">
+                    <img src="{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}" alt="Default Profile Photo" class="float-start me-2 rounded-circle" width="100px" height="105">
                 {% endif %}
             </div>
             <div class="welcome-user-info">
