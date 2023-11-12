@@ -171,8 +171,6 @@ def create_post(request: HttpRequest):
                 username=request.user,
                 post_content=data['review'],
                 post_date=dt.datetime.now(),
-                post_likes=0,
-                post_dislikes=0,
                 tag_id=Tags.objects.get(tag_text=data['tag_name'])
             )
 
