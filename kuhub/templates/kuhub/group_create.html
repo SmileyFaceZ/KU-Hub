@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}
+    <title>Create Post</title>
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'kuhub:create_group' %}" method="post">
+        {% csrf_token %}
+       <div class="mb-3">
+        <label class="form-label">Group Name:</label>
+           {{ form.name }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Tags:</label>
+            {{ form.tag_name }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Description:</label>
+            {{ form.description }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Password:</label>
+            {{ form.password }}
+        </div>
+    <input type="submit" value="Create" class="btn btn-success">
+</form>
+{% endblock %}

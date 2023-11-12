@@ -1,5 +1,5 @@
 from django import forms
-from kuhub.models import Tags, Subject, GroupTags
+from kuhub.models import Tags, Subject
 from kuhub.models.profile import Profile
 
 
@@ -35,8 +35,8 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ['biography', 'display_photo']
 
-class Groupform(forms.ModelForm):
-    Name = forms.CharField(
+class GroupForm(forms.ModelForm):
+    name = forms.CharField(
         widget=forms.Textarea(attrs={'cols': 100, 'rows': 1}),
         label='Group name:',
         required=True
