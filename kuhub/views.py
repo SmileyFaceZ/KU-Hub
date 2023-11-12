@@ -290,3 +290,11 @@ def toggle_follow(request, user_id):
     followers_count = UserFollower.objects.filter(user_followed=user_to_follow).count()
 
     return JsonResponse({'is_following': not is_following, 'followers_count': followers_count})
+
+
+@login_required
+def followers_page(request):
+    user = request.user
+    followers = UserFollower.objects.filter(follower=user)
+
+    return render(request, "kuhub/followers_page.html", context={'followers': followers})
