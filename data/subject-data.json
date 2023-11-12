@@ -1,0 +1,2524 @@
+[
+{
+  "model": "kuhub.subject",
+  "pk": 1,
+  "fields": {
+    "course_code": "01175111",
+    "type": "Wellness",
+    "name_eng": "Track and Field for Health",
+    "name_th": "กรีฑาลู่-ลาน เพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 2,
+  "fields": {
+    "course_code": "01175112",
+    "type": "Wellness",
+    "name_eng": "Badminton for Health",
+    "name_th": "แบดมินตันเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 3,
+  "fields": {
+    "course_code": "01175113",
+    "type": "Wellness",
+    "name_eng": "Tennis for Health",
+    "name_th": "เทนนิสเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 4,
+  "fields": {
+    "course_code": "01175114",
+    "type": "Wellness",
+    "name_eng": "Table Tennis for Health",
+    "name_th": "เทเบิลเทนนิสเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 5,
+  "fields": {
+    "course_code": "01175115",
+    "type": "Wellness",
+    "name_eng": "Meditation with Shooting Activity",
+    "name_th": "ฝึกสมาธิด้วยกิจกรรมยิงปืน",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 6,
+  "fields": {
+    "course_code": "01175117",
+    "type": "Wellness",
+    "name_eng": "Meditation with Archery Activity",
+    "name_th": "ฝึกสมาธิด้วยกิจกรรมยิงธนู",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 7,
+  "fields": {
+    "course_code": "01175118",
+    "type": "Wellness",
+    "name_eng": "Chair Ball for Health",
+    "name_th": "แชร์บอลเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 8,
+  "fields": {
+    "course_code": "01175121",
+    "type": "Wellness",
+    "name_eng": "Basketball for Health",
+    "name_th": "บาสเกตบอลเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 9,
+  "fields": {
+    "course_code": "01175122",
+    "type": "Wellness",
+    "name_eng": "Soccer for Health",
+    "name_th": "ฟุตบอลเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 10,
+  "fields": {
+    "course_code": "01175123",
+    "type": "Wellness",
+    "name_eng": "Volleyball for Health",
+    "name_th": "วอลเลย์บอลเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 11,
+  "fields": {
+    "course_code": "01175124",
+    "type": "Wellness",
+    "name_eng": "Handball for Health",
+    "name_th": "แฮนด์บอลเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 12,
+  "fields": {
+    "course_code": "01175125",
+    "type": "Wellness",
+    "name_eng": "Softball for Health",
+    "name_th": "ซอฟท์บอลเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 13,
+  "fields": {
+    "course_code": "01175126",
+    "type": "Wellness",
+    "name_eng": "Takraw for Health",
+    "name_th": "ตะกร้อเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 14,
+  "fields": {
+    "course_code": "01175127",
+    "type": "Wellness",
+    "name_eng": "Hockey for Health",
+    "name_th": "ฮอกกี้เพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 15,
+  "fields": {
+    "course_code": "01175128",
+    "type": "Wellness",
+    "name_eng": "Rugby Football for Health",
+    "name_th": "รักบี้ฟุตบอลเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 16,
+  "fields": {
+    "course_code": "01175129",
+    "type": "Wellness",
+    "name_eng": "Futsal for Health",
+    "name_th": "ฟุตซอลเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 17,
+  "fields": {
+    "course_code": "01175131",
+    "type": "Wellness",
+    "name_eng": "Swimming for Health",
+    "name_th": "ว่ายน้ำเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 18,
+  "fields": {
+    "course_code": "01175133",
+    "type": "Wellness",
+    "name_eng": "Diving",
+    "name_th": "กระโดดน้ำ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 19,
+  "fields": {
+    "course_code": "01175134",
+    "type": "Wellness",
+    "name_eng": "Water Polo",
+    "name_th": "โปโลน้ำ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 20,
+  "fields": {
+    "course_code": "01175141",
+    "type": "Wellness",
+    "name_eng": "Aerobic Dance for Health",
+    "name_th": "การเต้นแอโรบิกเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 21,
+  "fields": {
+    "course_code": "01175142",
+    "type": "Wellness",
+    "name_eng": "Folk Dance by Local Culture for Health",
+    "name_th": "การเต้นรำพื้นเมืองตามวัฒนธรรมท้องถิ่นเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 22,
+  "fields": {
+    "course_code": "01175143",
+    "type": "Wellness",
+    "name_eng": "Social Dance for Health",
+    "name_th": "การเต้นลีลาศเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 23,
+  "fields": {
+    "course_code": "01175144",
+    "type": "Wellness",
+    "name_eng": "Thai Classical Dance for Health",
+    "name_th": "รำไทยเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 24,
+  "fields": {
+    "course_code": "01175151",
+    "type": "Wellness",
+    "name_eng": "Martial Art with Thai Sword",
+    "name_th": "ศิลปะการป้องกันตัวและการต่อสู้ด้วยดาบไทย",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 25,
+  "fields": {
+    "course_code": "01175152",
+    "type": "Wellness",
+    "name_eng": "Martial Art with Fencing",
+    "name_th": "ศิลปะการป้องกันตัวและการต่อสู้ด้วยดาบสากล",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 26,
+  "fields": {
+    "course_code": "01175153",
+    "type": "Wellness",
+    "name_eng": "Martial Art with Thai Boxing",
+    "name_th": "ศิลปะการป้องกันตัวและการต่อสู้ด้วยมวยไทย",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 27,
+  "fields": {
+    "course_code": "01175154",
+    "type": "Wellness",
+    "name_eng": "Martial Art with Boxing",
+    "name_th": "ศิลปะการป้องกันตัวและการต่อสู้ด้วยมวยสากล",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 28,
+  "fields": {
+    "course_code": "01175155",
+    "type": "Wellness",
+    "name_eng": "Martial Art with Judo",
+    "name_th": "ศิลปะการป้องกันตัวและการต่อสู้ด้วยยูโด",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 29,
+  "fields": {
+    "course_code": "01175156",
+    "type": "Wellness",
+    "name_eng": "Martial Art with Aikido",
+    "name_th": "ศิลปะการป้องกันตัวและการต่อสู้ด้วยไอกิโด",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 30,
+  "fields": {
+    "course_code": "01175157",
+    "type": "Wellness",
+    "name_eng": "Martial Art with Krabi-Krabong",
+    "name_th": "ศิลปะการป้องกันตัวและการต่อสู้ด้วยกระบี่กระบอง",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 31,
+  "fields": {
+    "course_code": "01175159",
+    "type": "Wellness",
+    "name_eng": "Martial Art with Karate",
+    "name_th": "ศิลปะการป้องกันตัวและการต่อสู้ด้วยคาราเต้",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 32,
+  "fields": {
+    "course_code": "01175161",
+    "type": "Wellness",
+    "name_eng": "Brain Training with Playing Bridge",
+    "name_th": "ฝึกสมองด้วยการเล่นบริดจ์",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 33,
+  "fields": {
+    "course_code": "01175162",
+    "type": "Wellness",
+    "name_eng": "Bowling for Health",
+    "name_th": "โบว์ลิ่งเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 34,
+  "fields": {
+    "course_code": "01175163",
+    "type": "Wellness",
+    "name_eng": "Golf for Health",
+    "name_th": "กอล์ฟเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 35,
+  "fields": {
+    "course_code": "01175164",
+    "type": "Wellness",
+    "name_eng": "Cycling for Health",
+    "name_th": "จักรยานเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 36,
+  "fields": {
+    "course_code": "01175165",
+    "type": "Wellness",
+    "name_eng": "Weight Training for Health",
+    "name_th": "การฝึกด้วยน้ำหนักเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 37,
+  "fields": {
+    "course_code": "01175166",
+    "type": "Wellness",
+    "name_eng": "Martial Art with Taekwondo",
+    "name_th": "ศิลปะการป้องกันตัวและการต่อสู้ด้วยเทควันโด",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 38,
+  "fields": {
+    "course_code": "01175168",
+    "type": "Wellness",
+    "name_eng": "Jogging for Health",
+    "name_th": "การวิ่งเหยาะเพื่อสุขภาพ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 39,
+  "fields": {
+    "course_code": "01175169",
+    "type": "Wellness",
+    "name_eng": "Exercise for developing Holistic Health",
+    "name_th": "การออกกาลังกายเพื่อพัฒนาสุขภาพแบบองค์รวม",
+    "unit": "2",
+    "hour": "1-2-3",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 40,
+  "fields": {
+    "course_code": "03768111",
+    "type": "Wellness",
+    "name_eng": "Pe’tanque",
+    "name_th": "เปตอง",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Management Science Sri Racha Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 41,
+  "fields": {
+    "course_code": "03768112",
+    "type": "Wellness",
+    "name_eng": "Weight Training",
+    "name_th": "การฝึกโดยการใช้น้ำหนัก ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Management Science Sri Racha Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 42,
+  "fields": {
+    "course_code": "03768121",
+    "type": "Wellness",
+    "name_eng": "Basketball",
+    "name_th": "บาสเกตบอล",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Management Science Sri Racha Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 43,
+  "fields": {
+    "course_code": "03768141",
+    "type": "Wellness",
+    "name_eng": "Thai Classical and Social Dances",
+    "name_th": "นาฏศิลป์และลีลาศ",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Management Science Sri Racha Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 44,
+  "fields": {
+    "course_code": "03768151",
+    "type": "Wellness",
+    "name_eng": "Sword and Pole Fighting",
+    "name_th": "กระบี่กระบอง",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Management Science Sri Racha Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 45,
+  "fields": {
+    "course_code": "01173151",
+    "type": "Wellness",
+    "name_eng": "AIDS Education",
+    "name_th": "เอดส์ศึกษา",
+    "unit": "2",
+    "hour": "2-0-4",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 46,
+  "fields": {
+    "course_code": "01174231",
+    "type": "Wellness",
+    "name_eng": "Introduction to Recreation",
+    "name_th": "นันทนาการเบื้องต้น1",
+    "unit": "2",
+    "hour": "2-0-4",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 47,
+  "fields": {
+    "course_code": "01387101",
+    "type": "Wellness",
+    "name_eng": "The Art of Living with Others",
+    "name_th": "ศิลปะการอยู่ร่วมกับผู้อื่น",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 48,
+  "fields": {
+    "course_code": "01387103",
+    "type": "Wellness",
+    "name_eng": "Philosophy of Sufficiency Economics and Buddhism",
+    "name_th": "ปรัชญาเศรษฐกิจพอเพียงกับพุทธศาสนา",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 49,
+  "fields": {
+    "course_code": "01387105",
+    "type": "Entrepreneurship",
+    "name_eng": "Buddhist Ethics of Business Operations",
+    "name_th": "พุทธจริยศาสตร์ในการดำเนินธุรกิจ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": ""
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 50,
+  "fields": {
+    "course_code": "01459101",
+    "type": "Wellness",
+    "name_eng": "Psychology for Modern Life",
+    "name_th": "จิตวิทยาเพื่อชีวิตสมัยใหม่",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Social Sciences"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 51,
+  "fields": {
+    "course_code": "01459102",
+    "type": "Wellness",
+    "name_eng": "Psychology and Human Diversity",
+    "name_th": "จิตวิทยากับความหลากหลายของมนุษย์",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Social Sciences"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 52,
+  "fields": {
+    "course_code": "01999011",
+    "type": "Wellness",
+    "name_eng": "Food for Mankind",
+    "name_th": "อาหารเพื่อมนุษยชาติ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 53,
+  "fields": {
+    "course_code": "01999012",
+    "type": "Wellness",
+    "name_eng": "Health for Life",
+    "name_th": "สุขภาพเพื่อชีวิต",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 54,
+  "fields": {
+    "course_code": "01999033",
+    "type": "Wellness",
+    "name_eng": "Arts of Living",
+    "name_th": "ศิลปะการดำเนินชีวิต",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 55,
+  "fields": {
+    "course_code": "01999036",
+    "type": "Wellness",
+    "name_eng": "Happiness amongst Life Dynamics",
+    "name_th": "ความสุขในพลวัตของชีวิต",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 56,
+  "fields": {
+    "course_code": "01999048",
+    "type": "Wellness",
+    "name_eng": "Innovation for Environment and Health",
+    "name_th": "นวัตกรรมเพื่อสิ่งแวดล้อมและสุขภาวะ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 57,
+  "fields": {
+    "course_code": "01999051",
+    "type": "Wellness",
+    "name_eng": "Development of Core Competency through One Health",
+    "name_th": "การพัฒนาสมรรถนะหลักผ่านสุขภาพหนึ่งเดียว",
+    "unit": "2",
+    "hour": "2-0-4",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 58,
+  "fields": {
+    "course_code": "01999213",
+    "type": "Wellness",
+    "name_eng": "Environment, Technology and Life",
+    "name_th": "สิ่งแวดล้อม เทคโนโลยี และชีวิต",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 59,
+  "fields": {
+    "course_code": "02032303",
+    "type": "Wellness",
+    "name_eng": "Agriculture and Quality of Life",
+    "name_th": "การเกษตรกับคุณภาพชีวิตที่ดี",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Agriculture Kamphaeng Saen Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 60,
+  "fields": {
+    "course_code": "02999044",
+    "type": "Wellness",
+    "name_eng": "Sufficiency Economy for Living",
+    "name_th": "เศรษฐกิจพอเพียงเพื่อการดำรงชีวิต",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education Kamphaeng Saen Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 61,
+  "fields": {
+    "course_code": "02999045",
+    "type": "Wellness",
+    "name_eng": "Enhancement of Living Value Through Rural Community Path",
+    "name_th": "การเพิ่มคุณค่าชีวิตด้วยวิถีชุมชนชนบท",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education Kamphaeng Saen Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 62,
+  "fields": {
+    "course_code": "04401112",
+    "type": "Wellness",
+    "name_eng": "Personality and Social Etiquette for Community Service",
+    "name_th": "บุคลิกภาพและมารยาททางสังคมสาหรับการบริการชุมชน",
+    "unit": "1",
+    "hour": "1-0-2",
+    "faculty": "Faculty of Public Health Chalermphrakiat Sakon Nakhon Province Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 63,
+  "fields": {
+    "course_code": "04804311",
+    "type": "Wellness",
+    "name_eng": "Philosophy of Sufficiency Economy",
+    "name_th": "ปรัชญาเศรษฐกิจพอเพียง",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Natural Resources and Agro Industry Chalermphrakiat Sakon Nakhon Province Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 64,
+  "fields": {
+    "course_code": "01005101",
+    "type": "Entrepreneurship",
+    "name_eng": "Modern Agriculture Technology",
+    "name_th": "เทคโนโลยีเกษตรสมัยใหม่",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Agriculture"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 65,
+  "fields": {
+    "course_code": "01101101",
+    "type": "Entrepreneurship",
+    "name_eng": "General Economics in Globalization",
+    "name_th": "เศรษฐศาสตร์ทั่วไปในกระแสโลกาภิวัต",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Economics?"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 66,
+  "fields": {
+    "course_code": "01132101",
+    "type": "Entrepreneurship",
+    "name_eng": "Modern Entrepreneur",
+    "name_th": "ผู้ประกอบการรุ่นใหม่",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Business"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 67,
+  "fields": {
+    "course_code": "01131111",
+    "type": "Entrepreneurship",
+    "name_eng": "Finance for Entrepreneurs",
+    "name_th": "การเงินสำหรับผู้ประกอบการ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Business"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 68,
+  "fields": {
+    "course_code": "01177141",
+    "type": "Entrepreneurship",
+    "name_eng": "Knowledge Acquisition",
+    "name_th": "การแสวงหาความรู้",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 69,
+  "fields": {
+    "course_code": "01200101",
+    "type": "Entrepreneurship",
+    "name_eng": "Innovative Thinking",
+    "name_th": "การคิดเชิงนวัตกรรม",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Engineering"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 70,
+  "fields": {
+    "course_code": "01999041",
+    "type": "Entrepreneurship",
+    "name_eng": "Economics for Better Living",
+    "name_th": "เศรษฐศาสตร์เพื่อการดำเนินชีวิตที่ดี",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 71,
+  "fields": {
+    "course_code": "01999043",
+    "type": "Entrepreneurship",
+    "name_eng": "Creativity for Value Management",
+    "name_th": "การคิดสร้างสรรค์เพื่อการจัดการคุณค่า",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 72,
+  "fields": {
+    "course_code": "02717011",
+    "type": "Wellness",
+    "name_eng": "Self and Self Development",
+    "name_th": "ตนและการพัฒนาตน",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Liberal Arts and Science Kamphaeng Saen Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 73,
+  "fields": {
+    "course_code": "03600014",
+    "type": "Entrepreneurship",
+    "name_eng": "Creative Problem Solving and Critical Thinking Skills",
+    "name_th": "การแก้ปัญหาเชิงสร้างสรรค์และทักษะการคิดเชิงวิพากษ์",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Engineering Sri Racha Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 74,
+  "fields": {
+    "course_code": "03757123",
+    "type": "Entrepreneurship",
+    "name_eng": "Mathematics for Business",
+    "name_th": "คณิตศาสตร์สำหรับธุรกิจ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Management Science Sri Racha Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 75,
+  "fields": {
+    "course_code": "01999111",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Knowledge of the Land",
+    "name_th": "ศาสตร์แห่งแผ่นดิน",
+    "unit": "2",
+    "hour": "2-0-4",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 76,
+  "fields": {
+    "course_code": "01001317",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Kings and State Leaders on Agricultural Sector Development",
+    "name_th": "พระมหากษัตริย์และผู้นำประเทศกับการพัฒนาภาคการเกษตร",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Agriculture"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 77,
+  "fields": {
+    "course_code": "01015202",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Thai Lives Agiculture",
+    "name_th": "เกษตรวิถีไทย",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Agriculture"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 78,
+  "fields": {
+    "course_code": "01301101",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Resource and Environment conservation",
+    "name_th": "การอนุรักษ์ทรัพยากรและสิ่งแวดล้อม",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Forester"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 79,
+  "fields": {
+    "course_code": "01350101",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Ways of Life and Culture in ASEAN",
+    "name_th": "วิถีชีวิตและวัฒนธรรมในอาเซียน",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 80,
+  "fields": {
+    "course_code": "01390102",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Creative Tourism",
+    "name_th": "การท่องเที่ยวเชิงสร้างสรรค์",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 81,
+  "fields": {
+    "course_code": "01450101",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Thai Society and ASEAN Community in Today's World",
+    "name_th": "สังคมไทยกับประชาคมอาเซียนในโลกปัจจุบัน",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Social Sciences"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 82,
+  "fields": {
+    "course_code": "01455101",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "World Politics in Daily Life",
+    "name_th": "การเมืองโลกในชีวิตประจำวัน",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Social Sciences"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 83,
+  "fields": {
+    "course_code": "01460101",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Contemporary Thai Society and Culture",
+    "name_th": "สังคมและวัฒนธรรมไทยร่วมสมัย",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Social Sciences"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 84,
+  "fields": {
+    "course_code": "01999031",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Thai Heritage of World Civilization",
+    "name_th": "มรดกอารยธรรมโลก",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 85,
+  "fields": {
+    "course_code": "01999032",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Thai Studies",
+    "name_th": "ไทยศึกษา",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 86,
+  "fields": {
+    "course_code": "01999046",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "National Security Development",
+    "name_th": "การพัฒนาความมั่นคงแห่งชาติ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 87,
+  "fields": {
+    "course_code": "01999047",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Military for Country Development",
+    "name_th": "การทหารเพื่อพัฒนาประเทศ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 88,
+  "fields": {
+    "course_code": "01999141",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Man and Society",
+    "name_th": "มนุษย์กับสังคม",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 89,
+  "fields": {
+    "course_code": "02999042",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Student Development",
+    "name_th": "การพัฒนานิสิต",
+    "unit": "3",
+    "hour": "2-3-6",
+    "faculty": "Integration Project Kamphaeng Saen Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 90,
+  "fields": {
+    "course_code": "02999144",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Life Skills for Undergraduate Student",
+    "name_th": "ทักษะชีวิตการเป็นนิสิตในมหาวิทยาลัย",
+    "unit": "1",
+    "hour": "1-0-2",
+    "faculty": "Integration Project Kamphaeng Saen Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 91,
+  "fields": {
+    "course_code": "02999147",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "The Thai in ASEAN Dynamics",
+    "name_th": "ไทยในพลวัตอาเซียน",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Project Kamphaeng Saen Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 92,
+  "fields": {
+    "course_code": "03751112",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Social and Politics",
+    "name_th": "สังคมและการเมือง",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Management Science Sri Racha Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 93,
+  "fields": {
+    "course_code": "04804115",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Volunteer Spirit for Community Development",
+    "name_th": "จิตอาสาเพื่อพัฒนาชุมชน",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Natural Resources and Agro Industry Chalermphrakiat Sakon Nakhon Province Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 94,
+  "fields": {
+    "course_code": "01361101",
+    "type": "Language_and_Communication",
+    "name_eng": "Introductory Thai Usage",
+    "name_th": "การใช้ภาษาไทยเบื้องต้น",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 95,
+  "fields": {
+    "course_code": "01361102",
+    "type": "Language_and_Communication",
+    "name_eng": "Thai Pratical Writing",
+    "name_th": "การเขียนภาษาไทยเชิงปฏิบัติ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 96,
+  "fields": {
+    "course_code": "01361222",
+    "type": "Language_and_Communication",
+    "name_eng": "Thai Critical Reading",
+    "name_th": "การอ่านภาษาไทยเชิงวิจารณ์",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 97,
+  "fields": {
+    "course_code": "02701011",
+    "type": "Language_and_Communication",
+    "name_eng": "Thai Usage for Business, Science and Technology",
+    "name_th": "การใช้ภาษาไทยเพื่อธุรกิจ วิทยาศาสตร์และเทคโนโลยี",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Liberal Arts and Science Kamphaeng Saen Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 98,
+  "fields": {
+    "course_code": "01999021",
+    "type": "Language_and_Communication",
+    "name_eng": "Thai Language for Communication",
+    "name_th": "ภาษาไทยเพื่อการสื่อสาร",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 99,
+  "fields": {
+    "course_code": "01354311",
+    "type": "Language_and_Communication",
+    "name_eng": "Khmer l",
+    "name_th": "ภาษาเขมร l",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 100,
+  "fields": {
+    "course_code": "01354312",
+    "type": "Language_and_Communication",
+    "name_eng": "Khmer ll",
+    "name_th": "ภาษาเขมร ll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 101,
+  "fields": {
+    "course_code": "01354411",
+    "type": "Language_and_Communication",
+    "name_eng": "Khmer lll",
+    "name_th": "ภาษาเขมร lll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 102,
+  "fields": {
+    "course_code": "01355101",
+    "type": "Language_and_Communication",
+    "name_eng": "English for Everyday Life",
+    "name_th": "ภาษาอังกฤษในชีวิตประจําวัน",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 103,
+  "fields": {
+    "course_code": "01355102",
+    "type": "Language_and_Communication",
+    "name_eng": "English for University Life",
+    "name_th": "ภาษาอังกฤษในมหาวิทยาลัย",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 104,
+  "fields": {
+    "course_code": "01355103",
+    "type": "Language_and_Communication",
+    "name_eng": "English for job Opportunities",
+    "name_th": "ภาษาอังกฤษเพื่อโอกาสในการทำงาน",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 105,
+  "fields": {
+    "course_code": "01355104",
+    "type": "Language_and_Communication",
+    "name_eng": "English for Pre-Medical Students l",
+    "name_th": "ภาษาอังกฤษสำหรับนิสิตเตรียมแพทย์ l",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 106,
+  "fields": {
+    "course_code": "01355105",
+    "type": "Language_and_Communication",
+    "name_eng": "English for Pre-Medical Students ll",
+    "name_th": "ภาษาอังกฤษสำหรับนิสิตเตรียมแพทย์ ll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 107,
+  "fields": {
+    "course_code": "01355109",
+    "type": "Language_and_Communication",
+    "name_eng": "Essential English Listening-Speaking Skills",
+    "name_th": "ทักษะการฟัง-การพูดภาษาอังกฤษที่จําเป็น",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 108,
+  "fields": {
+    "course_code": "01355112",
+    "type": "Language_and_Communication",
+    "name_eng": "Foundation English ll",
+    "name_th": "ภาษาอังกฤษพื้นฐาน ll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 109,
+  "fields": {
+    "course_code": "01355113",
+    "type": "Language_and_Communication",
+    "name_eng": "Foundation English lll",
+    "name_th": "ภาษาอังกฤษพื้นฐาน lll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 110,
+  "fields": {
+    "course_code": "01355114",
+    "type": "Language_and_Communication",
+    "name_eng": "English for Pre-Medical Students l",
+    "name_th": "ภาษาอังกฤษสำหรับนิสิตเตรียมแพทย์ l",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 111,
+  "fields": {
+    "course_code": "01355115",
+    "type": "Language_and_Communication",
+    "name_eng": "English for Pre-Medical Students ll",
+    "name_th": "ภาษาอังกฤษสำหรับนิสิตเตรียมแพทย์ ll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 112,
+  "fields": {
+    "course_code": "01355119",
+    "type": "Language_and_Communication",
+    "name_eng": "Essential English Reading Skills",
+    "name_th": "ทักษะการอ่านภาษาอังกฤษที่จําเป็น",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 113,
+  "fields": {
+    "course_code": "01355201",
+    "type": "Language_and_Communication",
+    "name_eng": "Fundamental English Reading",
+    "name_th": "การอ่านภาษาอังกฤษเบื้องต้น",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 114,
+  "fields": {
+    "course_code": "01355202",
+    "type": "Language_and_Communication",
+    "name_eng": "Fundamental English Writing",
+    "name_th": "การเขียนภาษาอังกฤษเบื้องต้น",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 115,
+  "fields": {
+    "course_code": "01355203",
+    "type": "Language_and_Communication",
+    "name_eng": "Fundamental English Structure",
+    "name_th": "โครงสร้างภาษาอังกฤษเบื้องต้น",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 116,
+  "fields": {
+    "course_code": "01355204",
+    "type": "Language_and_Communication",
+    "name_eng": "Fundamental English Listening-Speaking",
+    "name_th": "การฟัง-การพูดภาษาอังกฤษเบื้องต้น",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 117,
+  "fields": {
+    "course_code": "01355205",
+    "type": "Language_and_Communication",
+    "name_eng": "Reading for Mass Communication in English",
+    "name_th": "การอ่านภาษาอังกฤษด้านสื่อมวลชน",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 118,
+  "fields": {
+    "course_code": "01355206",
+    "type": "Language_and_Communication",
+    "name_eng": "Technical English",
+    "name_th": "อังกฤษวิชาการ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 119,
+  "fields": {
+    "course_code": "01355207",
+    "type": "Language_and_Communication",
+    "name_eng": "English Correspondence",
+    "name_th": "การเขียนตอบโต้ภาษาอังกฤษ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 120,
+  "fields": {
+    "course_code": "01355208",
+    "type": "Language_and_Communication",
+    "name_eng": "English through Songs",
+    "name_th": "ภาษาอังกฤษจากเพลง",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 121,
+  "fields": {
+    "course_code": "01355209",
+    "type": "Language_and_Communication",
+    "name_eng": "Communicative English for Careers",
+    "name_th": "ภาษาอังกฤษเพื่อการสื่อสารในงานอาชีพ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 122,
+  "fields": {
+    "course_code": "01355302",
+    "type": "Language_and_Communication",
+    "name_eng": "Report Writing in English",
+    "name_th": "การเขียนรายงานภาษาอังกฤษ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 123,
+  "fields": {
+    "course_code": "01355303",
+    "type": "Language_and_Communication",
+    "name_eng": "English for Employment",
+    "name_th": "ภาษาอังกฤษเพื่อการสมัครงาน",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 124,
+  "fields": {
+    "course_code": "01356101",
+    "type": "Language_and_Communication",
+    "name_eng": "Elementary French l",
+    "name_th": "ภาษาฝรั่งเศสเบื้องต้น l",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 125,
+  "fields": {
+    "course_code": "01356102",
+    "type": "Language_and_Communication",
+    "name_eng": "Elementary French ll",
+    "name_th": "ภาษาฝรั่งเศสเบื้องต้น ll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 126,
+  "fields": {
+    "course_code": "01356103",
+    "type": "Language_and_Communication",
+    "name_eng": "Elementary French lll",
+    "name_th": "ภาษาฝรั่งเศสเบื้องต้น lll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 127,
+  "fields": {
+    "course_code": "01356104",
+    "type": "Language_and_Communication",
+    "name_eng": "Elementary French lV",
+    "name_th": "ภาษาฝรั่งเศสเบื้องต้น lV",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 128,
+  "fields": {
+    "course_code": "01357111",
+    "type": "Language_and_Communication",
+    "name_eng": "Elementary German l",
+    "name_th": "ภาษาเยอรมันเบื้องต้น l",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 129,
+  "fields": {
+    "course_code": "01357112",
+    "type": "Language_and_Communication",
+    "name_eng": "Elementary German ll",
+    "name_th": "ภาษาเยอรมันเบื้องต้น ll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 130,
+  "fields": {
+    "course_code": "01357113",
+    "type": "Language_and_Communication",
+    "name_eng": "Elementary German lll",
+    "name_th": "ภาษาเยอรมันเบื้องต้น lll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 131,
+  "fields": {
+    "course_code": "01357114",
+    "type": "Language_and_Communication",
+    "name_eng": "Elementary German lV",
+    "name_th": "ภาษาเยอรมันเบื้องต้น lV",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 132,
+  "fields": {
+    "course_code": "01358101",
+    "type": "Language_and_Communication",
+    "name_eng": "Elementary Japanese l",
+    "name_th": "ภาษาญี่ปุ่นเบื้องต้น l",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 133,
+  "fields": {
+    "course_code": "01358102",
+    "type": "Language_and_Communication",
+    "name_eng": "Elementary Japanese ll",
+    "name_th": "ภาษาญี่ปุ่นเบื้องต้น ll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 134,
+  "fields": {
+    "course_code": "01358103",
+    "type": "Language_and_Communication",
+    "name_eng": "Elementary Japanese lll",
+    "name_th": "ภาษาญี่ปุ่นเบื้องต้น lll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 135,
+  "fields": {
+    "course_code": "01358104",
+    "type": "Language_and_Communication",
+    "name_eng": "Elementary Japanese lV",
+    "name_th": "ภาษาญี่ปุ่นเบื้องต้น lV",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 136,
+  "fields": {
+    "course_code": "01362101",
+    "type": "Language_and_Communication",
+    "name_eng": "Chinese l",
+    "name_th": "ภาษาจีน l",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 137,
+  "fields": {
+    "course_code": "01362102",
+    "type": "Language_and_Communication",
+    "name_eng": "Chinese ll",
+    "name_th": "ภาษาจีน ll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 138,
+  "fields": {
+    "course_code": "01362103",
+    "type": "Language_and_Communication",
+    "name_eng": "Chinese lll",
+    "name_th": "ภาษาจีน lll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 139,
+  "fields": {
+    "course_code": "01362104",
+    "type": "Language_and_Communication",
+    "name_eng": "Chinese lV",
+    "name_th": "ภาษาจีน lV",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 140,
+  "fields": {
+    "course_code": "01362105",
+    "type": "Language_and_Communication",
+    "name_eng": "Chinese V",
+    "name_th": "ภาษาจีน V",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 141,
+  "fields": {
+    "course_code": "01367311",
+    "type": "Language_and_Communication",
+    "name_eng": "Myanmar Language l",
+    "name_th": "ภาษาพม่า l",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 142,
+  "fields": {
+    "course_code": "01367312",
+    "type": "Language_and_Communication",
+    "name_eng": "Myanmar Language ll",
+    "name_th": "ภาษาพม่า ll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 143,
+  "fields": {
+    "course_code": "01367411",
+    "type": "Language_and_Communication",
+    "name_eng": "Myanmar Language lll",
+    "name_th": "ภาษาพม่า lll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 144,
+  "fields": {
+    "course_code": "01395101",
+    "type": "Language_and_Communication",
+    "name_eng": "Communicative Korean l",
+    "name_th": "ภาษาเกาหลีเพื่อการศึกษา l",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 145,
+  "fields": {
+    "course_code": "01395102",
+    "type": "Language_and_Communication",
+    "name_eng": "Communicative Korean ll",
+    "name_th": "ภาษาเกาหลีเพื่อการศึกษา ll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 146,
+  "fields": {
+    "course_code": "01395103",
+    "type": "Language_and_Communication",
+    "name_eng": "Communicative Korean lll",
+    "name_th": "ภาษาเกาหลีเพื่อการศึกษา lll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 147,
+  "fields": {
+    "course_code": "01395104",
+    "type": "Language_and_Communication",
+    "name_eng": "Communicative Korean lV",
+    "name_th": "ภาษาเกาหลีเพื่อการศึกษา lV",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 148,
+  "fields": {
+    "course_code": "01395105",
+    "type": "Language_and_Communication",
+    "name_eng": "Korean Reading and Oral Report",
+    "name_th": "การอ่านและรายงานภาษาเกาหลี",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 149,
+  "fields": {
+    "course_code": "01398101",
+    "type": "Language_and_Communication",
+    "name_eng": "Communicative Malayu l",
+    "name_th": "ภาษามลายูเพื่อการสื่อสาร l",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 150,
+  "fields": {
+    "course_code": "01398102",
+    "type": "Language_and_Communication",
+    "name_eng": "Communicative Malayu ll",
+    "name_th": "ภาษามลายูเพื่อการสื่อสาร ll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 151,
+  "fields": {
+    "course_code": "01398103",
+    "type": "Language_and_Communication",
+    "name_eng": "Communicative Malayu lll",
+    "name_th": "ภาษามลายูเพื่อการสื่อสาร lll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 152,
+  "fields": {
+    "course_code": "01398104",
+    "type": "Language_and_Communication",
+    "name_eng": "Communicative Malayu lV",
+    "name_th": "ภาษามลายูเพื่อการสื่อสาร lV",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 153,
+  "fields": {
+    "course_code": "01398105",
+    "type": "Language_and_Communication",
+    "name_eng": "Malayu Reading",
+    "name_th": "การอ่านภาษามลายู",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 154,
+  "fields": {
+    "course_code": "01398106",
+    "type": "Language_and_Communication",
+    "name_eng": "Malayu Listening and Speaking",
+    "name_th": "การฟัง-พูดภาษามลายู",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 155,
+  "fields": {
+    "course_code": "01399101",
+    "type": "Language_and_Communication",
+    "name_eng": "Communicative Vietnamese l",
+    "name_th": "ภาษาเวียดนามเพื่อการสื่อสาร l",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 156,
+  "fields": {
+    "course_code": "01399102",
+    "type": "Language_and_Communication",
+    "name_eng": "Communicative Vietnamese ll",
+    "name_th": "ภาษาเวียดนามเพื่อการสื่อสาร ll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 157,
+  "fields": {
+    "course_code": "01399103",
+    "type": "Language_and_Communication",
+    "name_eng": "Communicative Vietnamese lll",
+    "name_th": "ภาษาเวียดนามเพื่อการสื่อสาร lll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 158,
+  "fields": {
+    "course_code": "01399104",
+    "type": "Language_and_Communication",
+    "name_eng": "Communicative Vietnamese lV",
+    "name_th": "ภาษาเวียดนามเพื่อการสื่อสาร lV",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 159,
+  "fields": {
+    "course_code": "01399105",
+    "type": "Language_and_Communication",
+    "name_eng": "Vietnamese Reading",
+    "name_th": "การอ่านภาษาเวียดนาม",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 160,
+  "fields": {
+    "course_code": "01999023",
+    "type": "Language_and_Communication",
+    "name_eng": "Essential Computer Skill",
+    "name_th": " ทักษะความเข้าใจและใช้เทคโนโลยีดิจิทัล",
+    "unit": "2",
+    "hour": "1-2-4",
+    "faculty": "I Dont know"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 161,
+  "fields": {
+    "course_code": "01399106",
+    "type": "Language_and_Communication",
+    "name_eng": "Vietnamese Listening and Speaking",
+    "name_th": "การฟัง-พูดภาษาเวียดนาม",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 162,
+  "fields": {
+    "course_code": "02724011",
+    "type": "Language_and_Communication",
+    "name_eng": "Intercultural Communication",
+    "name_th": "การสื่อสารระหว่างวัฒนธรรม",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Liberal Arts and Science Kamphaeng Saen Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 163,
+  "fields": {
+    "course_code": "03754111",
+    "type": "Language_and_Communication",
+    "name_eng": "Foundation English l",
+    "name_th": "ภาษาอังกฤษ l",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Management Science Sri Racha Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 164,
+  "fields": {
+    "course_code": "03754112",
+    "type": "Language_and_Communication",
+    "name_eng": "Foundation English ll",
+    "name_th": "ภาษาอังกฤษ lll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Management Science Sri Racha Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 165,
+  "fields": {
+    "course_code": "03754113",
+    "type": "Language_and_Communication",
+    "name_eng": "Foundation English lll",
+    "name_th": "ภาษาอังกฤษ lll",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Management Science Sri Racha Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 166,
+  "fields": {
+    "course_code": "03754271",
+    "type": "Language_and_Communication",
+    "name_eng": "English for Careers",
+    "name_th": "ภาษาอังกฤษในงานอาชีพ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Management Science Sri Racha Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 167,
+  "fields": {
+    "course_code": "01371111",
+    "type": "Language_and_Communication",
+    "name_eng": "Information Media for Learning",
+    "name_th": "สื่อสารสนเทศเพื่อการเรียนรู้",
+    "unit": "1",
+    "hour": "1-0-2",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 168,
+  "fields": {
+    "course_code": "01418111",
+    "type": "Language_and_Communication",
+    "name_eng": "Computer Application",
+    "name_th": "การใช้งานคอมพิวเตอร์",
+    "unit": "1",
+    "hour": "1-0-2",
+    "faculty": "Faculty of Science"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 169,
+  "fields": {
+    "course_code": "01174122",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Recreational Learning through Backpack Traveling",
+    "name_th": "การเรียนรู้เชิงนันทนาการโดยการเดินทางในต่างประเทศแบบประหยัด",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "คณะศึกษาศาสตร์"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 170,
+  "fields": {
+    "course_code": "01999013",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "New Age Information Management In Everyday Life",
+    "name_th": "การจัดการสารสนเทศยุคใหม่ในชีวิตประจำวัน",
+    "unit": "3",
+    "hour": "2-2-5",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 171,
+  "fields": {
+    "course_code": "01999211",
+    "type": "Language_and_Communication",
+    "name_eng": "Mathematics and Computer in Everyday Life",
+    "name_th": "คณิตศาสตร์และคอมพิวเตอร์ในชีวิตประจ าวัน",
+    "unit": "3",
+    "hour": "2-2-5",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 172,
+  "fields": {
+    "course_code": "02729102",
+    "type": "Language_and_Communication",
+    "name_eng": "Computer Application in Everyday Life",
+    "name_th": "การประยุกต์คอมพิวเตอร์ในชีวิตประจำวัน",
+    "unit": "3",
+    "hour": "2-2-5",
+    "faculty": "Faculty of Liberal Arts and Science Kamphaeng Saen Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 173,
+  "fields": {
+    "course_code": "03752111",
+    "type": "Language_and_Communication",
+    "name_eng": "Information Resources for Research",
+    "name_th": "ทรัพยากรสารสนเทศเพื่อการค้นคว้า",
+    "unit": "1",
+    "hour": "1-0-2",
+    "faculty": "Faculty of Management Science Sri Racha Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 174,
+  "fields": {
+    "course_code": "01007101",
+    "type": "Aesthetics",
+    "name_eng": "Horticulture for life Quality and Environment",
+    "name_th": "พืชสวนเพื่อคุณภาพชีวิตและสิ่งแวดล้อม",
+    "unit": "2",
+    "hour": "2-0-4",
+    "faculty": "Faculty of Agriculture"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 175,
+  "fields": {
+    "course_code": "01009102",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Agricultural Resources and Environment",
+    "name_th": "ทรัพยากรการเกษตรและสิ่งแวดล้อม",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Agriculture"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 176,
+  "fields": {
+    "course_code": "01240011",
+    "type": "Aesthetics",
+    "name_eng": "Design in Everyday Life",
+    "name_th": "การออกแบบในชีวิตประจำวัน",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Architecture"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 177,
+  "fields": {
+    "course_code": "01255101",
+    "type": "Aesthetics",
+    "name_eng": "Man and Sea",
+    "name_th": "มนุษย์กับทะเล",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Fisheries"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 178,
+  "fields": {
+    "course_code": "01308101",
+    "type": "Aesthetics",
+    "name_eng": "Sustainable natural tourism?",
+    "name_th": "การท่องเที่ยวทางธรรมชาติอย่างยั่งยืน",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "วนศาสตร์"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 179,
+  "fields": {
+    "course_code": "01350102",
+    "type": "Aesthetics",
+    "name_eng": "Visual Storytelling",
+    "name_th": "เล่าเรื่องด้วยภาพ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 180,
+  "fields": {
+    "course_code": "01387102",
+    "type": "Aesthetics",
+    "name_eng": "Philosophy for Modern Life",
+    "name_th": "ปรัชญาสําหรับชีวิตยุคใหม่",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Humanities"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 181,
+  "fields": {
+    "course_code": "01401201",
+    "type": "Aesthetics",
+    "name_eng": "Plants for Value of Life Creation",
+    "name_th": "พืชเพื่อการสร้างคุณค่าชีวิต",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Science"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 182,
+  "fields": {
+    "course_code": "01418101",
+    "type": "Language_and_Communication",
+    "name_eng": "Computer Applications",
+    "name_th": "การใช้งานคอมพิวเตอร์",
+    "unit": "1",
+    "hour": "0-2-1",
+    "faculty": "Faculty of Science"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 183,
+  "fields": {
+    "course_code": "01418102",
+    "type": "Entrepreneurship",
+    "name_eng": "Information Technology for Entrepreneurship",
+    "name_th": "เทคโนโลยีสารสนเทศเพื่อผู้ประกอบการ",
+    "unit": "3",
+    "hour": "2-2-5",
+    "faculty": "Faculty of Science"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 184,
+  "fields": {
+    "course_code": "01418104",
+    "type": "Language_and_Communication",
+    "name_eng": "IT Updates",
+    "name_th": "รู้ทันไอที",
+    "unit": "2",
+    "hour": "2-0-4",
+    "faculty": "Faculty of Science"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 185,
+  "fields": {
+    "course_code": "01418105",
+    "type": "Aesthetics",
+    "name_eng": "Digital Creative Arts",
+    "name_th": "ศิลปะสร้างสรรค์ดิจิทัล",
+    "unit": "3",
+    "hour": "2-2-5",
+    "faculty": "Faculty of Science"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 186,
+  "fields": {
+    "course_code": "01418106",
+    "type": "Language_and_Communication",
+    "name_eng": "Digital Technology Skills",
+    "name_th": "ทักษะเทคโนโลยีดิจิทัล",
+    "unit": "3",
+    "hour": "2-2-5",
+    "faculty": "Faculty of Science"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 187,
+  "fields": {
+    "course_code": "01420201",
+    "type": "Aesthetics",
+    "name_eng": "Gems and Jewelry",
+    "name_th": "อัญมณีและเครื่องประดับ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Science"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 188,
+  "fields": {
+    "course_code": "01999034",
+    "type": "Aesthetics",
+    "name_eng": "Art Perception",
+    "name_th": "ศิลปวิจักษณ์",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 189,
+  "fields": {
+    "course_code": "01999035",
+    "type": "Aesthetics",
+    "name_eng": "Music Culture in Life",
+    "name_th": "วัฒนธรรมดนตรีกับชีวิต",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Integration Section of General Education"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 190,
+  "fields": {
+    "course_code": "02708102",
+    "type": "Aesthetics",
+    "name_eng": "Literature and Science",
+    "name_th": "วรรณกรรมกับวิทยาศาสตร์",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Liberal Arts and Science Kamphaeng Saen Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 191,
+  "fields": {
+    "course_code": "02728102",
+    "type": "Aesthetics",
+    "name_eng": "สารสีในงานศิลปะ",
+    "name_th": "สารสีในงานศิลปะ",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Liberal Arts and Science Kamphaeng Saen Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 192,
+  "fields": {
+    "course_code": "03600012",
+    "type": "Aesthetics",
+    "name_eng": "Green Technology",
+    "name_th": "เทคโนโลยีสีเขียว",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Engineering Sri Racha Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 193,
+  "fields": {
+    "course_code": "03600013",
+    "type": "Language_and_Communication",
+    "name_eng": "Essential Computer Tools and Skills",
+    "name_th": "เครื่องมือและทักษะทางคอมพิวเตอร์ที่จําเป็น",
+    "unit": "1",
+    "hour": "0-3-2",
+    "faculty": "Faculty of Engineering Sri Racha Campus"
+  }
+},
+{
+  "model": "kuhub.subject",
+  "pk": 194,
+  "fields": {
+    "course_code": "03751111",
+    "type": "Thai_Citizen_and_Global_Citizen",
+    "name_eng": "Man and Environment",
+    "name_th": "มนุษย์กับสิ่งแวดล้อม",
+    "unit": "3",
+    "hour": "3-0-6",
+    "faculty": "Faculty of Management Science Sri Racha Campus"
+  }
+}
+]

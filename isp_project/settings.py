@@ -26,8 +26,8 @@ SECRET_KEY = "django-insecure-3#l7#_o8un#n*q#u7351(0+rmh#do9(dszorz)@0o0py80ch$i
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # Application definition
 
 INSTALLED_APPS = [

@@ -8,3 +8,6 @@ class KuHubConfig(AppConfig):
     """KU-Hub Configuration."""
     default_auto_field = "django.db.models.BigAutoField"
     name = "kuhub"
+
+    def ready(self):
+        import kuhub.signals
