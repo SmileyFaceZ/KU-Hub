@@ -63,7 +63,7 @@
                                                 <p>Enter Password:</p>
                                                  <form method="post" action="{% url 'kuhub:join' group.id %}">
                                                     {% csrf_token %}
-                                                     <input type="text" name="pass" placeholder="Password">
+                                                     <input type="password" name="pass" placeholder="Password">
                                                     <input type="submit" class="btn btn-primary" value="Join">
                                                      </form>
                                                 {% else %}
