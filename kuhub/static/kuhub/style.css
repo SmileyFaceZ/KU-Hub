@@ -90,3 +90,29 @@
 .card-subtitle {
     text-align: end;
 }
+
+.button-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.button-group .btn-link i {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.button-group .btn-link:hover i {
+    opacity: 0.5;
+}
+
+.button-group .btn-link:hover .fa-thumbs-up {
+    color: green;
+}
+
+.button-group .btn-link:hover .fa-thumbs-down {
+    color: green;
+}
+
+.button-group .btn-link {
+    color: black;
+}

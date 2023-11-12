@@ -3,15 +3,19 @@
 related to Review-Hub, Summary-Hub and Tricks-Hub
 in the kuhub web application.
 """
+import json
 import datetime as dt
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import QuerySet
-from django.http import HttpRequest
-from django.shortcuts import redirect, render
+from django.http import HttpRequest, JsonResponse
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
-from kuhub.forms import PostForm
-from kuhub.models import Post, PostDownload, Tags
+from kuhub.forms import PostForm, ProfileForm
+from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower
+from django.contrib.auth.models import User
+
 
 
 class ReviewHubView(generic.ListView):
@@ -23,6 +27,16 @@ class ReviewHubView(generic.ListView):
     def get_queryset(self) -> QuerySet[Post]:
         """Return Post objects with tag_id=1 and order by post_date."""
         return Post.objects.filter(tag_id=1).order_by('-post_date')
+
+    def get_context_data(self, **kwargs):
+        """Add like and dislike icon styles to context."""
+        context = super().get_context_data(**kwargs)
+        context['like_icon_styles'] = [post.like_icon_style(self.request.user)
+                                       for post in context['posts_list']]
+        context['dislike_icon_styles'] = [
+            post.dislike_icon_style(self.request.user) for post in
+            context['posts_list']]
+        return context
 
 
 class SummaryHubView(generic.ListView):
@@ -37,16 +51,36 @@ class SummaryHubView(generic.ListView):
             '-post_id__post_date'
         ).all()
 
+    def get_context_data(self, **kwargs):
+        """Add like and dislike icon styles to context."""
+        context = super().get_context_data(**kwargs)
+        context['like_icon_styles'] = [post.like_icon_style(self.request.user)
+                                       for post in context['summary_post_list']]
+        context['dislike_icon_styles'] = [
+            post.dislike_icon_style(self.request.user) for post in
+            context['summary_post_list']]
+        return context
+
 
 class TricksHubView(generic.ListView):
     """Redirect to Tricks-Hub page for tricks posts."""
 
     template_name: str = 'kuhub/tricks.html'
-    context_object_name: str = 'posts_list'
+    context_object_name: str = 'tricks_list'
 
     def get_queryset(self) -> QuerySet[Post]:
         """Return Post objects with tag_id=3 and order by post_date."""
         return Post.objects.filter(tag_id=3).order_by('-post_date')
+
+    def get_context_data(self, **kwargs):
+        """Add like and dislike icon styles to context."""
+        context = super().get_context_data(**kwargs)
+        context['like_icon_styles'] = [post.like_icon_style(self.request.user)
+                                       for post in context['tricks_list']]
+        context['dislike_icon_styles'] = [
+            post.dislike_icon_style(self.request.user) for post in
+            context['tricks_list']]
+        return context
 
 
 class EncouragementView(generic.ListView):
@@ -59,6 +93,71 @@ class EncouragementView(generic.ListView):
         """Return Post objects with tag_id=4 and order by post_date."""
         return Post.objects.filter(tag_id=4).order_by('-post_date')
 
+
+@login_required
+def like_post(request: HttpRequest) -> JsonResponse:
+    """Increase number of likes for a post when the user clicks the like."""
+    user = request.user
+    if user.is_authenticated:
+        if (request.method == 'POST'
+                and request.headers.get(
+                    'X-Requested-With') == 'XMLHttpRequest'):
+            post_id = request.readline().decode('utf-8')
+            js_post = json.loads(post_id)
+            post_obj = get_object_or_404(Post, id=js_post['post_id'])
+
+            if user in post_obj.disliked.all():
+                post_obj.disliked.remove(user)
+
+            if user in post_obj.liked.all():
+                post_obj.liked.remove(user)
+            else:
+                post_obj.liked.add(user)
+
+            return JsonResponse(
+                {
+                    'likes': post_obj.liked.all().count(),
+                    'dislikes': post_obj.disliked.all().count(),
+                    'like_style': post_obj.like_icon_style(user),
+                    'dislike_style': post_obj.dislike_icon_style(user)
+                }
+            )
+        return redirect('kuhub:review')
+
+    return redirect('account_login')
+
+
+@login_required
+def dislike_post(request: HttpRequest) -> JsonResponse:
+    """Decrease number of likes for a post when the user clicks the dislike."""
+    user = request.user
+    if user.is_authenticated:
+        if (request.method == 'POST'
+                and request.headers.get(
+                    'X-Requested-With') == 'XMLHttpRequest'):
+            post_id = request.readline().decode('utf-8')
+            js_post = json.loads(post_id)
+            post_obj: Post = get_object_or_404(Post, id=js_post['post_id'])
+
+            if user in post_obj.liked.all():
+                post_obj.liked.remove(user)
+
+            if user in post_obj.disliked.all():
+                post_obj.disliked.remove(user)
+            else:
+                post_obj.disliked.add(user)
+
+            return JsonResponse(
+                {
+                    'likes': post_obj.total_likes(),
+                    'dislikes': post_obj.total_dislikes(),
+                    'dislike_style': post_obj.dislike_icon_style(user),
+                    'like_style': post_obj.like_icon_style(user),
+                }
+            )
+        return redirect('kuhub:review')
+
+    return redirect('account_login')
 
 @login_required
 def create_post(request: HttpRequest):
@@ -111,3 +210,34 @@ def create_post(request: HttpRequest):
             "form": PostForm(),
         }
     )
+
+
+@login_required
+def profile_settings(request):
+    user = request.user
+    profile = user.profile
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=user.profile)
+        if form.is_valid():
+            form.save()
+            return redirect('kuhub:profile_settings')
+
+    else:
+        form = ProfileForm(instance=profile)
+
+    following = UserFollower.objects.filter(user_followed=user)
+    followers = UserFollower.objects.filter(follower=user)
+    biography = Profile.objects.filter(biography=profile.biography)
+
+    return render(request,
+                  template_name='kuhub/profile_settings.html',
+                  context={
+                    'form': form,
+                    'user': user,
+                    'profile': profile,
+                    'following': following,
+                    'followers': followers,
+                    'biography': biography
+                     })
+
