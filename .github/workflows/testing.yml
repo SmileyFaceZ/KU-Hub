@@ -47,7 +47,7 @@ jobs:
       - name: Load environment variables
         run: |
           pip install python-dotenv
-          source .env
+          dotenv -f .env
 
       - name: Lint with flake8
         run: |
@@ -56,4 +56,3 @@ jobs:
 
       - name: Test with Django test
         run: python manage.py test kuhub
-
