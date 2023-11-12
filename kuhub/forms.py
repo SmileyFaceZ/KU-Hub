@@ -52,7 +52,12 @@ class GroupForm(forms.Form):
         required=False
     )
     password = forms.CharField(
-        widget=forms.Textarea(attrs={'cols': 50, 'rows': 1}),
+        widget=forms.PasswordInput,
+        label='Password',
+        required=False
+    )
+    password_2 = forms.CharField(
+        widget=forms.PasswordInput,
         label='Password',
         required=False
     )

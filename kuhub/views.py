@@ -133,6 +133,14 @@ def create_group(request: HttpRequest):
         form = GroupForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
+            #check password and password(again) is the same
+            if data['password'] != data['password_2'] :
+                messages.error(request, "Password is not the same")
+                return render(
+                    request,
+                    template_name='kuhub/group_create.html',
+                    context={'form': GroupForm}
+                )
             # if not have the tag in groupTag object create it
             group_tag, created = GroupTags.objects.get_or_create(tag_text=data['tag_name'])
             # create group object

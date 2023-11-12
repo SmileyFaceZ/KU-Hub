@@ -34,6 +34,15 @@
                 {{ form.password }}
                     </div>
             </div>
+            <div class="mb-3">
+                <label class="form-label">Password again:</label>
+                <div>
+                {{ form.password_2 }}
+                    </div>
+                {% for message in messages %}
+                   <p>{{ message }}</p>
+                {% endfor %}
+            </div>
         <input type="submit" value="Create" class="btn btn-success">
     </form>
     </div>
