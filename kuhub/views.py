@@ -123,6 +123,17 @@ def join(request,group_id):
     messages.success(request, "You join the group success!")
     return redirect(reverse('kuhub:groups'))
 
+@login_required
+def create_group(request):
+    """
+    Create Group
+    """
+    user = request.user
+    form = PostForm(request.POST)
+    if form.is_valid():
+        data = form.cleaned_data
+        if data['tags'] not in GroupTags.objects.all()
+    return redirect(reverse('kuhub:groups'))
 
 @login_required
 def like_post(request: HttpRequest) -> JsonResponse:

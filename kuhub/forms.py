@@ -1,5 +1,5 @@
 from django import forms
-from kuhub.models import Tags, Subject
+from kuhub.models import Tags, Subject, GroupTags
 from kuhub.models.profile import Profile
 
 
@@ -34,3 +34,25 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['biography', 'display_photo']
+
+class Groupform(forms.ModelForm):
+    Name = forms.CharField(
+        widget=forms.Textarea(attrs={'cols': 100, 'rows': 1}),
+        label='Group name:',
+        required=True
+    )
+    tag_name = forms.CharField(
+        choices=TAG_CHOICES,
+        label='Tags :',
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+    description = forms.CharField(
+        widget=forms.Textarea(attrs={'cols': 100, 'rows': 3}),
+        label='Description',
+        required=False
+    )
+    password = forms.CharField(
+        widget=forms.Textarea(attrs={'cols': 100, 'rows': 1}),
+        label='Password',
+        required=False
+    )
