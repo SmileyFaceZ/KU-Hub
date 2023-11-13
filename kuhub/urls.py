@@ -14,9 +14,9 @@ urlpatterns = [
          views.GroupView.as_view(),
          name='groups'
     ),
+    path('<int:pk>/group', views.GroupDetail.as_view(), name='group_detail'),
     path('create-group/', views.create_group, name='create_group'),
     path('<int:group_id>/join',views.join,name='join'),
-    path('<int:pk>/group', views.group_detail.as_view(),name='group_detail'),
     path('liked/', views.like_post, name='like_post'),
     path('disliked/', views.dislike_post, name='dislike_post'),
     path('create-post/', views.create_post, name='create_post'),

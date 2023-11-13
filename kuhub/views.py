@@ -4,6 +4,7 @@ related to Review-Hub, Summary-Hub and Tricks-Hub
 in the kuhub web application.
 """
 from django.http import HttpResponseRedirect
+from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.generic import TemplateView
 import json
@@ -163,8 +164,8 @@ def create_group(request: HttpRequest):
         context={'form': GroupForm}
     )
 
-@login_required
-class group_detail(generic.DetailView):
+@method_decorator(login_required, name='dispatch')
+class GroupDetail(generic.DetailView):
     """Group manage and detail page"""
     model = Group
     template_name = 'kuhub/group_detail.html'
