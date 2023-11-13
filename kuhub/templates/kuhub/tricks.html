@@ -32,7 +32,19 @@
                         {{ post.tag_id.tag_text }}
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body position-relative">
+                    <div class="dropdown position-absolute top-0 end-0">
+                        <button class="btn btn-link kebab-menu" type="button" id="kebabMenu{{ post.pk }}" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="kebabMenu{{ post.pk }}" style="box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);">
+                            {% if user.is_authenticated and post.username == user %}
+                                <li><a class="dropdown-item" href="#">Edit Post</a></li>
+                            {% else %}
+                                <li><a class="dropdown-item" href="#">Report</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
                     <img class="float-start rounded-circle" src="https://images.unsplash.com/photo-1603984973710-e915353b35fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YW1hemluZyUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D&w=1000&q=80" width="45" height="45">
                     <h4 class="card-title" style="font-weight: 600;">{{ post.username }}</h4>
                     <br>
