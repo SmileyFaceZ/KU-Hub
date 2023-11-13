@@ -3,4 +3,4 @@ Django >= 4.1, <5.0
 django-allauth
 Pillow >= 8.0.0
 python-decouple
-psycopg2
+psycopg2-binary==2.9.9
