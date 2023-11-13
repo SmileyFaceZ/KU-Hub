@@ -15,8 +15,8 @@ from django.db.models import QuerySet
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
-from kuhub.forms import PostForm, ProfileForm
-from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group
+from kuhub.forms import PostForm, ProfileForm, GroupForm
+from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group, GroupTags, GroupPassword
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 
@@ -123,6 +123,45 @@ def join(request,group_id):
     messages.success(request, "You join the group success!")
     return redirect(reverse('kuhub:groups'))
 
+@login_required
+def create_group(request: HttpRequest):
+    """
+    Create Group
+    """
+    user = request.user
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            #check password and password(again) is the same
+            if data['password'] != data['password_2'] :
+                messages.error(request, "Password is not the same")
+                return render(
+                    request,
+                    template_name='kuhub/group_create.html',
+                    context={'form': GroupForm}
+                )
+            # if not have the tag in groupTag object create it
+            group_tag, created = GroupTags.objects.get_or_create(tag_text=data['tag_name'])
+            # create group object
+            password = None
+            if data['password']:
+                password = GroupPassword.objects.create(group_password=data['password'])
+                password.set_password(password.group_password)
+            group = Group.objects.create(
+                group_name=data['name'],
+                group_description=data['description'],
+                group_password=password,
+            )
+            group.group_tags.set([group_tag])
+            group.group_member.set([user])
+            messages.success(request, f'Create group successful your group id is {group.id}')
+            return redirect(reverse('kuhub:groups'))
+    return render(
+        request,
+        template_name='kuhub/group_create.html',
+        context={'form': GroupForm}
+    )
 
 @login_required
 def like_post(request: HttpRequest) -> JsonResponse:
