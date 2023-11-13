@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
     <title>Review-Hub</title>
@@ -7,6 +8,7 @@
 
 {% block content %}
 {% load custom_filters %}
+{% load static %}
 
 {% if messages %}
     {% for message in messages %}
@@ -21,11 +23,10 @@
         {% for post in posts_list %}
             <div class="card border border-1 rounded-4">
                 <div class="card-header">
-                    <div class="tag-text">{{ post.tag_id.tag_text }}
                     {% if post.was_published_recently_post %}
-                            <span class="badge" style="background-color: red; text-align: center; margin-left: 5px;">New!</span>
+                        <span class="badge" style="background-color: red; text-align: center; margin-right: 5px;">New!</span>
                     {% endif %}
-                    </div>
+                    {{ post.tag_id.tag_text }}
                 </div>
                 <div class="card-body">
                     <img class="float-start rounded-circle" src="https://images.unsplash.com/photo-1603984973710-e915353b35fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YW1hemluZyUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D&w=1000&q=80" width="45" height="45">
@@ -66,6 +67,9 @@
         <h1>No posts are available.</h1>
     {% endif %}
 </div>
+
+<link rel="stylesheet" href="{% static 'kuhub/style.css' %}">
+
 <script>
 function click_button(postId, response) {
     console.log('Server response:', response);
@@ -119,5 +123,13 @@ function dislike_button_click(postId) {
         console.log('Error:', error);
     });
 }
+
+function changeLanguage(language) {
+  var element = document.getElementById("url");
+  element.value = language;
+  element.innerHTML = language;
+}
+
+
 </script>
 {% endblock %}

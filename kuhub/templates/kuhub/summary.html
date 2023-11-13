@@ -25,10 +25,11 @@
         {% for post in summary_post_list %}
             <div class="card border border-1 rounded-4">
                 <div class="card-header">
-                    <div class="tag-text">{{ post.post_id.tag_id.tag_text }}
-                        {% if post.post_id.was_published_recently_post %}
-                            <span class="badge" style="background-color: red; text-align: center; margin-left: 5px;">New!</span>
+                    <div class="tag-text">
+                        {% if post.was_published_recently_post %}
+                            <span class="badge" style="background-color: red; text-align: center; margin-right: 5px;">New!</span>
                         {% endif %}
+                        {{ post.post_id.tag_id.tag_text }}
                     </div>
                 </div>
                 <div class="card-body">
