@@ -35,10 +35,23 @@ jobs:
       - name: Set TESTING environment variable
         run: echo "TESTING=true" >> $GITHUB_ENV
 
+      - name: Set environment variables
+        run: |
+          echo "SECRET_KEY=secretkey" >> $GITHUB_ENV
+          echo "DEBUG=False" >> $GITHUB_ENV
+          echo "ALLOWED_HOSTS=127.0.0.1,localhost" >> $GITHUB_ENV
+          echo "TIME_ZONE=Asia/Bangkok" >> $GITHUB_ENV
+          echo "DATABASE_URL=postgres-neon-url" >> $GITHUB_ENV
+          echo "GOOGLE_OAUTH_CLIENT_ID=google-oauth-client-id" >> $GITHUB_ENV
+          echo "GOOGLE_OAUTH_SECRET_KEY=google-oauth-secret-key" >> $GITHUB_ENV
+
       - name: Lint with flake8
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=79 --statistics
 
+      - name: Apply database migrations
+        run: python manage.py migrate
+
       - name: Test with Django test
-        run: python manage.py test kuhub --settings=isp_project.settings
+        run: python manage.py test kuhub
