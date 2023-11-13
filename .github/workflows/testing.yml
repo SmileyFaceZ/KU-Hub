@@ -41,9 +41,14 @@ jobs:
           echo "DEBUG=False" >> $GITHUB_ENV
           echo "ALLOWED_HOSTS=127.0.0.1,localhost" >> $GITHUB_ENV
           echo "TIME_ZONE=Asia/Bangkok" >> $GITHUB_ENV
-          echo "DATABASE_URL=postgres-neon-url" >> $GITHUB_ENV
-          echo "GOOGLE_OAUTH_CLIENT_ID=google-oauth-client-id" >> $GITHUB_ENV
-          echo "GOOGLE_OAUTH_SECRET_KEY=google-oauth-secret-key" >> $GITHUB_ENV
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+          echo "GOOGLE_OAUTH_CLIENT_ID=${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "GOOGLE_OAUTH_SECRET_KEY=${{ secrets.GOOGLE_OAUTH_SECRET_KEY }}" >> $GITHUB_ENV
+          echo "TESTING=true" >> $GITHUB_ENV
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          GOOGLE_OAUTH_SECRET_KEY: ${{ secrets.GOOGLE_OAUTH_SECRET_KEY }}
 
       - name: Lint with flake8
         run: |
