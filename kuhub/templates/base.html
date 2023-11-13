@@ -37,7 +37,6 @@
                         {% if user.profile.display_photo %}
                             <img src="{{ user.profile.display_photo.url }}" alt="Profile Photo" width="45px" height="50" class="rounded-icon">
                         {% else %}
-                            <!-- Add a default profile photo here -->
                             <img src="{% static 'media/media/store/profile_photos/IMG_7967.jpeg' %}" alt="Default Profile Photo" width="45px" height="50" class="rounded-icon">
                         {% endif %}
                     {% else %}
@@ -62,8 +61,11 @@
                 <a href="{% url 'kuhub:create_post' %}" class="h5 text-decoration-none m-3">
                     <i style="margin-right: 15px; margin-bottom: 15px;" class="fa-regular fa-square-plus"></i>Create Post
                 </a><br>
-                <a href="#" class="h5 text-decoration-none m-3">
+                <a href="{% url 'kuhub:followers_page' %}" class="h5 text-decoration-none m-3">
                     <i style="margin-right: 10px; margin-bottom: 15px;" class="fa-solid fa-user-plus"></i>Follower
+                </a><br>
+                <a href="{% url 'kuhub:following_page' %}" class="h5 text-decoration-none m-3">
+                    <i style="margin-right: 10px; margin-bottom: 15px;" class="fa-solid fa-user-plus"></i>Following
                 </a><br>
                 <a href="#" class="h5 text-decoration-none m-3">
                     <i style="margin-right: 15px; margin-bottom: 7px;" class="fa-solid fa-download"></i>Download
