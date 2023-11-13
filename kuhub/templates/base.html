@@ -89,7 +89,7 @@
     {% endblock %}
     {% url 'kuhub:create_post' as create_post_url %}
     {% if user.is_authenticated and request.path != create_post_url %}
-        <button type="button" class="round-create"><a href="{% url 'kuhub:create_post' %}" style="text-decoration: none; color: white;">&#9998;</a></button>
+        <button type="button" id=create_post class="round-create"><a href="{% url 'kuhub:create_post' %}" style="text-decoration: none; color: white;">&#9998;</a></button>
     {% endif %}
 </body>
 </html>
