@@ -70,23 +70,4 @@
     "biography": "",
     "display_photo": ""
   }
-},
-{
-  "model": "kuhub.profile",
-  "pk": 9,
-  "fields": {
-    "user": 12,
-    "biography": "",
-    "display_photo": ""
-  }
-},
-{
-  "model": "kuhub.profile",
-  "pk": 10,
-  "fields": {
-    "user": 13,
-    "biography": "",
-    "display_photo": ""
-  }
-}
 ]

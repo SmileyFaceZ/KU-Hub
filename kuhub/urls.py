@@ -19,5 +19,9 @@ urlpatterns = [
     path('liked/', views.like_post, name='like_post'),
     path('disliked/', views.dislike_post, name='dislike_post'),
     path('create-post/', views.create_post, name='create_post'),
-    path('profile/settings/', views.profile_settings, name='profile_settings')
+    path('profile/settings/', views.profile_settings, name='profile_settings'),
+    path('profile/<str:username>/', views.profile_view, name='profile_view'),
+    path('toggle-follow/<int:user_id>/', views.toggle_follow, name='toggle_follow'),
+    path('followers/', views.followers_page, name='followers_page'),
+    path('following/', views.following_page, name='following_page')
 ]

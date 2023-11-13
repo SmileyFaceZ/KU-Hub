@@ -7,7 +7,7 @@ class Group(models.Model):
     group_member = models.ManyToManyField('auth.User')
     group_tags = models.ManyToManyField('GroupTags')
     group_description = models.CharField(max_length=255)
-    create_date = models.DateField(default=datetime.date.today())
+    create_date = models.DateField(default=datetime.date.today)
     group_password = models.OneToOneField('GroupPassword', on_delete=models.CASCADE, null=True, blank=True)
 
     def was_published_recently_post(self):
