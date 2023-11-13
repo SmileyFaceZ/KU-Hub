@@ -16,17 +16,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_DB: kuhubdb
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
     steps:
       - uses: actions/checkout@v3
 
@@ -40,14 +29,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8 pytest -r requirements.txt "python-dotenv[cli]"
 
-
       - name: Copy .env.example to .env
         run: cp .env.example .env
 
-      - name: Load environment variables
-        run: |
-          pip install python-dotenv
-          dotenv
+      - name: Set TESTING environment variable
+        run: echo "TESTING=true" >> $GITHUB_ENV
 
       - name: Lint with flake8
         run: |
@@ -56,4 +42,3 @@ jobs:
 
       - name: Test with Django test
         run: python manage.py test kuhub --settings=isp_project.settings
-
