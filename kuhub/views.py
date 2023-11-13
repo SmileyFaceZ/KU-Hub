@@ -164,6 +164,17 @@ def create_group(request: HttpRequest):
     )
 
 @login_required
+class group_detail(generic.DetailView):
+    """Group manage and detail page"""
+    model = Group
+    template_name = 'kuhub/group_detail.html'
+
+    def get_queryset(self):
+        return Group.objects.all()
+
+
+
+@login_required
 def like_post(request: HttpRequest) -> JsonResponse:
     """Increase number of likes for a post when the user clicks the like."""
     user = request.user
