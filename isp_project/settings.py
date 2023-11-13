@@ -57,12 +57,13 @@ SOCIALACCOUNT_PROVIDERS = {
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
         'APP': {
-            'client_id': '298266224776-o5thmj41tjhabonol6nf853qt9f8np7l.apps.googleusercontent.com',
-            'secret': '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',
+            'client_id': config('GOOGLE_OAUTH_CLIENT_ID', default='google-oauth-client-id'),
+            'secret': config('GOOGLE_OAUTH_SECRET_KEY', default='google-oauth-secret-key'),
             'key': ''
         }
     }
 }
+
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
