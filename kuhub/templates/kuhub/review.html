@@ -11,18 +11,24 @@
 
 {% if messages %}
     {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="font-family: 'Poppins'">
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     {% endfor %}
 {% endif %}
-
-<div class="container">
+<div class="container" style="font-family: 'Poppins'">
     {% if posts_list %}
         {% for post in posts_list %}
             <div class="card border border-1 rounded-4">
-                <div class="float-start card-body">
+                <div class="card-header">
+                    <div class="tag-text">{{ post.tag_id.tag_text }}
+                    {% if post.was_published_recently_post %}
+                            <span class="badge" style="background-color: red; text-align: center; margin-left: 5px;">New!</span>
+                    {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
                     <a href="{% url 'kuhub:profile_view' username=post.username %}">
                         {% if post.username.profile.display_photo %}
                             <img class="me-2 rounded-circle" src="{{ post.user.profile.display_photo.url }}" width="45" height="45" alt="{{ post.username }}'s Profile">

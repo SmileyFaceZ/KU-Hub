@@ -1,4 +1,4 @@
-[![Unit Testing](https://github.com/SmileyFaceZ/KU-Hub/actions/workflows/kuhub-app.yml/badge.svg)](https://github.com/SmileyFaceZ/KU-Hub/actions/workflows/kuhub-app.yml)
+[![Unit Testing](https://github.com/SmileyFaceZ/KU-Hub/actions/workflows/testing.yml/badge.svg)](https://github.com/SmileyFaceZ/KU-Hub/actions/workflows/testing.yml)
 
 # KU-Hub
 
