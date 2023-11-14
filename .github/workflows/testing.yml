@@ -41,4 +41,4 @@ jobs:
 
       - name: Debugging
         run: |
-          python manage.py test kuhub
+          python manage.py test kuhub --noinput
