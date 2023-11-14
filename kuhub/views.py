@@ -133,14 +133,27 @@ class SubjectDetailView(generic.ListView):
 
     def get(self, request: HttpRequest, **kwargs):
         try:
-            question = get_object_or_404(Subject, course_code=kwargs["pk"])
+            key = kwargs["course_code"]
+            subject = get_object_or_404(Subject, course_code=key)
         except Http404:
-            messages.error(
+            messages.warning(
                 request,
-                f"Subject Course Code {kwargs['pk']} does not exists.❗️")
-            return redirect("kuhub:review")
+                f"Subject Course Code {key} does not exist.❗️")
+            return redirect("kuhub:gen_ed_type_list")
 
-        return render(request, 'kuhub/subject_detail.html')
+        course_code_post = [
+            post for post in Post.objects.all().order_by('-post_date')
+            if key == post.subject.course_code
+        ]
+
+        return render(
+            request,
+            'kuhub/subject_detail.html',
+            context={
+                "course_code_post": course_code_post,
+                "subject": subject.course_code + " " + subject.name_eng,
+            }
+        )
 
 
 @login_required
