@@ -29,7 +29,9 @@
                         {% if post.was_published_recently_post %}
                             <span class="badge" style="background-color: red; text-align: center; margin-right: 5px;">New!</span>
                         {% endif %}
-                        {{ post.post_id.tag_id.tag_text }}
+                        {{ post.post_id.tag_id.tag_text }} |
+                        <a href="#">{{ post.post_id.subject.course_code }} {{ post.post_id.subject.name_eng }}</a> |
+                        <a href="{% url 'kuhub:gen_ed_type_list' %}#{{ post.post_id.subject.type|slugify }}">{{ post.post_id.subject.type }}</a>
                     </div>
                 </div>
                 <div class="card-body position-relative">

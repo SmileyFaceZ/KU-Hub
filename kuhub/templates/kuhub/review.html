@@ -26,7 +26,9 @@
                     {% if post.was_published_recently_post %}
                         <span class="badge" style="background-color: red; text-align: center; margin-right: 5px;">New!</span>
                     {% endif %}
-                    {{ post.tag_id.tag_text }}
+                    {{ post.tag_id.tag_text }} |
+                    <a href="{% url 'kuhub:subject_detail' post.subject.course_code %}">{{ post.subject.course_code }} {{ post.subject.name_eng }}</a> |
+                    <a href="{% url 'kuhub:gen_ed_type_list' %}#{{ post.subject.type|slugify }}">{{ post.subject.type }}</a>
                 </div>
                 <div class="card-body position-relative">
                     <div class="dropdown position-absolute top-0 end-0">
@@ -190,7 +192,6 @@ function getCookie(name) {
 $(document).ready(function () {
     $('#followBtn').text(initialFollowingStatus ? 'Unfollow' : 'Follow');
 });
-
 </script>
 
 <style>

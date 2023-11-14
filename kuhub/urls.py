@@ -23,5 +23,7 @@ urlpatterns = [
     path('profile/<str:username>/', views.profile_view, name='profile_view'),
     path('toggle-follow/<int:user_id>/', views.toggle_follow, name='toggle_follow'),
     path('followers/', views.followers_page, name='followers_page'),
-    path('following/', views.following_page, name='following_page')
+    path('following/', views.following_page, name='following_page'),
+    path('gen-ed-list/', views.GenEdTypeListView.as_view(), name='gen_ed_type_list'),
+    path('subject/<str:course_code>/', views.SubjectDetailView.as_view(), name='subject_detail'),
 ]
