@@ -34,3 +34,30 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['biography', 'display_photo']
+
+class GroupForm(forms.Form):
+    name = forms.CharField(
+        widget=forms.Textarea(attrs={'cols': 50, 'rows': 1}),
+        label='Group name:',
+        required=True
+    )
+    tag_name = forms.CharField(
+        widget=forms.Textarea(attrs={'cols': 70, 'rows': 1}),
+        label='Tags :',
+        required=False
+    )
+    description = forms.CharField(
+        widget=forms.Textarea(attrs={'cols': 100, 'rows': 3}),
+        label='Description',
+        required=False
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+        label='Password',
+        required=False
+    )
+    password_2 = forms.CharField(
+        widget=forms.PasswordInput,
+        label='Password',
+        required=False
+    )

@@ -11,4 +11,4 @@ class Profile(models.Model):
                                       default='media/media/store/profile_photos/IMG_7967.jpeg')
 
     def __str__(self):
-        return self.biography
+        return self.user.username

@@ -15,10 +15,10 @@ from django.db.models import QuerySet
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
-from kuhub.forms import PostForm, ProfileForm
-from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group
+from kuhub.forms import PostForm, ProfileForm, GroupForm
+from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group, GroupTags, GroupPassword
 from django.contrib.auth.models import User
-
+from django.views.decorators.http import require_POST
 
 class ReviewHubView(generic.ListView):
     """Redirect to Review-Hub page for review posts."""
@@ -123,6 +123,45 @@ def join(request,group_id):
     messages.success(request, "You join the group success!")
     return redirect(reverse('kuhub:groups'))
 
+@login_required
+def create_group(request: HttpRequest):
+    """
+    Create Group
+    """
+    user = request.user
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            #check password and password(again) is the same
+            if data['password'] != data['password_2'] :
+                messages.error(request, "Password is not the same")
+                return render(
+                    request,
+                    template_name='kuhub/group_create.html',
+                    context={'form': GroupForm}
+                )
+            # if not have the tag in groupTag object create it
+            group_tag, created = GroupTags.objects.get_or_create(tag_text=data['tag_name'])
+            # create group object
+            password = None
+            if data['password']:
+                password = GroupPassword.objects.create(group_password=data['password'])
+                password.set_password(password.group_password)
+            group = Group.objects.create(
+                group_name=data['name'],
+                group_description=data['description'],
+                group_password=password,
+            )
+            group.group_tags.set([group_tag])
+            group.group_member.set([user])
+            messages.success(request, f'Create group successful your group id is {group.id}')
+            return redirect(reverse('kuhub:groups'))
+    return render(
+        request,
+        template_name='kuhub/group_create.html',
+        context={'form': GroupForm}
+    )
 
 @login_required
 def like_post(request: HttpRequest) -> JsonResponse:
@@ -188,6 +227,7 @@ def dislike_post(request: HttpRequest) -> JsonResponse:
         return redirect('kuhub:review')
 
     return redirect('account_login')
+
 
 @login_required
 def create_post(request: HttpRequest):
@@ -261,12 +301,78 @@ def profile_settings(request):
     return render(request,
                   template_name='kuhub/profile_settings.html',
                   context={
-                    'form': form,
-                    'user': user,
-                    'profile': profile,
-                    'following': following,
-                    'followers': followers,
-                    'biography': biography
-                     })
+                      'form': form,
+                      'user': user,
+                      'profile': profile,
+                      'following': following,
+                      'followers': followers,
+                      'biography': biography
+                  })
 
+
+def profile_view(request, username):
+
+    # Retrieve the user based on the username
+    user = get_object_or_404(User, username=username)
+
+    # Retrieve the user's profile
+    profile = get_object_or_404(Profile, user=user)
+
+    # Get followers and following counts
+    following = UserFollower.objects.filter(user_followed=user)
+    followers = UserFollower.objects.filter(follower=user)
+    posts_list = Post.objects.filter(username=user)
+
+    # Check if the current user is following the viewed profile
+    is_following = False
+    if request.user.is_authenticated:
+        is_following = request.user.follower.filter(user_followed=user).exists()
+
+    context = {
+        'profile': profile,
+        'followers_count': following,
+        'following_count': followers,
+        'is_following': is_following,
+        'user': request.user,
+        'posts_list': posts_list,
+    }
+
+    return render(request, 'kuhub/profile.html', context)
+
+
+@login_required
+@require_POST
+def toggle_follow(request, user_id):
+    user_to_follow = User.objects.get(pk=user_id)
+    follower = request.user
+
+    is_following = UserFollower.objects.filter(user_followed=user_to_follow, follower=follower).exists()
+
+    if is_following:
+        # If already following, unfollow
+        UserFollower.objects.filter(user_followed=user_to_follow, follower=follower).delete()
+    else:
+        # If not following, follow
+        UserFollower.objects.create(user_followed=user_to_follow, follower=follower)
+
+    # Recalculate counts
+    followers_count = UserFollower.objects.filter(user_followed=user_to_follow).count()
+
+    return JsonResponse({'is_following': not is_following, 'followers_count': followers_count})
+
+
+@login_required
+def followers_page(request):
+    user = request.user
+    followers = UserFollower.objects.filter(user_followed=user)
+
+    return render(request, "kuhub/followers_page.html", context={'followers': followers})
+
+
+@login_required
+def following_page(request):
+    user = request.user
+    following = UserFollower.objects.filter(follower=user)
+
+    return render(request, "kuhub/following_page.html", context={'followings': following})
 
