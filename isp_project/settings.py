@@ -112,7 +112,7 @@ WSGI_APPLICATION = "isp_project.wsgi.application"
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL', default='postgres-url'),
+        default=config("DATABASE_URL", default="postgres://postgres:postgres@localhost:5432/postgres"),
         conn_max_age=500,
         conn_health_checks=True
     )
