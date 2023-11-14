@@ -1,34 +1,50 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
     <title>Tricks-Hub</title>
 {% endblock %}
+<script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
 
 {% block content %}
 
-{% load static %}
 {% load custom_filters %}
+{% load static %}
 
 {% if messages %}
     {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="font-family: 'Poppins'">
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     {% endfor %}
 {% endif %}
 
-<div class="container">
+<div class="container" style="font-family: 'Poppins'">
     {% if tricks_list %}
         {% for post in tricks_list %}
-            <div class="card border border-dark border-3 m-2 rounded-3">
+            <div class="card border border-1 rounded-4">
                 <div class="card-header">
-                    {% if post.was_published_recently_post %}
-                        <h3>NEW!</h3>
-                    {% endif %}
-                    {{ post.id }} | {{ post.tag_id.tag_text }} | ReportButton
+                    <div class="tag-text">
+                        {% if post.was_published_recently_post %}
+                            <span class="badge" style="background-color: red; text-align: center; margin-right: 5px;">New!</span>
+                        {% endif %}
+                        {{ post.tag_id.tag_text }}
+                    </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body position-relative">
+                    <div class="dropdown position-absolute top-0 end-0">
+                        <button class="btn btn-link kebab-menu" type="button" id="kebabMenu{{ post.pk }}" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="kebabMenu{{ post.pk }}" style="box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);">
+                            {% if user.is_authenticated and post.username == user %}
+                                <li><a class="dropdown-item" href="#">Edit Post</a></li>
+                            {% else %}
+                                <li><a class="dropdown-item" href="#">Report</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
                     <a href="{% url 'kuhub:profile_view' username=post.username %}">
                         {% if post.username.profile.display_photo %}
                             <img class="me-2 rounded-circle" src="{{ post.user.profile.display_photo.url }}" width="45" height="45" alt="{{ post.username }}'s Profile">
@@ -36,10 +52,10 @@
                             <img class="me-2 rounded-circle" src="{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}" width="45" height="45" alt="{{ post.username }}'s Profile">
                         {% endif %}
                     </a>
-                    <h4 class="card-title m-auto h1">{{ post.username }}</h4>
+                    <h4 class="card-title" style="font-weight: 600;">{{ post.username }}</h4>
                     <br>
                     <p class="card-text">{{ post.post_content }}</p>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ post.post_date }}</h6>
+                    <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 5px;"></i>{{ post.post_date }}</h6>
                 </div>
                 <div class="card-footer custom-footer">
                     <div class="follow-button-section">
@@ -84,6 +100,9 @@
         <h1>No posts are available.</h1>
     {% endif %}
 </div>
+
+<link rel="stylesheet" href="{% static 'kuhub/style.css' %}">
+
 <script>
 function click_button(postId, response) {
     console.log('Server response:', response);

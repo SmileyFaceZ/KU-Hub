@@ -46,7 +46,7 @@ class Post(models.Model):
         default=1
     )
 
-    def was_published_recently(self) -> bool:
+    def was_published_recently_post(self) -> bool:
         """
         Checks if the post was published recently.
 
