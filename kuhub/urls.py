@@ -25,4 +25,5 @@ urlpatterns = [
     path('followers/', views.followers_page, name='followers_page'),
     path('following/', views.following_page, name='following_page'),
     path('gen-ed-list/', views.GenEdTypeListView.as_view(), name='gen_ed_type_list'),
+    path('subject/<str:pk>/', views.SubjectDetailView.as_view(), name='subject_detail'),
 ]

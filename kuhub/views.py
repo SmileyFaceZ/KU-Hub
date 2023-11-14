@@ -3,7 +3,7 @@ Contains view functions for handling requests.
 related to Review-Hub, Summary-Hub and Tricks-Hub
 in the kuhub web application.
 """
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.views import generic
 from django.views.generic import TemplateView
 import json
@@ -124,6 +124,24 @@ class GenEdTypeListView(generic.ListView):
 
         context['subject_list'] = subject_list
         return context
+
+
+class SubjectDetailView(generic.ListView):
+    """Redirect to review and summary detail of each subject page."""
+    template_name = 'kuhub/subject_detail.html'
+    context_object_name = 'subject_detail'
+
+    def get(self, request: HttpRequest, **kwargs):
+        try:
+            question = get_object_or_404(Subject, course_code=kwargs["pk"])
+        except Http404:
+            messages.error(
+                request,
+                f"Subject Course Code {kwargs['pk']} does not exists.❗️")
+            return redirect("kuhub:review")
+
+        return render(request, 'kuhub/subject_detail.html')
+
 
 @login_required
 def join(request,group_id):
