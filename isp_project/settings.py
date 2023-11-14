@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from decouple import config, Csv
+import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -55,12 +57,13 @@ SOCIALACCOUNT_PROVIDERS = {
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
         'APP': {
-            'client_id': '298266224776-o5thmj41tjhabonol6nf853qt9f8np7l.apps.googleusercontent.com',
-            'secret': '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',
+            'client_id': config('GOOGLE_OAUTH_CLIENT_ID', default='google-oauth-client-id'),
+            'secret': config('GOOGLE_OAUTH_SECRET_KEY', default='google-oauth-secret-key'),
             'key': ''
         }
     }
 }
+
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
@@ -108,14 +111,11 @@ WSGI_APPLICATION = "isp_project.wsgi.application"
 # To use Neon with Django, you have to create a Project on Neon and specify the project connection settings in your settings.py in the same way as for standalone Postgres.
 
 DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.postgresql',
-    'NAME': config("DATABASE_NAME", default="kuhubdb"),
-    'USER': config("DATABASE_USER", default="KU-Hub"),
-    'PASSWORD': config("DATABASE_PASSWORD", default="password"),
-    'HOST': config("HOST", default="localhost"),
-    'PORT': config("PORT", default="5432"),
-  }
+    'default': dj_database_url.config(
+        default=config("DATABASE_URL", default="postgres://postgres:postgres@localhost:5432/postgres"),
+        conn_max_age=500,
+        conn_health_checks=True
+    )
 }
 
 # Password validation
