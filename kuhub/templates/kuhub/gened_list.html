@@ -1,10 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}
+    <title>Review-Hub</title>
+{% endblock %}
+
+{% block content %}
+{% load static %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="font-family: 'Poppins'">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="container mt-4" style="font-family: 'Poppins'">
+    {% if type_list %}
+        <ul class="nav nav-tabs" role="tablist">
+            {% for type in type_list %}
+                <li class="nav-item">
+                    <a class="nav-link {% if forloop.first %}active{% endif %}" data-bs-toggle="tab" href="#{{ type|slugify }}">{{ type }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="tab-content">
+            {% for type in type_list %}
+                <div id="{{ type|slugify }}" class="container tab-pane fade {% if forloop.first %}show active{% endif %}"><br>
+                    <div id="accordion-basic" class="accordion">
+                        {% for subject in subject_list %}
+                            {% if subject.type == type %}
+                                <div class="accordion-item m-4 ">
+                                    <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#{{ subject.course_code }}">
+                                        {{ subject.course_code }} | {{ subject.name_eng }}
+                                    </button>
+                                    <div id="{{ subject.course_code }}" class="panel-collapse collapse">
+                                        <div class="accordion-body">
+                                            <p>Thai Name : {{ subject.name_th }}</p>
+                                            <p>Unit : {{ subject.unit }}</p>
+                                            <p>Hour : {{ subject.hour }}</p>
+                                            <p>Faculty : {{ subject.faculty }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <h1>No Subject are available.</h1>
+    {% endif %}
+</div>
+{% endblock %}
