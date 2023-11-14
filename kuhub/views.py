@@ -152,6 +152,7 @@ class SubjectDetailView(generic.ListView):
             context={
                 "course_code_post": course_code_post,
                 "subject": subject.course_code + " " + subject.name_eng,
+                "tag_list": Tags.objects.all(),
             }
         )
 
@@ -294,7 +295,8 @@ def create_post(request: HttpRequest):
                 username=request.user,
                 post_content=data['review'],
                 post_date=dt.datetime.now(),
-                tag_id=Tags.objects.get(tag_text=data['tag_name'])
+                tag_id=Tags.objects.get(tag_text=data['tag_name']),
+                subject=Subject.objects.get(course_code=data['subject'])
             )
 
             messages.success(request, 'Create Post Successfully!')

@@ -18,9 +18,25 @@
 
 <div class="container mt-4" style="font-family: 'Poppins'">
     <h1>{{ subject }}</h1>
-    {% for post in course_code_post %}
-        {{ post }}
-        <br>
+{#    {% for post in course_code_post %}#}
+{#        {{ post }}#}
+{#        <br>#}
+{#    {% endfor %}#}
+
+    <ul class="nav nav-tabs" role="tablist">
+    {% for tag in tag_list %}
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#{{ tag.tag_text|slugify }}">{{ tag.tag_text }}</a>
+        </li>
     {% endfor %}
+    </ul>
+
+    <div class="tab-content">
+        {% for tag in tag_list %}
+            <div id="{{ tag.tag_text|slugify }}" class="container tab-pane fade {% if forloop.first %}show active{% endif %}"><br>
+                Hello for {{ tag.tag_text }}
+            </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}
