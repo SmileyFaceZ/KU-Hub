@@ -47,8 +47,14 @@
                             {% endif %}
                         </ul>
                     </div>
-                    <img class="float-start rounded-circle" src="https://images.unsplash.com/photo-1603984973710-e915353b35fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YW1hemluZyUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D&w=1000&q=80" width="45" height="45">
-                    <h4 class="card-title" style="font-weight: 600;">{{ post.post_id.username }}</h4>
+                    <a href="{% url 'kuhub:profile_view' username=post.post_id.username %}">
+                        {% with profile=post.post_id.username.profile %}
+                            <div class="d-flex align-items-center"> <!-- Use a flex container for alignment -->
+                                <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                                <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ post.post_id.username }}</h4>
+                            </div>
+                        {% endwith %}
+                    </a>
                     <br>
                     <p class="card-text">{{ post.post_id.post_content }}</p>
                     <p class="card-text">
@@ -59,6 +65,17 @@
 
                 </div>
                 <div class="card-footer custom-footer">
+                    <div class="follow-button-section">
+                        {% if user.is_authenticated and user != profile.user %}
+                            <button type="button" id="followBtn" class="btn btn-primary" onclick="toggleFollow({{ profile.user.id }}, {{ is_following|yesno:"true,false" }}, event)">
+                                {% if is_following %}
+                                    Unfollow
+                                {% else %}
+                                    Follow
+                                {% endif %}
+                            </button>
+                        {% endif %}
+                    </div>
                     <div class="button-group">
                         {% if user.is_authenticated %}
                             <button type="button" class="btn btn-link" id="like-btn-{{ post.post_id.pk }}" data-content="{{ post.post_id.pk }}" onclick="like_button_click('{{ post.post_id.pk }}')">
