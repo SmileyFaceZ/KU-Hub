@@ -5,7 +5,6 @@ in the kuhub web application.
 """
 from django.http import HttpResponseRedirect, Http404
 from django.views import generic
-from django.views.generic import TemplateView
 import json
 import datetime as dt
 from django.urls import reverse
@@ -17,9 +16,10 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
 from kuhub.forms import PostForm, ProfileForm, GroupForm
 from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower,
-                          Group, GroupTags, GroupPassword, Subject)
+                          Group, GroupTags, GroupPassword, Subject, Notification)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
+
 
 class ReviewHubView(generic.ListView):
     """Redirect to Review-Hub page for review posts."""
@@ -104,6 +104,7 @@ class GroupView(generic.ListView):
             context['user_groups'] = self.request.user.group_set.all()
         return context
 
+
 class GenEdTypeListView(generic.ListView):
     """Redirect to show a type all subject type list."""
     template_name = 'kuhub/gened_list.html'
@@ -111,7 +112,7 @@ class GenEdTypeListView(generic.ListView):
 
     def get_queryset(self):
         """Return QuerySet of all subjects ordered by course_code"""
-        tag_list = (Subject.objects.values_list("type",flat=True)
+        tag_list = (Subject.objects.values_list("type", flat=True)
                     .distinct().order_by('type'))
         return [tag.replace("_", " ") for tag in tag_list]
 
@@ -156,13 +157,22 @@ class SubjectDetailView(generic.ListView):
         )
 
 
+class NotificationView(generic.ListView):
+    """Redirect users to notification page and show list of notification"""
+    template_name = 'kuhub/notification.html'
+    context_object_name = 'notifications_list'
+
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user).order_by("-id")
+
+
 @login_required
-def join(request,group_id):
+def join(request, group_id):
     """
     Join Group button
     """
     user = request.user
-    group = get_object_or_404(Group,pk=group_id)
+    group = get_object_or_404(Group, pk=group_id)
     if user in group.group_member.all():
         messages.error(request, "You already a member of this group")
         return redirect(reverse('kuhub:groups'))
@@ -176,6 +186,7 @@ def join(request,group_id):
     messages.success(request, "You join the group success!")
     return redirect(reverse('kuhub:groups'))
 
+
 @login_required
 def create_group(request: HttpRequest):
     """
@@ -186,8 +197,8 @@ def create_group(request: HttpRequest):
         form = GroupForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            #check password and password(again) is the same
-            if data['password'] != data['password_2'] :
+            # check password and password(again) is the same
+            if data['password'] != data['password_2']:
                 messages.error(request, "Password is not the same")
                 return render(
                     request,
@@ -215,6 +226,7 @@ def create_group(request: HttpRequest):
         template_name='kuhub/group_create.html',
         context={'form': GroupForm}
     )
+
 
 @login_required
 def like_post(request: HttpRequest) -> JsonResponse:
@@ -364,7 +376,6 @@ def profile_settings(request):
 
 
 def profile_view(request, username):
-
     # Retrieve the user based on the username
     user = get_object_or_404(User, username=username)
 
@@ -428,4 +439,5 @@ def following_page(request):
     following = UserFollower.objects.filter(follower=user)
 
     return render(request, "kuhub/following_page.html", context={'followings': following})
+
 

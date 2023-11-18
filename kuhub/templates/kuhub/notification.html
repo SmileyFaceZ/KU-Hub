@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Notifications</title>
+{% endblock %}
+
+
+{% block content %}
+{% load custom_filters %}
+{% load static %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="font-family: 'Poppins'">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+<div class="container" style="font-family: 'Poppins'">
+    {% if notifications_list %}
+        {% for notification in notifications_list %}
+            <div class="card border border-1 rounded-4">
+                <div class="card-body position-relative">
+                    <h4 class="card-title" style="font-weight: 600;">{{ post.username }}</h4>
+                    <br>
+                    <p class="card-text">{{ notification.message }}</p>
+                    <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 10px;"></i>{{ notification.timestamp }}</h6>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h1>No posts are available.</h1>
+    {% endif %}
+</div>
+
+<link rel="stylesheet" href="{% static 'kuhub/style.css' %}">
+
+{% endblock %}
