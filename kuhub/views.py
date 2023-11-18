@@ -3,6 +3,8 @@ Contains view functions for handling requests.
 related to Review-Hub, Summary-Hub and Tricks-Hub
 in the kuhub web application.
 """
+import datetime
+
 from django.http import HttpResponseRedirect
 from django.views import generic
 from django.views.generic import TemplateView
@@ -19,6 +21,7 @@ from kuhub.forms import PostForm, ProfileForm, GroupForm
 from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group, GroupTags, GroupPassword
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
+from .calendar import get_google_calendar_service, create_event
 
 class ReviewHubView(generic.ListView):
     """Redirect to Review-Hub page for review posts."""
@@ -376,3 +379,24 @@ def following_page(request):
 
     return render(request, "kuhub/following_page.html", context={'followings': following})
 
+def test(request):
+    if request.method == 'POST':
+        summary = request.POST.get('summary')
+        # start_datetime = request.POST.get('start_datetime')
+        # end_datetime = request.POST.get('end_datetime')
+        start_datetime = "2023-01-01T12:00:00"
+        end_datetime = '2024-01-01T12:00:00'
+        # Get the Google Calendar service
+        # service = get_google_calendar_service(request)
+
+        # if service:
+            # Create the event
+        created_event = create_event(request, summary, start_datetime, end_datetime)
+
+        if created_event:
+            messages.success(request, 'Event created successfully!')
+        else:
+            messages.error(request, 'Error creating the event. Please try again.')
+
+        return redirect('kuhub:test')
+    return render(request, 'kuhub/demo.html')
