@@ -70,6 +70,7 @@
                                 <i class="{{ dislike_icon_styles|index:forloop.counter0 }}"></i>
                             </button>
                             <span id="dislikes-count-{{ post.post_id.pk }}">{{ post.total_dislikes }}</span>
+                            <a href="{% url 'kuhub:post_detail' pk=post.pk %}" class="btn btn-link">See comments</a>
                         {% else %}
                             <form action="{% url 'account_login' %}">
                                 <button type="submit" class="btn btn-link">

@@ -452,7 +452,7 @@ def post_detail(request, pk):
             comment.post_id = post
             comment.username = request.user
             comment.save()
-            return redirect('post_detail', pk=post.pk)
+            return redirect('kuhub/post_detail', pk=post.pk)
 
     else:
         form = CommentForm()
