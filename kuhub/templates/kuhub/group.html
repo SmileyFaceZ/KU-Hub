@@ -13,7 +13,7 @@
                 <h2><b>My Group</b></h2>
                 {% if user.is_authenticated %}
                 {% for group in user_groups %}
-                    <ul>{{ group.group_name }}</ul>
+                    <a href="{% url 'kuhub:group_detail' group.id %}">{{ group.group_name }}</a>
                 {% endfor %}
                 {% endif %}
                 {% for message in messages %}
