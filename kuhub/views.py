@@ -457,7 +457,10 @@ def post_detail(request, pk):
     else:
         form = CommentForm()
 
-    context = {'post': post, 'comments':comments, 'form': form}
+    owner_profile = Profile.objects.filter(user=post.username)
+    context = {'post': post, 'comments':comments,
+               'form': form,
+               'owner_profile': owner_profile}
 
     return render(request, 'kuhub/post_detail.html', context)
 

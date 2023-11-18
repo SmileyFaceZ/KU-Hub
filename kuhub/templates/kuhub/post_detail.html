@@ -36,7 +36,7 @@
                     </div>
                     <a href="{% url 'kuhub:profile_view' username=post.username %}">
                         {% if post.username.profile.display_photo %}
-                            <img class="me-2 rounded-circle" src="{{ post.user.profile.display_photo.url }}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                            <img class="me-2 rounded-circle" src="{{ post.username.profile.display_photo.url }}" width="45" height="45" alt="{{ post.username }}'s Profile">
                         {% else %}
                             <img class="me-2 rounded-circle" src="{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}" width="45" height="45" alt="{{ post.username }}'s Profile">
                         {% endif %}
@@ -55,8 +55,8 @@
                     <div class="card-body">
                         <h1 class="card-title">{{ com.username.username }}</h1>
                         <a href="{% url 'kuhub:profile_view' username=com.username %}">
-                        {% if post.username.profile.display_photo %}
-                            <img class="me-2 rounded-circle" src="{{ post.user.profile.display_photo.url }}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                        {% if owner_profile.display_photo %}
+                            <img class="me-2 rounded-circle" src="{{ owner.display_photo.url }}" width="45" height="45" alt="{{ post.username }}'s Profile">
                         {% else %}
                             <img class="me-2 rounded-circle" src="{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}" width="45" height="45" alt="{{ post.username }}'s Profile">
                         {% endif %}
