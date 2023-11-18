@@ -9,4 +9,5 @@ from .group_password import GroupPassword
 from .group_tags import GroupTags
 from .subject import Subject
 from .profile import Profile
+from .notification import Notification
 

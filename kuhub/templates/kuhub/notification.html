@@ -1,0 +1,18 @@
+<!-- templates/notifications.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notifications</title>
+</head>
+<body>
+    <script>
+        const socket = new WebSocket('ws://' + window.location.host + '/ws/notifications/');
+
+        socket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            alert(data.message);
+        };
+    </script>
+</body>
+</html>
