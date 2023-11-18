@@ -14,9 +14,9 @@ from django.db.models import QuerySet
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
-from kuhub.forms import PostForm, ProfileForm, GroupForm
+from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm
 from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower,
-                          Group, GroupTags, GroupPassword, Subject, Notification)
+                          Group, GroupTags, GroupPassword, Subject, Notification, PostComments)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 
@@ -440,4 +440,22 @@ def following_page(request):
 
     return render(request, "kuhub/following_page.html", context={'followings': following})
 
+
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    comments = PostComments.objects.filter(post_id=post)
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post_id = post
+            comment.username = request.user
+            comment.save()
+            return redirect('post_detail', pk=post.pk)
+
+    else:
+        form = CommentForm()
+
+    return render(request, 'kuhub/post_detail.html', {'post': post, 'comments':comments, 'form': form})
 
