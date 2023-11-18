@@ -1,31 +1,12 @@
-<!-- templates/create_event.html -->
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Create Event</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Google Calendar Creation</title>
 </head>
 <body>
-    <h2>Create Event</h2>
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-    <form method="post">
-        {% csrf_token %}
-        <label for="summary">Summary:</label>
-        <input type="text" id="summary" name="summary" required>
-        <br>
-        <label for="start_datetime">Start Datetime:</label>
-        <input type="datetime-local" id="start_datetime" name="start_datetime" required>
-        <br>
-        <label for="end_datetime">End Datetime:</label>
-        <input type="datetime-local" id="end_datetime" name="end_datetime" required>
-        <br>
-        <button type="submit">Create Event</button>
-    </form>
+    <h1>New Calendar Created!</h1>
+    <p>Calendar ID: {{ new_calendar_id }}</p>
 </body>
 </html>

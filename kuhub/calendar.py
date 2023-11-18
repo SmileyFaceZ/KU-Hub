@@ -5,6 +5,7 @@ from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from allauth.socialaccount.models import SocialToken
 from googleapiclient.discovery import build
+from google.oauth2 import service_account
 
 def get_google_calendar_service(request):
     """
@@ -26,6 +27,31 @@ def get_google_calendar_service(request):
     credentials = Credentials.from_authorized_user_info(info=user_info,scopes=scope)
     service = build('calendar', 'v3', credentials=credentials)
     return service
+
+def get_service_by_service_account():
+    """
+        Create and return a Google Calendar API service instance using the provided credentials.
+        With google service account.
+    """
+    SCOPES = ['https://www.googleapis.com/auth/calendar']
+    # Load the service account credentials
+    credentials = service_account.Credentials.from_service_account_file(
+        'data/ku-hub-403109-d333bb4ea845.json',
+        scopes=SCOPES
+    )
+
+    # Create a service object
+    service = build('calendar', 'v3', credentials=credentials)
+    return service
+
+def create_calendar(name):
+    service = get_service_by_service_account()
+    new_calendar = {
+        'summary': name,
+        'timeZone': 'Asia/Bangkok'
+    }
+    created_calendar = service.calendars().insert(body=new_calendar).execute()
+    return created_calendar
 
 def create_event(request, summary, start_datetime, end_datetime):
     """
