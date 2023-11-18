@@ -34,11 +34,17 @@ class ReviewHubView(generic.ListView):
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
+
+        profiles_list = [Profile.objects.filter(user=post.username).first()
+                         for post in context['posts_list']]
+
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
                                        for post in context['posts_list']]
         context['dislike_icon_styles'] = [
             post.dislike_icon_style(self.request.user) for post in
             context['posts_list']]
+        context['profiles_list'] = profiles_list
+
         return context
 
 

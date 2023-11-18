@@ -44,11 +44,9 @@
                         </ul>
                     </div>
                     <a href="{% url 'kuhub:profile_view' username=post.username %}">
-                        {% if post.username.profile.display_photo %}
-                            <img class="me-2 rounded-circle" src="{{ post.user.profile.display_photo.url }}" width="45" height="45" alt="{{ post.username }}'s Profile">
-                        {% else %}
-                            <img class="me-2 rounded-circle" src="{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}" width="45" height="45" alt="{{ post.username }}'s Profile">
-                        {% endif %}
+                        {% with profile=post.username.profile %}
+                            <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                        {% endwith %}
                     </a>
                     <h4 class="card-title" style="font-weight: 600;">{{ post.username }}</h4>
                     <br>
