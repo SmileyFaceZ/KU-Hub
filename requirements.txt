@@ -4,3 +4,7 @@ django-allauth
 Pillow >= 8.0.0
 python-decouple
 psycopg2-binary==2.9.9
+google-api-python-client
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
