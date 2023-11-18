@@ -457,5 +457,7 @@ def post_detail(request, pk):
     else:
         form = CommentForm()
 
-    return render(request, 'kuhub/post_detail.html', {'post': post, 'comments':comments, 'form': form})
+    context = {'post': post, 'comments':comments, 'form': form}
+
+    return render(request, 'kuhub/post_detail.html', context)
 
