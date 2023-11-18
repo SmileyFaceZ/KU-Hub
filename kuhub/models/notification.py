@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 
-class Notification:
+class Notification(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     message = models.CharField(max_length=255)
     timestamp = models.DateTimeField(default=timezone.now)

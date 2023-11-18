@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'channels',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -105,7 +104,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "isp_project.wsgi.application"
 
-ASGI_APPLICATION = 'isp_project.routing.application'
 
 
 # Database

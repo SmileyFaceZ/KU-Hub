@@ -5,7 +5,6 @@ in the kuhub web application.
 """
 from django.http import HttpResponseRedirect, Http404
 from django.views import generic
-from django.views.generic import TemplateView
 import json
 import datetime as dt
 from django.urls import reverse
@@ -17,7 +16,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
 from kuhub.forms import PostForm, ProfileForm, GroupForm
 from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower,
-                          Group, GroupTags, GroupPassword, Subject)
+                          Group, GroupTags, GroupPassword, Subject, Notification)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 
@@ -156,6 +155,15 @@ class SubjectDetailView(generic.ListView):
                 "subject": subject.course_code + " " + subject.name_eng,
             }
         )
+
+
+class NotificationView(generic.ListView):
+    """Redirect users to notification page and show list of notification"""
+    template_name = 'kuhub/notification.html'
+    context_object_name = 'notifications_list'
+
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user).order_by("-id")
 
 
 @login_required
@@ -433,5 +441,3 @@ def following_page(request):
     return render(request, "kuhub/following_page.html", context={'followings': following})
 
 
-class NotificationView(TemplateView):
-    template_name = 'notifications.html'

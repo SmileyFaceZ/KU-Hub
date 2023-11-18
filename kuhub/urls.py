@@ -26,5 +26,5 @@ urlpatterns = [
     path('following/', views.following_page, name='following_page'),
     path('gen-ed-list/', views.GenEdTypeListView.as_view(), name='gen_ed_type_list'),
     path('subject/<str:course_code>/', views.SubjectDetailView.as_view(), name='subject_detail'),
-    path('notifications/')
+    path('notifications/', views.NotificationView.as_view(), name='notifications')
 ]
