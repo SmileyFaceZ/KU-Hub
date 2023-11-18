@@ -152,10 +152,12 @@ def create_group(request: HttpRequest):
             if data['password']:
                 password = GroupPassword.objects.create(group_password=data['password'])
                 password.set_password(password.group_password)
+            calendar = create_calendar("calendar")
             group = Group.objects.create(
                 group_name=data['name'],
                 group_description=data['description'],
                 group_password=password,
+                group_calendar=calendar['id']
             )
             group.group_tags.set([group_tag])
             group.group_member.set([user])
@@ -391,29 +393,3 @@ def following_page(request):
 
     return render(request, "kuhub/following_page.html", context={'followings': following})
 
-# def test(request):
-#     if request.method == 'POST':
-#         summary = request.POST.get('summary')
-#         # start_datetime = request.POST.get('start_datetime')
-#         # end_datetime = request.POST.get('end_datetime')
-#         start_datetime = "2023-01-01T12:00:00"
-#         end_datetime = '2024-01-01T12:00:00'
-#         # Get the Google Calendar service
-#         # service = get_google_calendar_service(request)
-#
-#         # if service:
-#             # Create the event
-#         created_event = create_event(request, summary, start_datetime, end_datetime)
-#
-#         if created_event:
-#             messages.success(request, 'Event created successfully!')
-#         else:
-#             messages.error(request, 'Error creating the event. Please try again.')
-#
-#         return redirect('kuhub:test')
-#     return render(request, 'kuhub/demo.html')
-
-def test(request):
-    calendar = create_calendar('calendar1')
-    context = {'new_calendar_id': calendar['id']}
-    return render(request, 'kuhub/demo.html', context)

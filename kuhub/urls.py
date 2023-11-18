@@ -25,5 +25,4 @@ urlpatterns = [
     path('toggle-follow/<int:user_id>/', views.toggle_follow, name='toggle_follow'),
     path('followers/', views.followers_page, name='followers_page'),
     path('following/', views.following_page, name='following_page'),
-    path('apitest/',views.test,name='test')
 ]
