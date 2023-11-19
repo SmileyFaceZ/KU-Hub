@@ -110,3 +110,13 @@ class PostDownloadFilter(PostFilter):
         elif value == 'desc':
             return queryset.order_by('download')
         return queryset
+
+
+class GenedFilter(django_filters.FilterSet):
+
+    subject_name = django_filters.CharFilter(
+        label='Subject Name',
+        field_name='name_eng',
+        lookup_expr='icontains',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )

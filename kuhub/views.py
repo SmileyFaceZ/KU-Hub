@@ -18,7 +18,7 @@ from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower,
                           Group, GroupTags, GroupPassword, Subject, Notification, PostComments)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
-from kuhub.filters import PostFilter, PostDownloadFilter
+from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
 
 
 class ReviewHubView(generic.ListView):
@@ -152,6 +152,14 @@ class GenEdTypeListView(generic.ListView):
             subject.type = subject.type.replace("_", " ")
 
         context['subject_list'] = subject_list
+        context['form'] = GenedFilter(
+            self.request.GET,
+            queryset=subject_list
+        ).form
+        type_list = list(set(subject.type for subject in subject_list))
+
+        context['type_list'] = type_list
+
         return context
 
 
