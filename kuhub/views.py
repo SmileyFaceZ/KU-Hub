@@ -148,14 +148,17 @@ class GenEdTypeListView(generic.ListView):
         """Return user'group data as contect data"""
         context = super().get_context_data(**kwargs)
         subject_list = Subject.objects.all().order_by('course_code')
-        for subject in subject_list:
-            subject.type = subject.type.replace("_", " ")
 
         subject_filter = GenedFilter(
             self.request.GET,
             queryset=subject_list
         )
+        for subject in subject_filter.qs:
+            subject.type = subject.type.replace("_", " ")
+
         context['subject_list'] = subject_filter.qs
+        for i in subject_filter.qs:
+            print(i.type)
         context['form'] = subject_filter.form
 
         return context

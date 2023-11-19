@@ -1,6 +1,6 @@
 import django_filters
 from django import forms
-from django.db.models import Count, Case, When, Value, IntegerField
+from django.db.models import Count, Case, When, Value, IntegerField, Q
 
 
 class PostFilter(django_filters.FilterSet):
@@ -113,10 +113,13 @@ class PostDownloadFilter(PostFilter):
 
 
 class GenedFilter(django_filters.FilterSet):
-
-    subject_name = django_filters.CharFilter(
-        label='Subject Name',
-        field_name='name_eng',
-        lookup_expr='icontains',
+    search = django_filters.CharFilter(
+        label='Search by Subject or Course Code',
+        method='filter_search',
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
+
+    def filter_search(self, queryset, name, value):
+        return queryset.filter(
+            Q(name_eng__icontains=value) | Q(course_code__icontains=value)
+        )
