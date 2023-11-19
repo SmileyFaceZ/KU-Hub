@@ -87,7 +87,6 @@
                                 <i class="{{ dislike_icon_styles|index:forloop.counter0 }}"></i>
                             </button>
                             <span id="dislikes-count-{{ post.post_id.pk }}">{{ post.total_dislikes }}</span>
-                            <a href="{% url 'kuhub:post_detail' pk=post.pk %}" class="btn btn-link">See comments</a>
                         {% else %}
                             <form action="{% url 'account_login' %}">
                                 <button type="submit" class="btn btn-link">
@@ -100,6 +99,8 @@
                                 <span>{{ post.total_dislikes }}</span>
                             </form>
                         {% endif %}
+                        <a href="{% url 'kuhub:post_detail' pk=post.pk %}" class="btn btn-link">See comments</a>
+                        <a href="{% url 'kuhub:report_post' pk=post.pk %}" class="btn btn-link">Report</a>
                     </div>
                 </div>
             </div>

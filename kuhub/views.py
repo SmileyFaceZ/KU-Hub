@@ -463,6 +463,7 @@ def following_page(request):
 from django.shortcuts import render
 from itertools import zip_longest  # Import zip_longest for handling different lengths
 
+
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comments_list = PostComments.objects.filter(post_id=post)
@@ -500,7 +501,6 @@ def post_detail(request, pk):
     return render(request, 'kuhub/post_detail.html', context)
 
 
-
 @login_required
 def report_post(request, pk):
     post = Post.objects.get(pk=pk)
@@ -509,7 +509,11 @@ def report_post(request, pk):
         form = ReportForm(request.POST)
         if form.is_valid():
             reason = form.cleaned_data['reason']
-            PostReport.objects.create(post_id=post, report_reason=reason, report_date=dt.datetime.now())
+            report_count = PostReport.objects.filter(post_id=post).last()
+            PostReport.objects.create(post_id=post,
+                                      report_reason=reason,
+                                      report_date=dt.datetime.now(),
+                                      report_count=report_count.report_count+1)
 
     else:
         form = ReportForm()
