@@ -19,7 +19,7 @@ from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower,
                           Group, GroupTags, GroupPassword, Subject, Notification, PostComments)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
-from kuhub.filters import PostFilter
+from kuhub.filters import PostFilter, PostDownloadFilter
 
 
 class ReviewHubView(generic.ListView):
@@ -55,14 +55,17 @@ class ReviewHubView(generic.ListView):
 class SummaryHubView(generic.ListView):
     """Redirect to Summary-Hub page for summary posts."""
 
+    queryset = ((PostDownload.objects
+                .select_related('post_id__tag_id'))
+                .order_by('-post_id__post_date').all())
     template_name: str = 'kuhub/summary.html'
     context_object_name: str = 'summary_post_list'
 
     def get_queryset(self) -> QuerySet[PostDownload]:
         """Return PostDownload objects with tag_id=2 and order by post_date."""
-        return PostDownload.objects.select_related('post_id__tag_id').order_by(
-            '-post_id__post_date'
-        ).all()
+        queryset = super().get_queryset()
+        self.filterset = PostDownloadFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
@@ -77,6 +80,7 @@ class SummaryHubView(generic.ListView):
             post.dislike_icon_style(self.request.user) for post in
             context['summary_post_list']]
         context['profiles_list'] = profiles_list
+        context['form'] = self.filterset.form
 
         return context
 
