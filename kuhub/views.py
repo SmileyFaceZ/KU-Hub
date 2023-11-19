@@ -489,6 +489,7 @@ def post_detail(request, pk):
 
 @login_required
 def edit_post(request, pk):
+    """User can edit their own post content, tag and subject."""
     post = get_object_or_404(Post, pk=pk, username=request.user)
     if request.user != post.username:
         return redirect('kuhub:post_detail', pk=post.pk)
@@ -496,7 +497,10 @@ def edit_post(request, pk):
     if request.method == "POST":
         form = PostForm(request.POST)
         if form.is_valid():
-            post.tag_id.tag_text = form.cleaned_data['tag_name']
+            tag_name = form.cleaned_data['tag_name']
+
+            tag = get_object_or_404(Tags, tag_text=tag_name)
+            post.tag_id = tag
 
             subject_code = form.cleaned_data['subject']
             subject = get_object_or_404(Subject, course_code=subject_code)
@@ -504,12 +508,10 @@ def edit_post(request, pk):
 
             post.post_content = form.cleaned_data['review']
 
-            # Save the changes to the post
             post.save()
 
             return redirect('kuhub:post_detail', pk=post.pk)
     else:
-        # Populate the form with existing post data
         form = PostForm(initial={'tag_name': post.tag_id.tag_text,
                                  'subject': post.subject.course_code,
                                  'review': post.post_content})
