@@ -151,14 +151,12 @@ class GenEdTypeListView(generic.ListView):
         for subject in subject_list:
             subject.type = subject.type.replace("_", " ")
 
-        context['subject_list'] = subject_list
-        context['form'] = GenedFilter(
+        subject_filter = GenedFilter(
             self.request.GET,
             queryset=subject_list
-        ).form
-        type_list = list(set(subject.type for subject in subject_list))
-
-        context['type_list'] = type_list
+        )
+        context['subject_list'] = subject_filter.qs
+        context['form'] = subject_filter.form
 
         return context
 
