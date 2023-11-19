@@ -415,16 +415,16 @@ def group_event_create(request,group_id):
                 summary=data['summary'],
                 location=data['location'],
                 description=data['description'],
-                start_time=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
-                end_time=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'),
+                start_time=data['start_time'].strftime("%a. %d %b %Y %H:%M:%S"),
+                end_time=data['end_time'].strftime("%a. %d %b %Y %H:%M:%S"),
             )
             event = create_event(calendar_id=group.group_calendar,
                                  summary=group_event.summary,
                                  description=group_event.description,
                                  location=group_event.location,
                                  attendees=group.group_member.all(),
-                                 start_datetime=group_event.start_time,
-                                 end_datetime=group_event.end_time)
+                                 start_datetime=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
+                                 end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'))
             messages.success(request, f'create event successful')
             return redirect(reverse('kuhub:group_detail', args=(group_id,)))
     return render(
@@ -432,3 +432,4 @@ def group_event_create(request,group_id):
         template_name='kuhub/group_event.html',
         context={'form': EventForm,'group':group}
     )
+
