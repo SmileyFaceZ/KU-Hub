@@ -50,12 +50,12 @@
 
             <h2>Comments</h2>
             {% for com in comments %}
-                <div class="card border border-1 rounded-4">
+                <div class="card border border-0 rounded-4">
                     <div class="card-body">
                         <h1 class="card-title">{{ com.username.username }}</h1>
                         <a href="{% url 'kuhub:profile_view' username=com.username %}">
                             {% with owner_profile=com.username.profile %}
-                                <img class="me-2 rounded-circle" src="{% if owner_profile.display_photo %}{{ owner_profile.display_photo.url }}{% else %}{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}{% endif %}" width="45" height="45" alt="{{ com.username }}'s Profile">
+                                <img class="me-2 rounded-circle" src="{% if com.display_photo %}{{ owner_profile.display_photo.url }}{% else %}{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}{% endif %}" width="45" height="45" alt="{{ com.username }}'s Profile">
                             {% endwith %}
                         </a>
                         <p class="card-text">{{ com.comment }}</p>
@@ -68,10 +68,10 @@
 
             {% if user.is_authenticated %}
                 <h2>Add a comment</h2>
-                <form method="post" action="{% url 'kuhub:post_detail' pk=post.pk %}">
+                <form method="post" enctype="multipart/form-data" class="mt-3">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <button type="submit" class="btn btn-primary">Post comment</button>
+                    <button type="submit">Post comment</button>
                 </form>
             {% else %}
                 <p>Please log in to add a comment.</p>

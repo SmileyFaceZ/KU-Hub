@@ -464,21 +464,24 @@ def post_detail(request, pk):
     comments = PostComments.objects.filter(post_id=post)
 
     if request.method == "POST":
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post_id = post
-            comment.username = request.user
-            comment.save()
-            return redirect('kuhub/post_detail', pk=post.pk)
-
+        if request.user.is_authenticated:
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.post_id = post
+                comment.username = request.user
+                comment.save()
+                return redirect('kuhub:post_detail', pk=post.pk)
+        else:
+            return redirect('account_login')
     else:
         form = CommentForm()
 
     owner_profile = Profile.objects.filter(user=post.username)
-    context = {'post': post, 'comments':comments,
+
+    context = {'post': post,
+               'comments': comments,
                'form': form,
                'owner_profile': owner_profile}
 
     return render(request, 'kuhub/post_detail.html', context)
-
