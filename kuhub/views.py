@@ -11,15 +11,15 @@ from django.views import generic
 from django.views.generic import TemplateView
 import json
 import datetime as dt
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import QuerySet
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
-from kuhub.forms import PostForm, ProfileForm, GroupForm
-from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group, GroupTags, GroupPassword
+from kuhub.forms import PostForm, ProfileForm, GroupForm, EventForm
+from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group, GroupTags, GroupPassword, GroupEvent
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from .calendar import create_calendar,add_participate,create_event
@@ -171,10 +171,12 @@ def create_group(request: HttpRequest):
     )
 
 @method_decorator(login_required, name='dispatch')
-class GroupDetail(generic.DetailView):
+class GroupDetail(generic.DetailView,generic.FormView):
     """Group manage and detail page"""
     model = Group
     template_name = 'kuhub/group_detail.html'
+    form_class = EventForm
+    success_url = reverse_lazy('')
 
     def get_queryset(self):
         return Group.objects.all()
@@ -393,3 +395,32 @@ def following_page(request):
 
     return render(request, "kuhub/following_page.html", context={'followings': following})
 
+def group_event_create(request,group_id):
+    user = request.user
+    group = get_object_or_404(Group,pk=group_id)
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            group_event = GroupEvent.objects.create(
+                group=group,
+                summary=data['summary'],
+                location=data['location'],
+                description=data['description'],
+                start_time=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
+                end_time=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'),
+            )
+            event = create_event(calendar_id=group.group_calendar,
+                                 summary=group_event.summary,
+                                 description=group_event.description,
+                                 location=group_event.location,
+                                 attendees=group.group_member.all(),
+                                 start_datetime=group_event.start_time,
+                                 end_datetime=group_event.end_time)
+            messages.success(request, f'create event successful')
+            return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+    return render(
+        request,
+        template_name='kuhub/group_event.html',
+        context={'form': EventForm,'group':group}
+    )

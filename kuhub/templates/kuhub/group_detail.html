@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
+<!-- Add this to your HTML head section -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 {% block title %}
 <title>{{group}} Group</title>
@@ -13,7 +15,36 @@
                 <span style="display: inline;"><a href="{% url 'kuhub:profile_view' member.username %}">{{ member }}</a> </span>
             {% endfor %}
         </div>
+
+<!--        <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">-->
+<!--            create event-->
+<!--        </button>-->
+
+         <div class="modal" id="eventModal" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h3>Create Meeting Events</h3>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                    </div>
+                </div>
+            </div>
         </div>
-        <iframe src="https://calendar.google.com/calendar/embed?src={{ group.group_calendar}}&hl=en" style="border: 0" width="300" height="500" frameborder="0" scrolling="no"></iframe>
+        <button type="button" class="btn btn-success rounded-circle btn-floating btn-lg ">
+            <a href="{% url 'kuhub:group_event' group.id %}" style="color: white;">
+                <i class="fas fa-circle-plus"></i>
+            </a>
+        </button>
+        </div>
+        <iframe src="https://calendar.google.com/calendar/embed?src={{ group.group_calendar}}&hl=en" style="border: 0" width="400" height="500" frameborder="0" scrolling="no"></iframe>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 {% endblock %}

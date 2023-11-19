@@ -66,16 +66,17 @@ def add_participate(user,calendar_id):
     except user.email.DoesNotExist:
         return None
 
-def create_event(calendar_id,summary,location, attendees, start_datetime, end_datetime):
+def create_event(calendar_id,summary,location, attendees, start_datetime, end_datetime, description):
     """
     Create a new event in the Group's Google Calendar.
     """
     service = get_service_by_service_account()
-    attendees_field = [{'email': attendee} for attendee in attendees]
+    attendees_field = [{'email': attendee.email} for attendee in attendees]
     if service:
         event = {
             'summary': summary,
             'location': location,
+            'description': description,
             'start': {
                 'dateTime': start_datetime,
                 'timeZone': 'Asia/Bangkok'
@@ -84,7 +85,7 @@ def create_event(calendar_id,summary,location, attendees, start_datetime, end_da
                 'dateTime': end_datetime,
                 'timeZone': 'Asia/Bangkok'
             },
-            'attendees': attendees_field,
+            # 'attendees': attendees_field,
             'reminders': {
                 'useDefault': False,
                 'overrides': [
@@ -92,6 +93,17 @@ def create_event(calendar_id,summary,location, attendees, start_datetime, end_da
                     {'method': 'popup', 'minutes': 10},
                 ],
             },
+            'conferenceData': {
+                'createRequest': {
+                    'requestId': 'randomstring',
+                },
+            },
         }
-        created_event = service.events().insert(calendarId=calendar_id, body=event).execute()
-        return created_event
+
+        created_event = service.events().insert(calendarId=calendar_id, body=event,conferenceDataVersion=1).execute()
+        event = service.events().get(calendarId=calendar_id, eventId=created_event['id']).execute()
+        meet_link = event.get('conferenceData', {}).get('entryPoints', [{}])[0].get('uri', '')
+        event['description'] = description + f' Google Meet link: {meet_link}'
+        updated_event = service.events().update(calendarId=calendar_id, eventId=event['id'], body=event).execute()
+        return updated_event
+

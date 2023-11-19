@@ -1,0 +1,24 @@
+<form action="{% url 'kuhub:group_event' group.id %}" method="post">
+    {% csrf_token %}
+    <label class="form-label">Event name:</label>
+        <div>
+        {{ form.summary }}
+        </div>
+    <label class="form-label">Description:</label>
+        <div>
+        {{ form.description }}
+        </div>
+    <label class="form-label">Location:</label>
+        <div>
+        {{ form.location }}
+        </div>
+    <label class="form-label">Start time:</label>
+        <div>
+        {{ form.start_time }}
+        </div>
+    <label class="form-label">End time:</label>
+        <div>
+        {{ form.end_time }}
+        </div>
+    <input type="submit" value="Create" class="btn btn-success">
+</form>
