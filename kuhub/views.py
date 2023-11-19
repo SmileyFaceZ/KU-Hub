@@ -19,7 +19,7 @@ from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower,
                           Group, GroupTags, GroupPassword, Subject, Notification, PostComments)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
-from kuhub.filters import PostFilter, PostDownloadFilter
+from kuhub.filters import PostFilter, PostDownloadFilter, PostTrickFilter
 
 
 class ReviewHubView(generic.ListView):
@@ -32,6 +32,10 @@ class ReviewHubView(generic.ListView):
         """Return Post objects with tag_id=1 and order by post_date."""
         queryset = super().get_queryset()
         self.filterset = PostFilter(self.request.GET, queryset=queryset)
+
+        print("Original queryset length:", len(queryset))
+        print("Filtered queryset length:", len(self.filterset.qs.distinct()))
+
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
@@ -88,12 +92,16 @@ class SummaryHubView(generic.ListView):
 class TricksHubView(generic.ListView):
     """Redirect to Tricks-Hub page for tricks posts."""
 
+    queryset = Post.objects.filter(tag_id=3).order_by('-post_date')
     template_name: str = 'kuhub/tricks.html'
     context_object_name: str = 'tricks_list'
 
     def get_queryset(self) -> QuerySet[Post]:
         """Return Post objects with tag_id=3 and order by post_date."""
-        return Post.objects.filter(tag_id=3).order_by('-post_date')
+        queryset = super().get_queryset()
+        self.filterset = PostTrickFilter(self.request.GET, queryset=queryset)
+        print('filter set', self.filterset)
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
@@ -108,6 +116,7 @@ class TricksHubView(generic.ListView):
             post.dislike_icon_style(self.request.user) for post in
             context['tricks_list']]
         context['profiles_list'] = profiles_list
+        context['form'] = self.filterset.form
 
         return context
 
