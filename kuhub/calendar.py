@@ -1,12 +1,10 @@
-from django.http import HttpResponse
+from django.shortcuts import redirect
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
-from googleapiclient.discovery import build
 from allauth.socialaccount.models import SocialToken
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from django.contrib import messages
+from django.urls import reverse
 
 
 def get_google_calendar_service(request):
@@ -55,7 +53,10 @@ def create_calendar(name):
     created_calendar = service.calendars().insert(body=new_calendar).execute()
     return created_calendar
 
-def add_participate(user,calendar_id):
+def add_participate(user, calendar_id):
+    """
+    add user to can edit the group's calendar
+    """
     try:
         service = get_service_by_service_account()
         service.acl().insert(calendarId=calendar_id,
@@ -64,7 +65,8 @@ def add_participate(user,calendar_id):
                                              'value': user.email
                                              }}).execute()
     except user.email.DoesNotExist:
-        return
+        print("email does not exists")
+
 
 def create_event(calendar_id,summary,location, attendees, start_datetime, end_datetime, description):
     """
