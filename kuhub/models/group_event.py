@@ -7,6 +7,7 @@ class GroupEvent(models.Model):
     summary = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
+    event_id = models.CharField(max_length=255,null=True)
 
     def __str__(self):
         return self.summary

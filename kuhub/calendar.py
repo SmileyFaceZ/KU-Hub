@@ -109,3 +109,6 @@ def create_event(calendar_id,summary,location, attendees, start_datetime, end_da
         updated_event = service.events().update(calendarId=calendar_id, eventId=event['id'], body=event).execute()
         return updated_event
 
+def delete_event(calendar_id,event_id):
+    service = get_service_by_service_account()
+    service.events().delete(calendarId=calendar_id, eventId=eventId).execute()
