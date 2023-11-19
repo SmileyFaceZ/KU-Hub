@@ -35,11 +35,7 @@
             </div>
         </div>
 
-        <button type="button" class="btn btn-success rounded-circle btn-floating btn-lg ">
-            <a href="{% url 'kuhub:group_event' group.id %}" style="color: white;">
-                <i class="fas fa-circle-plus"></i>
-            </a>
-        </button>
+
         <div class="row">
             <div class="col-md-3">
                  <div class="card border border-dark border-3 m-2 rounded-3" style="height=500px;">
@@ -47,7 +43,7 @@
                  </div>
             </div>
             <div class="col-md-4">
-                <div class="card border border-dark border-3 m-2 rounded-3" style="min-height: 500px; max-height: 500px; overflow-y: auto;">
+                <div class="card border border-dark border-3 m-2 rounded-3" style="min-height: 80vh; max-height: 80vh; overflow-y: auto;">
                     {% for event in events %}
                         <div class="card border border-dark border-3 m-2 rounded-3">
                             <ul>Event: {{ event.summary }}</ul>
@@ -57,6 +53,11 @@
                         </div>
                     {% endfor %}
                 </div>
+                 <button type="button" class="btn btn-success rounded-circle btn-floating btn-lg " style="position: relative; bottom: 6%; left: 90%;">
+                    <a href="{% url 'kuhub:group_event' group.id %}" style="color: white;">
+                        <i class="fas fa-circle-plus"></i>
+                    </a>
+                 </button>
             </div>
             <div class="col-md-4">
                 <iframe src="https://calendar.google.com/calendar/embed?src={{ group.group_calendar}}&hl=en" style="border: 0; " width="500" height="500" frameborder="0" scrolling="yes"></iframe>
