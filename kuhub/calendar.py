@@ -64,7 +64,7 @@ def add_participate(user,calendar_id):
                                              'value': user.email
                                              }}).execute()
     except user.email.DoesNotExist:
-        return None
+        return
 
 def create_event(calendar_id,summary,location, attendees, start_datetime, end_datetime, description):
     """

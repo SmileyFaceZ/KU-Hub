@@ -171,15 +171,20 @@ def create_group(request: HttpRequest):
     )
 
 @method_decorator(login_required, name='dispatch')
-class GroupDetail(generic.DetailView,generic.FormView):
+class GroupDetail(generic.DetailView):
     """Group manage and detail page"""
     model = Group
     template_name = 'kuhub/group_detail.html'
-    form_class = EventForm
-    success_url = reverse_lazy('')
 
     def get_queryset(self):
         return Group.objects.all()
+
+    def get_context_data(self, **kwargs):
+        """Return user'group data as contect data"""
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            context['events'] = self.object.groupevent_set.all()
+        return context
 
 
 @login_required
