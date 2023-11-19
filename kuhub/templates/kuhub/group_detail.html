@@ -11,6 +11,7 @@
     <div class="container">
         <div class="group_header" style="display: inline;">
             <h2 style="display: inline;">{{ group }}</h2>
+            <b>group member:</b>
             {% for member in group.group_member.all %}
                 <span style="display: inline;"><a href="{% url 'kuhub:profile_view' member.username %}">{{ member }}</a> </span>
             {% endfor %}
@@ -38,20 +39,43 @@
 
         <div class="row">
             <div class="col-md-3">
-                 <div class="card border border-dark border-3 m-2 rounded-3" style="height=500px;">
+                <div class="row">
+                    <div class="card border border-dark border-3 m-2 rounded-3" style="min-height: 40vh; max-height: 40vh; overflow-y: auto;">
+                        <div class="card-header">
+                            Notes
+                        </div>
+                        <div class="card-body">
 
+                        </div>
                  </div>
+                </div>
+                 <div class="row">
+                    <div class="card border border-dark border-3 m-2 rounded-3" style="min-height: 40vh; max-height: 40vh; overflow-y: auto;">
+                        <div class="card-header">
+                            Tasks
+                        </div>
+                        <div class="card-body">
+
+                        </div>
+                 </div>
+                </div>
+
             </div>
             <div class="col-md-4">
-                <div class="card border border-dark border-3 m-2 rounded-3" style="min-height: 80vh; max-height: 80vh; overflow-y: auto;">
-                    {% for event in events %}
-                        <div class="card border border-dark border-3 m-2 rounded-3">
-                            <ul>Event: {{ event.summary }}</ul>
-                            <ul>Description: {{ event.description }}</ul>
-                            <ul>Location: {{ event.location }}</ul>
-                            <ul>Time: {{ event.start_time }} - {{ event.end_time }}</ul>
-                        </div>
-                    {% endfor %}
+                <div class="card border border-dark border-3 m-2 rounded-3" style="min-height: 82vh; max-height: 83vh; overflow-y: auto;">
+                    <div class="card-header">
+                        Meeting Event
+                    </div>
+                    <div class="card-body">
+                        {% for event in events %}
+                            <div class="card border border-dark border-3 m-2 rounded-3" style="line-height: 1; margin-top: 10px;">
+                                <ul>Event: {{ event.summary }}</ul>
+                                <ul>Description: {{ event.description }}</ul>
+                                <ul>Location: {{ event.location }}</ul>
+                                <ul>Time: {{ event.start_time }} - {{ event.end_time }}</ul>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
                  <button type="button" class="btn btn-success rounded-circle btn-floating btn-lg " style="position: relative; bottom: 6%; left: 90%;">
                     <a href="{% url 'kuhub:group_event' group.id %}" style="color: white;">
