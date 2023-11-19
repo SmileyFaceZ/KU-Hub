@@ -22,7 +22,7 @@ from kuhub.forms import PostForm, ProfileForm, GroupForm, EventForm
 from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group, GroupTags, GroupPassword, GroupEvent
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
-from .calendar import create_calendar,add_participate,create_event
+from .calendar import create_calendar, add_participate, create_event, delete_event
 
 class ReviewHubView(generic.ListView):
     """Redirect to Review-Hub page for review posts."""
@@ -433,3 +433,14 @@ def group_event_create(request,group_id):
         template_name='kuhub/group_event.html',
         context={'form': EventForm,'group':group}
     )
+
+def group_event_delete(request,event_id):
+    user = request.user
+    event = get_object_or_404(GroupEvent, pk=event_id)
+    group_id = event.group.id
+    #delete event in calendar
+    delete_event(event.group.group_calendar,event.event_id)
+    #delete GroupEvent object
+    event.delete()
+    messages.success(request,'delete event successful')
+    return redirect(reverse('kuhub:group_detail', args=(group_id,)))

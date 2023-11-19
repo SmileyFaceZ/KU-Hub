@@ -111,4 +111,4 @@ def create_event(calendar_id,summary,location, attendees, start_datetime, end_da
 
 def delete_event(calendar_id,event_id):
     service = get_service_by_service_account()
-    service.events().delete(calendarId=calendar_id, eventId=eventId).execute()
+    service.events().delete(calendarId=calendar_id, eventId=event_id).execute()

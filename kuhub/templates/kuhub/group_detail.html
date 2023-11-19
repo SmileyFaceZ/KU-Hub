@@ -69,10 +69,19 @@
                     <div class="card-body">
                         {% for event in events %}
                             <div class="card border border-dark border-3 m-2 rounded-3" style="line-height: 1; margin-top: 10px;">
-                                <ul>Event: {{ event.summary }}</ul>
-                                <ul>Description: {{ event.description }}</ul>
-                                <ul>Location: {{ event.location }}</ul>
-                                <ul>Time: {{ event.start_time }} - {{ event.end_time }}</ul>
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span>Event: {{ event.summary }}</span>
+                                    <form method="post" action="{% url 'kuhub:event_delete' event.id %}">
+                                        {% csrf_token %}
+                                        <input type="submit" class="btn btn-primary" value="delete">
+                                    </form>
+                                </div>
+                                <div class="card-body">
+                                    <ul>Description: {{ event.description }}</ul>
+                                    <ul>Location: {{ event.location }}</ul>
+                                    <ul>{{ event.start_time }} - </ul>
+                                    <ul>{{ event.end_time }}</ul>
+                                </div>
                             </div>
                         {% endfor %}
                     </div>
