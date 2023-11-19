@@ -485,3 +485,34 @@ def post_detail(request, pk):
                'owner_profile': owner_profile}
 
     return render(request, 'kuhub/post_detail.html', context)
+
+
+@login_required
+def edit_post(request, pk):
+    post = get_object_or_404(Post, pk=pk, username=request.user)
+    if request.user != post.username:
+        return redirect('kuhub:post_detail', pk=post.pk)
+
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post.tag_id.tag_text = form.cleaned_data['tag_name']
+
+            subject_code = form.cleaned_data['subject']
+            subject = get_object_or_404(Subject, course_code=subject_code)
+            post.subject = subject
+
+            post.post_content = form.cleaned_data['review']
+
+            # Save the changes to the post
+            post.save()
+
+            return redirect('kuhub:post_detail', pk=post.pk)
+    else:
+        # Populate the form with existing post data
+        form = PostForm(initial={'tag_name': post.tag_id.tag_text,
+                                 'subject': post.subject.course_code,
+                                 'review': post.post_content})
+
+    context = {'form': form, 'user': request.user, 'post': post}
+    return render(request, 'kuhub/edit_post.html', context)

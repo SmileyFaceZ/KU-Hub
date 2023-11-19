@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Edit Post</title>
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated and user == post.username %}
+    <div class="container mt-4">
+        <form action="{% url 'kuhub:edit_post' post.pk %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">Tags</label>
+                <div style="width: 300px;">
+                    {{ form.tag_name }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Subjects</label>
+                <div style="width: 500px;">
+                    {{ form.subject }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Review</label>
+                <br>
+                {{ form.review }}
+            </div>
+
+            <!-- Display current review content for reference -->
+            <div class="mb-3">
+                <label class="form-label">Current Review</label>
+                <p>{{ post.review }}</p>
+            </div>
+
+            <!-- File upload container -->
+            <div class="mb-3" id="file-upload-container">
+                <label class="form-label">Upload File (.pdf) / Picture (.jpg, .jpeg, .png)</label>
+                {{ form.file_upload }}
+            </div>
+
+            <input type="submit" name="update" id="button_update" value="Update" class="btn btn-success">
+        </form>
+    </div>
+
+    <script src="{% static 'kuhub/js/upload-file.js' %}"></script>
+{% endif %}
+
+{% endblock %}
