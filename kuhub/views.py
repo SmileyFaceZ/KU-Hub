@@ -22,7 +22,7 @@ from kuhub.forms import PostForm, ProfileForm, GroupForm
 from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group, GroupTags, GroupPassword
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
-from .calendar import get_google_calendar_service, create_event,create_calendar
+from .calendar import create_calendar,add_participate,create_event
 
 class ReviewHubView(generic.ListView):
     """Redirect to Review-Hub page for review posts."""
@@ -124,6 +124,7 @@ def join(request,group_id):
                 messages.error(request, "Wrong password")
                 return redirect(reverse('kuhub:groups'))
     group.group_member.add(user)
+    add_participate(user,group.group_calendar)
     messages.success(request, "You join the group success!")
     return redirect(reverse('kuhub:groups'))
 
@@ -177,7 +178,6 @@ class GroupDetail(generic.DetailView):
 
     def get_queryset(self):
         return Group.objects.all()
-
 
 
 @login_required

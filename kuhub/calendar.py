@@ -6,6 +6,8 @@ from googleapiclient.discovery import build
 from allauth.socialaccount.models import SocialToken
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
+from django.contrib import messages
+
 
 def get_google_calendar_service(request):
     """
@@ -53,18 +55,43 @@ def create_calendar(name):
     created_calendar = service.calendars().insert(body=new_calendar).execute()
     return created_calendar
 
-def create_event(request, summary, start_datetime, end_datetime):
-    """
-    Create a new event in the user's Google Calendar.
-    """
-    service = get_google_calendar_service(request)
+def add_participate(user,calendar_id):
+    try:
+        service = get_service_by_service_account()
+        service.acl().insert(calendarId=calendar_id,
+                             body={'role': 'reader',
+                                   'scope': {'type': 'user',
+                                             'value': user.email
+                                             }}).execute()
+    except user.email.DoesNotExist:
+        return None
 
+def create_event(calendar_id,summary,location, attendees, start_datetime, end_datetime):
+    """
+    Create a new event in the Group's Google Calendar.
+    """
+    service = get_service_by_service_account()
+    attendees_field = [{'email': attendee} for attendee in attendees]
     if service:
         event = {
             'summary': summary,
-            'start': {'dateTime': start_datetime, 'timeZone': 'Asia/Bangkok'},
-            'end': {'dateTime': end_datetime, 'timeZone': 'Asia/Bangkok'},
+            'location': location,
+            'start': {
+                'dateTime': start_datetime,
+                'timeZone': 'Asia/Bangkok'
+            },
+            'end': {
+                'dateTime': end_datetime,
+                'timeZone': 'Asia/Bangkok'
+            },
+            'attendees': attendees_field,
+            'reminders': {
+                'useDefault': False,
+                'overrides': [
+                    {'method': 'email', 'minutes': 24 * 60},
+                    {'method': 'popup', 'minutes': 10},
+                ],
+            },
         }
-
-        created_event = service.events().insert(calendarId='primary', body=event).execute()
-        return created_event  # You might want to handle the response in your views
+        created_event = service.events().insert(calendarId=calendar_id, body=event).execute()
+        return created_event

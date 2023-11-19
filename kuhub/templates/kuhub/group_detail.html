@@ -1,10 +1,19 @@
 {% extends "base.html" %}
 {% load static %}
 
-
 {% block title %}
-    <title>{{group}} Group</title>
+<title>{{group}} Group</title>
 {% endblock %}
-
 {% block content %}
+<body>
+    <div class="container">
+        <div class="group_header" style="display: inline;">
+            <h2 style="display: inline;">{{ group }}</h2>
+            {% for member in group.group_member.all %}
+                <span style="display: inline;"><a href="{% url 'kuhub:profile_view' member.username %}">{{ member }}</a> </span>
+            {% endfor %}
+        </div>
+        </div>
+        <iframe src="https://calendar.google.com/calendar/embed?src={{ group.group_calendar}}&hl=en" style="border: 0" width="300" height="500" frameborder="0" scrolling="no"></iframe>
+</body>
 {% endblock %}

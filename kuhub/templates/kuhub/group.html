@@ -17,7 +17,7 @@
                 {% endfor %}
                 {% endif %}
                 {% for message in messages %}
-                   <p>{{ message }}</p>
+                    <p>{{ message }}</p>
                 {% endfor %}
             </div>
         </div>
@@ -61,11 +61,11 @@
                                                 <p>You are going to join <b>{{group.group_name}}</b></p>
                                                 {% if group.group_password %}
                                                 <p>Enter Password:</p>
-                                                 <form method="post" action="{% url 'kuhub:join' group.id %}">
+                                                <form method="post" action="{% url 'kuhub:join' group.id %}">
                                                     {% csrf_token %}
-                                                     <input type="password" name="pass" placeholder="Password">
+                                                    <input type="password" name="pass" placeholder="Password">
                                                     <input type="submit" class="btn btn-primary" value="Join">
-                                                     </form>
+                                                </form>
                                                 {% else %}
                                                 <form method="post" action="{% url 'kuhub:join' group.id %}">
                                                     {% csrf_token %}
