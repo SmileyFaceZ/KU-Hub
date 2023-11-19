@@ -3,8 +3,7 @@ Contains view functions for handling requests.
 related to Review-Hub, Summary-Hub and Tricks-Hub
 in the kuhub web application.
 """
-from django.http import HttpResponseRedirect, Http404
-from django.views import generic
+from django.http import Http404
 import json
 import datetime as dt
 from django.urls import reverse
@@ -19,23 +18,18 @@ from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower,
                           Group, GroupTags, GroupPassword, Subject, Notification, PostComments)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
-from kuhub.filters import PostFilter, PostDownloadFilter, PostTrickFilter
+from kuhub.filters import PostFilter, PostDownloadFilter
 
 
 class ReviewHubView(generic.ListView):
     """Redirect to Review-Hub page for review posts."""
-    queryset = Post.objects.filter(tag_id=1).order_by('-post_date')
+    queryset = Post.objects.all().filter(tag_id=1).order_by('-post_date')
     template_name: str = 'kuhub/review.html'
     context_object_name: str = 'posts_list'
 
     def get_queryset(self) -> QuerySet[Post]:
-        """Return Post objects with tag_id=1 and order by post_date."""
         queryset = super().get_queryset()
         self.filterset = PostFilter(self.request.GET, queryset=queryset)
-
-        print("Original queryset length:", len(queryset))
-        print("Filtered queryset length:", len(self.filterset.qs.distinct()))
-
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
@@ -99,8 +93,7 @@ class TricksHubView(generic.ListView):
     def get_queryset(self) -> QuerySet[Post]:
         """Return Post objects with tag_id=3 and order by post_date."""
         queryset = super().get_queryset()
-        self.filterset = PostTrickFilter(self.request.GET, queryset=queryset)
-        print('filter set', self.filterset)
+        self.filterset = PostFilter(self.request.GET, queryset=queryset)
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
