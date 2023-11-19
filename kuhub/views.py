@@ -10,7 +10,7 @@ import datetime as dt
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Count
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
@@ -509,11 +509,11 @@ def report_post(request, pk):
         form = ReportForm(request.POST)
         if form.is_valid():
             reason = form.cleaned_data['reason']
-            report_count = PostReport.objects.filter(post_id=post).last()
+            report_count = PostReport.objects.filter(post_id=post).aggregate(Count('id'))['id__count']
             PostReport.objects.create(post_id=post,
                                       report_reason=reason,
                                       report_date=dt.datetime.now(),
-                                      report_count=report_count.report_count+1)
+                                      report_count=report_count+1)
 
     else:
         form = ReportForm()
