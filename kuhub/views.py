@@ -14,9 +14,9 @@ from django.db.models import QuerySet
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
-from kuhub.forms import PostForm, ProfileForm, GroupForm
+from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm
 from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower,
-                          Group, GroupTags, GroupPassword, Subject, Notification)
+                          Group, GroupTags, GroupPassword, Subject, Notification, PostComments)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 
@@ -34,11 +34,17 @@ class ReviewHubView(generic.ListView):
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
+
+        profiles_list = [Profile.objects.filter(user=post.username).first()
+                         for post in context['posts_list']]
+
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
                                        for post in context['posts_list']]
         context['dislike_icon_styles'] = [
             post.dislike_icon_style(self.request.user) for post in
             context['posts_list']]
+        context['profiles_list'] = profiles_list
+
         return context
 
 
@@ -57,11 +63,17 @@ class SummaryHubView(generic.ListView):
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
+
+        profiles_list = [Profile.objects.filter(user=post.post_id.username).first()
+                         for post in context['summary_post_list']]
+
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
                                        for post in context['summary_post_list']]
         context['dislike_icon_styles'] = [
             post.dislike_icon_style(self.request.user) for post in
             context['summary_post_list']]
+        context['profiles_list'] = profiles_list
+
         return context
 
 
@@ -78,11 +90,17 @@ class TricksHubView(generic.ListView):
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
+
+        profiles_list = [Profile.objects.filter(user=post.username).first()
+                         for post in context['tricks_list']]
+
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
                                        for post in context['tricks_list']]
         context['dislike_icon_styles'] = [
             post.dislike_icon_style(self.request.user) for post in
             context['tricks_list']]
+        context['profiles_list'] = profiles_list
+
         return context
 
 
@@ -441,3 +459,29 @@ def following_page(request):
     return render(request, "kuhub/following_page.html", context={'followings': following})
 
 
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    comments = PostComments.objects.filter(post_id=post)
+
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.post_id = post
+                comment.username = request.user
+                comment.save()
+                return redirect('kuhub:post_detail', pk=post.pk)
+        else:
+            return redirect('account_login')
+    else:
+        form = CommentForm()
+
+    owner_profile = Profile.objects.filter(user=post.username)
+
+    context = {'post': post,
+               'comments': comments,
+               'form': form,
+               'owner_profile': owner_profile}
+
+    return render(request, 'kuhub/post_detail.html', context)

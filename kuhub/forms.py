@@ -1,6 +1,5 @@
 from django import forms
-from kuhub.models import Tags, Subject
-from kuhub.models.profile import Profile
+from kuhub.models import Tags, Subject, Profile, PostComments
 
 
 class PostForm(forms.Form):
@@ -35,6 +34,7 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ['biography', 'display_photo']
 
+
 class GroupForm(forms.Form):
     name = forms.CharField(
         widget=forms.Textarea(attrs={'cols': 50, 'rows': 1}),
@@ -61,3 +61,9 @@ class GroupForm(forms.Form):
         label='Password',
         required=False
     )
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = PostComments
+        fields = ['comment']
