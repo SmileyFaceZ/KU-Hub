@@ -466,13 +466,11 @@ def post_detail(request, pk):
     if request.method == "POST":
         if request.user.is_authenticated:
             form = CommentForm(request.POST)
+
             if form.is_valid():
-                comment = form.save(commit=False)
-                comment.post_id = post
-                comment.username = request.user
-                comment.save()
-                PostComments.objects.create()
-                return redirect('kuhub:post_detail', pk=post.pk)
+                data = form.cleaned_data['comment']
+                PostComments.objects.create(username=request.user, post_id=post, comment=data)
+
         else:
             return redirect('account_login')
     else:
