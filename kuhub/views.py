@@ -459,9 +459,13 @@ def following_page(request):
     return render(request, "kuhub/following_page.html", context={'followings': following})
 
 
+# views.py
+from django.shortcuts import render
+from itertools import zip_longest  # Import zip_longest for handling different lengths
+
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    comments = PostComments.objects.filter(post_id=post)
+    comments_list = PostComments.objects.filter(post_id=post)
 
     if request.method == "POST":
         if request.user.is_authenticated:
@@ -469,7 +473,10 @@ def post_detail(request, pk):
 
             if form.is_valid():
                 data = form.cleaned_data['comment']
-                PostComments.objects.create(username=request.user, post_id=post, comment=data)
+                PostComments.objects.create(username=request.user,
+                                            post_id=post,
+                                            comment=data,
+                                            comment_date=dt.datetime.now())
 
         else:
             return redirect('account_login')
@@ -477,13 +484,21 @@ def post_detail(request, pk):
         form = CommentForm()
 
     owner_profile = Profile.objects.filter(user=post.username)
+    comments_profiles = [Profile.objects.filter(user=comment.username).first()
+                         for comment in comments_list]
 
-    context = {'post': post,
-               'comments': comments,
-               'form': form,
-               'owner_profile': owner_profile}
+    # Use zip_longest to handle different lengths
+    comments_and_profiles = zip_longest(comments_list, comments_profiles)
+
+    context = {
+        'post': post,
+        'comments_and_profiles': comments_and_profiles,
+        'form': form,
+        'owner_profile': owner_profile,
+    }
 
     return render(request, 'kuhub/post_detail.html', context)
+
 
 
 @login_required
