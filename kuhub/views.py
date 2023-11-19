@@ -19,17 +19,20 @@ from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower,
                           Group, GroupTags, GroupPassword, Subject, Notification, PostComments)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
+from kuhub.filters import PostFilter
 
 
 class ReviewHubView(generic.ListView):
     """Redirect to Review-Hub page for review posts."""
-
+    queryset = Post.objects.filter(tag_id=1).order_by('-post_date')
     template_name: str = 'kuhub/review.html'
     context_object_name: str = 'posts_list'
 
     def get_queryset(self) -> QuerySet[Post]:
         """Return Post objects with tag_id=1 and order by post_date."""
-        return Post.objects.filter(tag_id=1).order_by('-post_date')
+        queryset = super().get_queryset()
+        self.filterset = PostFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
@@ -44,6 +47,7 @@ class ReviewHubView(generic.ListView):
             post.dislike_icon_style(self.request.user) for post in
             context['posts_list']]
         context['profiles_list'] = profiles_list
+        context['form'] = self.filterset.form
 
         return context
 

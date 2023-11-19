@@ -1,22 +1,19 @@
 import django_filters
-from kuhub.models import Post
 from django import forms
 
 
 class PostFilter(django_filters.FilterSet):
     LIKED_DISLIKED_CHOICE = [
-        ('', 'Any'),
         ('asc', 'Most Liked'),
         ('desc', 'Most Disliked'),
     ]
 
     POST_CHOICES = [
-        ('', 'Any'),
         ('asc', 'Recent'),
         ('desc', 'Oldest'),
     ]
 
-    pose_content = django_filters.CharFilter(
+    post_content = django_filters.CharFilter(
         label='Post Content',
         field_name='post_content',
         lookup_expr='icontains',

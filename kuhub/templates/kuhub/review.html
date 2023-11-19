@@ -18,6 +18,54 @@
         </div>
     {% endfor %}
 {% endif %}
+
+<style>
+    .custom-border {
+        border: 2px solid #0b791a;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #d9f7be;
+    }
+</style>
+
+<div class="container mt-4 custom-border">
+    <form method="get" action="{% url 'kuhub:review' %}">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label"><strong>{{ form.post_content.label }}:</strong></label>
+                <div class="input-group" style="max-width: 400px;">
+                    {{ form.post_content }}
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label"><strong>{{ form.order_by_liked_disliked.label }}:</strong></label>
+                <div class="input-group" style="max-width: 200px;">
+                    {{ form.order_by_liked_disliked }}
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <label class="form-label"><strong>{{ form.order_by_post.label }}:</strong></label>
+                <div class="input-group" style="max-width: 200px;">
+                    {{ form.order_by_post }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 mt-3">
+            <button type="submit" class="btn btn-success">
+                <i class="fa-solid fa-magnifying-glass fa-fade fa-xl"></i>
+                <span style="font-family: 'Poppins'">Search</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+
+
+
 <div class="container" style="font-family: 'Poppins'">
     {% if posts_list %}
         {% for post in posts_list %}
