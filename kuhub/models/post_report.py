@@ -4,7 +4,7 @@ from django.db import models
 
 class PostReport(models.Model):
     """
-    A class represent repost of posts
+    A class represent report of posts
 
     Attributes:
         post_id(ForeignKey): ID of the post.
@@ -16,3 +16,7 @@ class PostReport(models.Model):
     report_reason = models.CharField(max_length=200)
     report_date = models.DateTimeField('date reported', null=True, blank=True)
     report_count = models.IntegerField(default=0)
+
+    def __str__(self):
+        """Return reason of reporting post."""
+        return self.report_reason

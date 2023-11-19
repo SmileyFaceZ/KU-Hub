@@ -14,8 +14,8 @@ from django.db.models import QuerySet
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
-from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm
-from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower,
+from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
+from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostReport,
                           Group, GroupTags, GroupPassword, Subject, Notification, PostComments)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
@@ -471,6 +471,7 @@ def post_detail(request, pk):
                 comment.post_id = post
                 comment.username = request.user
                 comment.save()
+                PostComments.objects.create()
                 return redirect('kuhub:post_detail', pk=post.pk)
         else:
             return redirect('account_login')
@@ -485,3 +486,19 @@ def post_detail(request, pk):
                'owner_profile': owner_profile}
 
     return render(request, 'kuhub/post_detail.html', context)
+
+
+@login_required
+def report_post(request, pk):
+    post = Post.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data['reason']
+            PostReport.objects.create(post_id=post, report_reason=reason, report_date=dt.datetime.now())
+
+    else:
+        form = ReportForm()
+
+    return render(request, 'kuhub/report_post.html', {'form': form, 'post': post})
