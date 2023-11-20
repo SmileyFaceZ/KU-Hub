@@ -38,16 +38,18 @@
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="font-family: 'Poppins'">
                     <button class="btn btn-outline-success" type="submit"><i class="fa fa-search"></i></button>
                 </form>
-                {% if user.is_authenticated %}
-                    {% if user.profile.display_photo %}
-                        <img src="{{ user.profile.display_photo.url }}" alt="Profile Photo" width="45px" height="50" class="rounded-icon" style="margin-left: 23%;">
+                <a href="{% url 'kuhub:profile_settings' %}" class="me-2 rounded-circle">
+                    {% if user.is_authenticated %}
+                        {% if user.profile.display_photo %}
+                            <img src="{{ user.profile.display_photo.url }}" alt="Profile Photo" width="45px" height="50" class="rounded-icon" style="margin-left: 23%;">
+                        {% else %}
+                            <img src="{% static 'media/media/store/profile_photos/IMG_7967.jpeg' %}" alt="Default Profile Photo" width="45px" height="50" class="rounded-icon" style="margin-left: 23%;">
+                        {% endif %}
                     {% else %}
-                        <img src="{% static 'media/media/store/profile_photos/IMG_7967.jpeg' %}" alt="Default Profile Photo" width="45px" height="50" class="rounded-icon" style="margin-left: 23%;">
+                        <a href="{% url 'account_login' %}" class="btn btn-secondary me-3" style="font-family: 'Poppins'" role="button">Sign In</a>
+                        <a href="{% url 'account_signup' %}" class="btn btn-primary me-3" style="font-family: 'Poppins'" role="button">Sign Up</a>
                     {% endif %}
-                {% else %}
-                    <a href="{% url 'account_login' %}" class="btn btn-secondary me-3" style="font-family: 'Poppins'" role="button">Sign In</a>
-                    <a href="{% url 'account_signup' %}" class="btn btn-primary me-3" style="font-family: 'Poppins'" role="button">Sign Up</a>
-                {% endif %}
+                </a>
             </div>
         </div>
     </nav>
@@ -85,7 +87,7 @@
     {% block title %}
     {% endblock %}
 </head>
-  
+
 <body class="background">
     {% block content %}
     {% endblock %}

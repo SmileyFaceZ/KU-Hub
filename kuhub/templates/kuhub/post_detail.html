@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Review-Hub</title>
+{% endblock %}
+
+{% block content %}
+    {% load custom_filters %}
+    {% load static %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="font-family: 'Poppins'">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="container" style="font-family: 'Poppins'">
+        {% if post %}
+            <div class="card border border-1 rounded-4">
+                <!-- Post Content -->
+                <div class="card-header">
+                    {% if post.was_published_recently_post %}
+                        <span class="badge" style="background-color: red; text-align: center; margin-right: 5px;">New!</span>
+                    {% endif %}
+                    {{ post.tag_id.tag_text }} |
+                    <a href="{% url 'kuhub:subject_detail' post.subject.course_code %}">{{ post.subject.course_code }} {{ post.subject.name_eng }}</a> |
+                    <a href="{% url 'kuhub:gen_ed_type_list' %}#{{ post.subject.type|slugify }}">{{ post.subject.type }}</a>
+                </div>
+                <div class="card-body position-relative">
+                    <div class="dropdown position-absolute top-0 end-0">
+                        <!-- Dropdown Menu -->
+                    </div>
+                    <a href="{% url 'kuhub:profile_view' username=post.username %}">
+                        {% with profile=post.username.profile %}
+                            <div class="d-flex align-items-center">
+                                <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                                <h4 class="card-title" style="font-weight: 600; margin-bottom: 0;">{{ post.username }}</h4>
+                            </div>
+                        {% endwith %}
+                    </a>
+                    <br>
+                    <p class="card-text">{{ post.post_content }}</p>
+                    <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 10px;"></i>{{ post.post_date }}</h6>
+                </div>
+            </div>
+
+            <h2>Comments</h2>
+            {% for com, profile in comments_and_profiles %}
+                <div class="card border border-0 rounded-4">
+                    <div class="card-body">
+                        <a href="{% url 'kuhub:profile_view' username=com.username %}">
+                            {% if profile.display_photo %}
+                                <img class="me-2 rounded-circle" src="{{ profile.display_photo.url }}" width="45" height="45" alt="{{ com.username }}'s Profile">
+                                <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ com.username.username }}</h4>
+                            {% else %}
+                                <img class="me-2 rounded-circle" src="{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}" width="45" height="45" alt="{{ com.username }}'s Profile">
+                                <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ com.username.username }}</h4>
+                            {% endif %}
+                        </a>
+                        <p class="card-text">{{ com.comment }}</p>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            <i class="fa-regular fa-clock" style="margin-right: 5px;"></i>{{ com.comment_date }}
+                        </h6>
+                    </div>
+                </div>
+            {% endfor %}
+
+
+            {% if user.is_authenticated %}
+                <h2>Add a comment</h2>
+                <form method="post" enctype="multipart/form-data" class="mt-3">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Post comment</button>
+                </form>
+            {% else %}
+                <p>Please log in to add a comment.</p>
+            {% endif %}
+
+        {% else %}
+            <h1>No post available.</h1>
+        {% endif %}
+    </div>
+{% endblock %}

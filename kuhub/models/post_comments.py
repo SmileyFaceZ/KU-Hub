@@ -13,10 +13,11 @@ class PostComments(models.Model):
     """
     username = models.ForeignKey(
         'auth.User',
-        on_delete=models.CASCADE
-    ),
+        on_delete=models.CASCADE,
+        default=7
+    )
     post_id = models.ForeignKey('Post', on_delete=models.CASCADE)
-    comment = models.CharField(max_length=200)
+    comment = models.TextField()
     comment_date = models.DateTimeField(
         'date commented', null=True, blank=True
     )

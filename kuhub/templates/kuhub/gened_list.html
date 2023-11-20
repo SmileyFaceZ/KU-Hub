@@ -7,6 +7,16 @@
 {% block content %}
 {% load static %}
 
+<style>
+    .custom-border {
+        border: 2px solid #0b791a;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #d9f7be;
+    }
+</style>
+
 {% if messages %}
     {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="font-family: 'Poppins'">
@@ -15,6 +25,23 @@
         </div>
     {% endfor %}
 {% endif %}
+
+<div class="container mt-4 custom-border">
+    <form method="get" action="{% url 'kuhub:gen_ed_type_list' %}">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label"><strong>{{ form.search.label }}:</strong></label>
+                <div class="input-group" style="max-width: 400px;">
+                    {{ form.search }}
+                    <button type="submit" class="btn btn-success">
+                <i class="fa-solid fa-magnifying-glass fa-fade fa-xl"></i>
+                <span style="font-family: 'Poppins'">Search</span>
+            </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 
 <div class="container mt-4" style="font-family: 'Poppins'">
     {% if type_list %}
@@ -29,23 +56,27 @@
             {% for type in type_list %}
                 <div id="{{ type|slugify }}" class="container tab-pane fade {% if forloop.first %}show active{% endif %}"><br>
                     <div id="accordion-basic" class="accordion">
-                        {% for subject in subject_list %}
-                            {% if subject.type == type %}
-                                <div class="accordion-item m-4 ">
-                                    <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#{{ subject.course_code }}">
-                                        {{ subject.course_code }} | {{ subject.name_eng }}
-                                    </button>
-                                    <div id="{{ subject.course_code }}" class="panel-collapse collapse">
-                                        <div class="accordion-body">
-                                            <p>Thai Name : {{ subject.name_th }}</p>
-                                            <p>Unit : {{ subject.unit }}</p>
-                                            <p>Hour : {{ subject.hour }}</p>
-                                            <p>Faculty : {{ subject.faculty }}</p>
+                        {% if subject_list %}
+                            {% for subject in subject_list %}
+                                {% if subject.type == type %}
+                                    <div class="accordion-item m-4 ">
+                                        <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#{{ subject.course_code }}">
+                                            {{ subject.course_code }} {{ subject.name_eng }}
+                                        </button>
+                                        <div id="{{ subject.course_code }}" class="panel-collapse collapse">
+                                            <div class="accordion-body">
+                                                <p>Thai Name : {{ subject.name_th }}</p>
+                                                <p>Unit : {{ subject.unit }}</p>
+                                                <p>Hour : {{ subject.hour }}</p>
+                                                <p>Faculty : {{ subject.faculty }}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <h1>Subject or Course Code not found!</h1>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
