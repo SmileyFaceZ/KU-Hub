@@ -10,12 +10,12 @@ import datetime as dt
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Count
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
-from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm
-from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower,
+from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
+from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostReport,
                           Group, GroupTags, GroupPassword, Subject, Notification, PostComments)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
@@ -459,29 +459,63 @@ def following_page(request):
     return render(request, "kuhub/following_page.html", context={'followings': following})
 
 
+# views.py
+from django.shortcuts import render
+from itertools import zip_longest  # Import zip_longest for handling different lengths
+
+
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    comments = PostComments.objects.filter(post_id=post)
+    comments_list = PostComments.objects.filter(post_id=post)
 
     if request.method == "POST":
         if request.user.is_authenticated:
             form = CommentForm(request.POST)
+
             if form.is_valid():
-                comment = form.save(commit=False)
-                comment.post_id = post
-                comment.username = request.user
-                comment.save()
-                return redirect('kuhub:post_detail', pk=post.pk)
+                data = form.cleaned_data['comment']
+                PostComments.objects.create(username=request.user,
+                                            post_id=post,
+                                            comment=data,
+                                            comment_date=dt.datetime.now())
+
         else:
             return redirect('account_login')
     else:
         form = CommentForm()
 
     owner_profile = Profile.objects.filter(user=post.username)
+    comments_profiles = [Profile.objects.filter(user=comment.username).first()
+                         for comment in comments_list]
 
-    context = {'post': post,
-               'comments': comments,
-               'form': form,
-               'owner_profile': owner_profile}
+    # Use zip_longest to handle different lengths
+    comments_and_profiles = zip_longest(comments_list, comments_profiles)
+
+    context = {
+        'post': post,
+        'comments_and_profiles': comments_and_profiles,
+        'form': form,
+        'owner_profile': owner_profile,
+    }
 
     return render(request, 'kuhub/post_detail.html', context)
+
+
+@login_required
+def report_post(request, pk):
+    post = Post.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data['reason']
+            report_count = PostReport.objects.filter(post_id=post).aggregate(Count('id'))['id__count']
+            PostReport.objects.create(post_id=post,
+                                      report_reason=reason,
+                                      report_date=dt.datetime.now(),
+                                      report_count=report_count+1)
+
+    else:
+        form = ReportForm()
+
+    return render(request, 'kuhub/report_post.html', {'form': form, 'post': post})

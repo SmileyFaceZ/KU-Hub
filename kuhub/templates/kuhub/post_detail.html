@@ -49,14 +49,17 @@
             </div>
 
             <h2>Comments</h2>
-            {% for com in comments %}
+            {% for com, profile in comments_and_profiles %}
                 <div class="card border border-0 rounded-4">
                     <div class="card-body">
-                        <h1 class="card-title">{{ com.username.username }}</h1>
                         <a href="{% url 'kuhub:profile_view' username=com.username %}">
-                            {% with owner_profile=com.username.profile %}
-                                <img class="me-2 rounded-circle" src="{% if com.display_photo %}{{ owner_profile.display_photo.url }}{% else %}{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}{% endif %}" width="45" height="45" alt="{{ com.username }}'s Profile">
-                            {% endwith %}
+                            {% if profile.display_photo %}
+                                <img class="me-2 rounded-circle" src="{{ profile.display_photo.url }}" width="45" height="45" alt="{{ com.username }}'s Profile">
+                                <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ com.username.username }}</h4>
+                            {% else %}
+                                <img class="me-2 rounded-circle" src="{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}" width="45" height="45" alt="{{ com.username }}'s Profile">
+                                <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ com.username.username }}</h4>
+                            {% endif %}
                         </a>
                         <p class="card-text">{{ com.comment }}</p>
                         <h6 class="card-subtitle mb-2 text-muted">
@@ -65,6 +68,7 @@
                     </div>
                 </div>
             {% endfor %}
+
 
             {% if user.is_authenticated %}
                 <h2>Add a comment</h2>
