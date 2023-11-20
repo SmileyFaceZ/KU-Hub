@@ -20,7 +20,9 @@
 
     <nav class="navbar navbar-expand-lg shadow">
         <div class="container-fluid">
-            <button class="btn btn-primary me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" style="font-family: 'Poppins'">Menu</button>
+            {% if user.is_authenticated %}
+                <button class="btn btn-success me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" style="font-family: 'Poppins'">Menu</button>
+            {% endif %}
             <img src="{% static 'images/ku-icon.png' %}" alt="ku-icon" width="50" height="50" class="me-2 rounded-icon">
 
             <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
@@ -32,15 +34,20 @@
                     <li class="nav-item"><a href="{% url 'kuhub:groups' %}" class="nav-link" style="font-family: 'Poppins'; font-weight: 600;">Group-Hub</a></li>
                     <li class="nav-item"><a href="{% url 'kuhub:gen_ed_type_list' %}" class="nav-link" style="font-family: 'Poppins'; font-weight: 600;">Gen-ed List</a></li>
                 </ul>
+                <form class="d-flex" action="action_page.php">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="font-family: 'Poppins'">
+                    <button class="btn btn-outline-success" type="submit"><i class="fa fa-search"></i></button>
+                </form>
                 <a href="{% url 'kuhub:profile_settings' %}" class="me-2 rounded-circle">
                     {% if user.is_authenticated %}
                         {% if user.profile.display_photo %}
-                            <img src="{{ user.profile.display_photo.url }}" alt="Profile Photo" width="45px" height="50" class="rounded-icon">
+                            <img src="{{ user.profile.display_photo.url }}" alt="Profile Photo" width="45px" height="50" class="rounded-icon" style="margin-left: 23%;">
                         {% else %}
-                            <img src="{% static 'media/media/store/profile_photos/IMG_7967.jpeg' %}" alt="Default Profile Photo" width="45px" height="50" class="rounded-icon">
+                            <img src="{% static 'media/media/store/profile_photos/IMG_7967.jpeg' %}" alt="Default Profile Photo" width="45px" height="50" class="rounded-icon" style="margin-left: 23%;">
                         {% endif %}
                     {% else %}
-                        <img src="{% static 'media/media/store/profile_photos/IMG_7967.jpeg' %}" alt="Default Profile Photo" width="45px" height="50" class="rounded-icon">
+                        <a href="{% url 'account_login' %}" class="btn btn-secondary me-3" style="font-family: 'Poppins'" role="button">Sign In</a>
+                        <a href="{% url 'account_signup' %}" class="btn btn-primary me-3" style="font-family: 'Poppins'" role="button">Sign Up</a>
                     {% endif %}
                 </a>
             </div>
@@ -73,9 +80,6 @@
                 <h5 style="color: whitesmoke;"></h5><a href="{% url 'account_logout' %}" class="h5 m-3">
                     <i style="margin-right: 15px;" class="fa-solid fa-arrow-right-from-bracket"></i>Log out
                 </a><br>
-            {% else %}
-
-                <h5 style="color: whitesmoke;">Please<a href="{% url 'account_login' %}" class="h5 m-3">Log in</a><br></h5>
             {% endif %}
         </div>
     </div>
