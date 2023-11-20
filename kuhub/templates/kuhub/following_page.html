@@ -6,8 +6,15 @@
 {% load static %}
 
 {% block content %}
-<div class="container">
-    <h1>Following</h1>
+
+<style>
+    body {
+        background-color: #99C1B9;
+    }
+</style>
+
+<div class="container" style="font-family: 'Poppins';">
+    <h4><span class="badge rounded-pill text-bg-success shadow p-3 d-flex justify-content-center" style="font-family: 'Poppins'; margin-top: 5%;">My Followings</span></h4>
     <div class="row row-cols-3">
         {% for following in followings %}
             <div class="col mb-3">
@@ -16,7 +23,7 @@
                         {% if following.user_followed.profile.display_photo %}
                             <img class="me-3 rounded-circle" src="{{ following.user_followed.profile.display_photo.url }}" width="45" height="45" alt="{{ following.user_followed.username }}'s Profile">
                         {% else %}
-                            <img class="me-3 rounded-circle" src="{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}" width="45" height="45" alt="{{ following.user_followed.username }}'s Profile">
+                            <img class="me-3 rounded-circle" src="{% static 'images/default_profile.jpg' %}" width="45" height="45" alt="{{ following.user_followed.username }}'s Profile">
                         {% endif %}
                         <h4 class="card-title">{{ following.user_followed.username }}</h4>
                     </div>

@@ -13,7 +13,8 @@
     }
 </style>
 
-<div class="container">
+<div class="container" style="font-family: 'Poppins';">
+    <h4><span class="badge rounded-pill text-bg-success shadow p-3 d-flex justify-content-center" style="font-family: 'Poppins'; margin-top: 5%;">My Followers</span></h4>
     <div class="row row-cols-3">
         {% for follow in followers %}
             <div class="col mb-3">
@@ -24,7 +25,7 @@
                         {% else %}
                             <img class="me-3 rounded-circle" src="{% static 'images/default_profile.jpg' %}" width="45" height="45" alt="{{ follow.follower.username }}'s Profile">
                         {% endif %}
-                        <h4 class="card-title">{{ follow.user_followed.username }}</h4>
+                        <h4 class="card-title">{{ follow.follower.username }}</h4>
                     </div>
                 </a>
             </div>

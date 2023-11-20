@@ -8,30 +8,43 @@
 <script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
 
 {% block content %}
+
 {% if messages %}
     {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="font-family: 'Poppins'">
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     {% endfor %}
 {% endif %}
 
-<div class="container mt-4">
-    <div class="alert alert-success" role="alert">
-        <div class="welcome-user-box">
+<div class="container mt-5 d-flex justify-content-center" style="font-family: 'Poppins'">
+    <div class="card p-3">
+        <div class="d-flex align-items-center">
             <div class="float-start profile-photo-container">
                 {% if profile.display_photo %}
-                    <img src="{{ profile.display_photo.url }}" alt="{{ profile.user.username }}'s Profile Photo" class="float-start me-2 rounded-circle" width="100px" height="105">
+                    <img src="{{ profile.display_photo.url }}" alt="{{ profile.user.username }}'s Profile Photo" class="float-start me-2 rounded-circle" width="100px" height="100px">
                 {% else %}
-                    <img src="{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}" alt="Default Profile Photo" class="float-start me-2 rounded-circle" width="100px" height="105">
+                    <img src="{% static 'images\default_profile.jpg' %}" alt="Default Profile Photo" class="float-start me-2 rounded-circle" width="100px" height="100px">
                 {% endif %}
             </div>
-            <div class="welcome-user-info">
-                <h2>{{ profile.user.username }}</h2>
-                <p>Followers: <span id="followersCount">{{ followers_count.count }}</span> Following: {{ following_count.count }}</p>
+            <div class="welcome-user-info ml-3 w-100" style="margin-left: 5%;">
+                <h2 class="mb-0 mt-0">{{ profile.user.username }}</h2>
+                {% if profile.biography %}
+                    <span class="biography">{{ profile.biography }}</span>
+                {% endif %}
+                <div class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats">
+                    <div class="d-flex flex-column">
+                        <span class="followers">Followers</span>
+                        <span id="followersCount">{{ followers_count.count }}</span>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <span class="following">Following</span>
+                        <span class="countfollowing">{{ following_count.count }}</span>
+                    </div>
+                </div>
                 {% if user.is_authenticated and user != profile.user %}
-                    <button id="followBtn" class="btn btn-primary" onclick="toggleFollow({{ profile.user.id }}, {{ is_following|yesno:"true,false" }})">
+                    <button id="followBtn" class="btn btn-primary bottom-0 end-0" style="margin-top: 10px;" onclick="toggleFollow({{ profile.user.id }}, {{ is_following|yesno:"true,false" }})">
                         {% if is_following %}
                             Unfollow
                         {% else %}
@@ -39,20 +52,14 @@
                         {% endif %}
                     </button>
                 {% endif %}
-                {% if profile.biography %}
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <p class="card-text">Biography: {{ profile.biography }}</p>
-                        </div>
-                    </div>
-                {% endif %}
             </div>
         </div>
     </div>
-<div class="posts-of-users">
+</div>
+<div class="container" style="font-family: 'Poppins'; margin-top: 50px;">
 {% if posts_list %}
     {% for post in posts_list %}
-        <div class="card border border-1 rounded-4">
+        <div class="card border border-1 rounded-4" style="width: 100%;">
             <div class="card-header">
                 {% if post.was_published_recently_post %}
                     <span class="badge" style="background-color: red; text-align: center; margin-right: 5px;">New!</span>
@@ -113,10 +120,10 @@
         </div>
     {% endfor %}
 {% else %}
-    <h1>No posts are available.</h1>
+    <h3 style="text-align: center; color: whitesmoke;">No posts are available.</h3>
 {% endif %}
 </div>
-</div>
+
 
 <script>
 
@@ -233,5 +240,5 @@ $(document).ready(function () {
         margin-top: 20px;
     }
 </style>
-
+<link rel="stylesheet" href="{% static 'kuhub/profile.css' %}">
 {% endblock %}
