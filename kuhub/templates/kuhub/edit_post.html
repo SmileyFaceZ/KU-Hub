@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-
+{% load static %}
 <div class="container mt-4">
     {% if messages %}
         {% for message in messages %}
@@ -38,28 +38,26 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Review</label>
+                <label class="form-label">Edit Review</label>
                 <br>
                 {{ form.review }}
             </div>
 
-            <!-- Display current review content for reference -->
             <div class="mb-3">
                 <label class="form-label">Current Review</label>
-                <p>{{ post.review }}</p>
+                <p>{{ post.post_content }}</p>
             </div>
 
-            <!-- File upload container -->
-            <div class="mb-3" id="file-upload-container">
+            <div class="mb-3" id="file-upload-container" style="display: none;">
                 <label class="form-label">Upload File (.pdf) / Picture (.jpg, .jpeg, .png)</label>
-                {{ form.file_upload }}
+                <input type="file" name="file_upload" id="file-upload-input" class="form-control" accept=".jpg, .jpeg, .png, .pdf">
             </div>
 
-            <input type="submit" name="update" id="button_update" value="Update" class="btn btn-success">
+            <input type="submit" name="post" id="button_post" value="Update" class="btn btn-success">
         </form>
     </div>
 
-    <script src="{% static 'kuhub/js/upload-file.js' %}"></script>
 {% endif %}
 
+<script src="{% static 'kuhub/js/upload-file.js' %}"></script>
 {% endblock %}
