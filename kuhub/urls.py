@@ -28,5 +28,6 @@ urlpatterns = [
     path('subject/<str:course_code>/', views.SubjectDetailView.as_view(), name='subject_detail'),
     path('notifications/', views.NotificationView.as_view(), name='notifications'),
     path('post/<int:pk>/', views.post_detail, name='post_detail'),
+    path('post/<int:pk>/edit/', views.edit_post, name='edit_post'),
     path('report/<int:pk>/', views.report_post, name='report_post'),
 ]

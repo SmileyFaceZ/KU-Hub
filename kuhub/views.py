@@ -521,6 +521,54 @@ def post_detail(request, pk):
 
 
 @login_required
+def edit_post(request, pk):
+    """User can edit their own post content, tag and subject."""
+    try:
+        post = get_object_or_404(Post, pk=pk)
+    except Http404:
+        messages.warning(
+            request,
+            f"Pos️t ID {pk} does not exist.❗️"
+        )
+        return redirect("kuhub:review")
+
+    if request.user != post.username:
+        print('do this')
+        messages.warning(
+            request,
+            f"You are not the owner of this post.❗️"
+        )
+
+        return redirect('kuhub:post_detail', pk=post.pk)
+
+    if request.method == "POST":
+        print('xxxxxxx')
+        form = PostForm(request.POST)
+        if form.is_valid():
+            tag_name = form.cleaned_data['tag_name']
+
+            tag = get_object_or_404(Tags, tag_text=tag_name)
+            post.tag_id = tag
+
+            subject_code = form.cleaned_data['subject']
+            subject = get_object_or_404(Subject, course_code=subject_code)
+            post.subject = subject
+
+            post.post_content = form.cleaned_data['review']
+
+            post.save()
+
+            return redirect('kuhub:post_detail', pk=post.pk)
+    else:
+        form = PostForm(
+            initial={'tag_name': post.tag_id.tag_text,
+                     'subject': post.subject.course_code,
+                     'review': post.post_content}
+        )
+
+    context = {'form': form, 'user': request.user, 'post': post}
+    return render(request, 'kuhub/edit_post.html', context)
+
 def report_post(request, pk):
     post = Post.objects.get(pk=pk)
 
