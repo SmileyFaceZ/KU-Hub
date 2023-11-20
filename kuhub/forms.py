@@ -1,5 +1,5 @@
 from django import forms
-from kuhub.models import Tags, Subject, Profile, PostComments
+from kuhub.models import Tags, Subject, Profile, PostComments, PostReport
 
 
 class PostForm(forms.Form):
@@ -64,6 +64,11 @@ class GroupForm(forms.Form):
 
 
 class CommentForm(forms.ModelForm):
+
     class Meta:
         model = PostComments
         fields = ['comment']
+
+
+class ReportForm(forms.Form):
+    reason = forms.CharField(widget=forms.Textarea)

@@ -3,33 +3,34 @@ Contains view functions for handling requests.
 related to Review-Hub, Summary-Hub and Tricks-Hub
 in the kuhub web application.
 """
-from django.http import HttpResponseRedirect, Http404
-from django.views import generic
+from django.http import Http404
 import json
 import datetime as dt
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Count
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
-from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm
-from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower,
+from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
+from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostReport,
                           Group, GroupTags, GroupPassword, Subject, Notification, PostComments)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
+from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
 
 
 class ReviewHubView(generic.ListView):
     """Redirect to Review-Hub page for review posts."""
-
+    queryset = Post.objects.all().filter(tag_id=1).order_by('-post_date')
     template_name: str = 'kuhub/review.html'
     context_object_name: str = 'posts_list'
 
     def get_queryset(self) -> QuerySet[Post]:
-        """Return Post objects with tag_id=1 and order by post_date."""
-        return Post.objects.filter(tag_id=1).order_by('-post_date')
+        queryset = super().get_queryset()
+        self.filterset = PostFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
@@ -44,6 +45,7 @@ class ReviewHubView(generic.ListView):
             post.dislike_icon_style(self.request.user) for post in
             context['posts_list']]
         context['profiles_list'] = profiles_list
+        context['form'] = self.filterset.form
 
         return context
 
@@ -51,14 +53,17 @@ class ReviewHubView(generic.ListView):
 class SummaryHubView(generic.ListView):
     """Redirect to Summary-Hub page for summary posts."""
 
+    queryset = ((PostDownload.objects
+                .select_related('post_id__tag_id'))
+                .order_by('-post_id__post_date').all())
     template_name: str = 'kuhub/summary.html'
     context_object_name: str = 'summary_post_list'
 
     def get_queryset(self) -> QuerySet[PostDownload]:
         """Return PostDownload objects with tag_id=2 and order by post_date."""
-        return PostDownload.objects.select_related('post_id__tag_id').order_by(
-            '-post_id__post_date'
-        ).all()
+        queryset = super().get_queryset()
+        self.filterset = PostDownloadFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
@@ -73,6 +78,7 @@ class SummaryHubView(generic.ListView):
             post.dislike_icon_style(self.request.user) for post in
             context['summary_post_list']]
         context['profiles_list'] = profiles_list
+        context['form'] = self.filterset.form
 
         return context
 
@@ -80,12 +86,15 @@ class SummaryHubView(generic.ListView):
 class TricksHubView(generic.ListView):
     """Redirect to Tricks-Hub page for tricks posts."""
 
+    queryset = Post.objects.filter(tag_id=3).order_by('-post_date')
     template_name: str = 'kuhub/tricks.html'
     context_object_name: str = 'tricks_list'
 
     def get_queryset(self) -> QuerySet[Post]:
         """Return Post objects with tag_id=3 and order by post_date."""
-        return Post.objects.filter(tag_id=3).order_by('-post_date')
+        queryset = super().get_queryset()
+        self.filterset = PostFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
@@ -100,6 +109,7 @@ class TricksHubView(generic.ListView):
             post.dislike_icon_style(self.request.user) for post in
             context['tricks_list']]
         context['profiles_list'] = profiles_list
+        context['form'] = self.filterset.form
 
         return context
 
@@ -138,10 +148,19 @@ class GenEdTypeListView(generic.ListView):
         """Return user'group data as contect data"""
         context = super().get_context_data(**kwargs)
         subject_list = Subject.objects.all().order_by('course_code')
-        for subject in subject_list:
+
+        subject_filter = GenedFilter(
+            self.request.GET,
+            queryset=subject_list
+        )
+        for subject in subject_filter.qs:
             subject.type = subject.type.replace("_", " ")
 
-        context['subject_list'] = subject_list
+        context['subject_list'] = subject_filter.qs
+        for i in subject_filter.qs:
+            print(i.type)
+        context['form'] = subject_filter.form
+
         return context
 
 
@@ -459,30 +478,44 @@ def following_page(request):
     return render(request, "kuhub/following_page.html", context={'followings': following})
 
 
+# views.py
+from django.shortcuts import render
+from itertools import zip_longest  # Import zip_longest for handling different lengths
+
+
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    comments = PostComments.objects.filter(post_id=post)
+    comments_list = PostComments.objects.filter(post_id=post)
 
     if request.method == "POST":
         if request.user.is_authenticated:
             form = CommentForm(request.POST)
+
             if form.is_valid():
-                comment = form.save(commit=False)
-                comment.post_id = post
-                comment.username = request.user
-                comment.save()
-                return redirect('kuhub:post_detail', pk=post.pk)
+                data = form.cleaned_data['comment']
+                PostComments.objects.create(username=request.user,
+                                            post_id=post,
+                                            comment=data,
+                                            comment_date=dt.datetime.now())
+
         else:
             return redirect('account_login')
     else:
         form = CommentForm()
 
     owner_profile = Profile.objects.filter(user=post.username)
+    comments_profiles = [Profile.objects.filter(user=comment.username).first()
+                         for comment in comments_list]
 
-    context = {'post': post,
-               'comments': comments,
-               'form': form,
-               'owner_profile': owner_profile}
+    # Use zip_longest to handle different lengths
+    comments_and_profiles = zip_longest(comments_list, comments_profiles)
+
+    context = {
+        'post': post,
+        'comments_and_profiles': comments_and_profiles,
+        'form': form,
+        'owner_profile': owner_profile,
+    }
 
     return render(request, 'kuhub/post_detail.html', context)
 
@@ -535,3 +568,21 @@ def edit_post(request, pk):
 
     context = {'form': form, 'user': request.user, 'post': post}
     return render(request, 'kuhub/edit_post.html', context)
+
+def report_post(request, pk):
+    post = Post.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data['reason']
+            report_count = PostReport.objects.filter(post_id=post).aggregate(Count('id'))['id__count']
+            PostReport.objects.create(post_id=post,
+                                      report_reason=reason,
+                                      report_date=dt.datetime.now(),
+                                      report_count=report_count+1)
+
+    else:
+        form = ReportForm()
+
+    return render(request, 'kuhub/report_post.html', {'form': form, 'post': post})

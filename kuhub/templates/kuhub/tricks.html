@@ -11,6 +11,16 @@
 {% load custom_filters %}
 {% load static %}
 
+<style>
+    .custom-border {
+        border: 2px solid #0b791a;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #d9f7be;
+    }
+</style>
+
 {% if messages %}
     {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="font-family: 'Poppins'">
@@ -19,6 +29,40 @@
         </div>
     {% endfor %}
 {% endif %}
+
+<div class="container mt-4 custom-border">
+    <form method="get" action="{% url 'kuhub:tricks' %}">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label"><strong>{{ form.post_content.label }}:</strong></label>
+                <div class="input-group" style="max-width: 400px;">
+                    {{ form.post_content }}
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label"><strong>{{ form.order_by_liked_disliked.label }}:</strong></label>
+                <div class="input-group" style="max-width: 200px;">
+                    {{ form.order_by_liked_disliked }}
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <label class="form-label"><strong>{{ form.order_by_post.label }}:</strong></label>
+                <div class="input-group" style="max-width: 200px;">
+                    {{ form.order_by_post }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 mt-3">
+            <button type="submit" class="btn btn-success">
+                <i class="fa-solid fa-magnifying-glass fa-fade fa-xl"></i>
+                <span style="font-family: 'Poppins'">Search</span>
+            </button>
+        </div>
+    </form>
+</div>
 
 <div class="container" style="font-family: 'Poppins'">
     {% if tricks_list %}
@@ -80,7 +124,7 @@
                                 <i class="{{ dislike_icon_styles|index:forloop.counter0 }}"></i>
                             </button>
                             <span id="dislikes-count-{{ post.pk }}">{{ post.total_dislikes }}</span>
-                            <a href="{% url 'kuhub:post_detail' pk=post.pk %}" class="btn btn-link">See comments</a>
+
                         {% else %}
                             <form action="{% url 'account_login' %}">
                                 <button type="submit" class="btn btn-link">
@@ -93,6 +137,8 @@
                                 <span>{{ post.total_dislikes }}</span>
                             </form>
                         {% endif %}
+                        <a href="{% url 'kuhub:post_detail' pk=post.pk %}" class="btn btn-link">See comments</a>
+                        <a href="{% url 'kuhub:report_post' pk=post.pk %}" class="btn btn-link">Report</a>
                     </div>
                 </div>
             </div>

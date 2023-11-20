@@ -10,6 +10,16 @@
 {% load custom_filters %}
 {% load static %}
 
+<style>
+    .custom-border {
+        border: 2px solid #0b791a;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #d9f7be;
+    }
+</style>
+
 <div class="container mt-4">
 {% if messages %}
     {% for message in messages %}
@@ -20,6 +30,41 @@
     {% endfor %}
 {% endif %}
 </div>
+
+<div class="container mt-4 custom-border">
+    <form method="get" action="{% url 'kuhub:review' %}">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label"><strong>{{ form.post_content.label }}:</strong></label>
+                <div class="input-group" style="max-width: 400px;">
+                    {{ form.post_content }}
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label"><strong>{{ form.order_by_liked_disliked.label }}:</strong></label>
+                <div class="input-group" style="max-width: 200px;">
+                    {{ form.order_by_liked_disliked }}
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <label class="form-label"><strong>{{ form.order_by_post.label }}:</strong></label>
+                <div class="input-group" style="max-width: 200px;">
+                    {{ form.order_by_post }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 mt-3">
+            <button type="submit" class="btn btn-success">
+                <i class="fa-solid fa-magnifying-glass fa-fade fa-xl"></i>
+                <span style="font-family: 'Poppins'">Search</span>
+            </button>
+        </div>
+    </form>
+</div>
+
 <div class="container" style="font-family: 'Poppins'">
     {% if posts_list %}
         {% for post in posts_list %}
@@ -41,13 +86,13 @@
                             {% if user.is_authenticated and post.username == user %}
                                 <li><a class="dropdown-item" href="#">Edit Post</a></li>
                             {% else %}
-                                <li><a class="dropdown-item" href="#">Report</a></li>
+                                <li><a class="dropdown-item" href="{% url 'kuhub:report_post' post.id %}">Report</a></li>
                             {% endif %}
                         </ul>
                     </div>
                     <a href="{% url 'kuhub:profile_view' username=post.username %}">
                         {% with profile=post.username.profile %}
-                            <div class="d-flex align-items-center"> <!-- Use a flex container for alignment -->
+                            <div class="d-flex align-items-center">
                                 <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
                                 <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ post.username }}</h4>
                             </div>
@@ -95,6 +140,7 @@
                             </form>
                         {% endif %}
                         <a href="{% url 'kuhub:post_detail' pk=post.pk %}" class="btn btn-link">See comments</a>
+                        <a href="{% url 'kuhub:report_post' pk=post.pk %}" class="btn btn-link">Report</a>
                     </div>
                 </div>
             </div>
