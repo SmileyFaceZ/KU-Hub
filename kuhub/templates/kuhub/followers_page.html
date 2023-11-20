@@ -1,13 +1,19 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
     <title>Followers</title>
 {% endblock %}
-{% load static %}
 
 {% block content %}
+
+<style>
+    body {
+        background-color: #99C1B9;
+    }
+</style>
+
 <div class="container">
-    <h1>Followers</h1>
     <div class="row row-cols-3">
         {% for follow in followers %}
             <div class="col mb-3">
@@ -16,7 +22,7 @@
                         {% if follow.follower.profile.display_photo %}
                             <img class="me-3 rounded-circle" src="{{ follow.follower.profile.display_photo.url }}" width="45" height="45" alt="{{ follow.follower.username }}'s Profile">
                         {% else %}
-                            <img class="me-3 rounded-circle" src="{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}" width="45" height="45" alt="{{ follow.follower.username }}'s Profile">
+                            <img class="me-3 rounded-circle" src="{% static 'images/default_profile.jpg' %}" width="45" height="45" alt="{{ follow.follower.username }}'s Profile">
                         {% endif %}
                         <h4 class="card-title">{{ follow.user_followed.username }}</h4>
                     </div>
