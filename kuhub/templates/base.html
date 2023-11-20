@@ -32,10 +32,6 @@
                     <li class="nav-item"><a href="{% url 'kuhub:groups' %}" class="nav-link" style="font-family: 'Poppins'; font-weight: 600;">Group-Hub</a></li>
                     <li class="nav-item"><a href="{% url 'kuhub:gen_ed_type_list' %}" class="nav-link" style="font-family: 'Poppins'; font-weight: 600;">Gen-ed List</a></li>
                 </ul>
-                <form class="d-flex" action="action_page.php">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="font-family: 'Poppins'">
-                    <button class="btn btn-outline-success" type="submit"><i class="fa fa-search"></i></button>
-                </form>
                 <a href="{% url 'kuhub:profile_settings' %}" class="me-2 rounded-circle">
                     {% if user.is_authenticated %}
                         {% if user.profile.display_photo %}
@@ -87,7 +83,7 @@
     {% block title %}
     {% endblock %}
 </head>
-  
+
 <body class="background">
     {% block content %}
     {% endblock %}

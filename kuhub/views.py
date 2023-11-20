@@ -3,8 +3,7 @@ Contains view functions for handling requests.
 related to Review-Hub, Summary-Hub and Tricks-Hub
 in the kuhub web application.
 """
-from django.http import HttpResponseRedirect, Http404
-from django.views import generic
+from django.http import Http404
 import json
 import datetime as dt
 from django.urls import reverse
@@ -19,17 +18,19 @@ from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostR
                           Group, GroupTags, GroupPassword, Subject, Notification, PostComments)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
+from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
 
 
 class ReviewHubView(generic.ListView):
     """Redirect to Review-Hub page for review posts."""
-
+    queryset = Post.objects.all().filter(tag_id=1).order_by('-post_date')
     template_name: str = 'kuhub/review.html'
     context_object_name: str = 'posts_list'
 
     def get_queryset(self) -> QuerySet[Post]:
-        """Return Post objects with tag_id=1 and order by post_date."""
-        return Post.objects.filter(tag_id=1).order_by('-post_date')
+        queryset = super().get_queryset()
+        self.filterset = PostFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
@@ -44,6 +45,7 @@ class ReviewHubView(generic.ListView):
             post.dislike_icon_style(self.request.user) for post in
             context['posts_list']]
         context['profiles_list'] = profiles_list
+        context['form'] = self.filterset.form
 
         return context
 
@@ -51,14 +53,17 @@ class ReviewHubView(generic.ListView):
 class SummaryHubView(generic.ListView):
     """Redirect to Summary-Hub page for summary posts."""
 
+    queryset = ((PostDownload.objects
+                .select_related('post_id__tag_id'))
+                .order_by('-post_id__post_date').all())
     template_name: str = 'kuhub/summary.html'
     context_object_name: str = 'summary_post_list'
 
     def get_queryset(self) -> QuerySet[PostDownload]:
         """Return PostDownload objects with tag_id=2 and order by post_date."""
-        return PostDownload.objects.select_related('post_id__tag_id').order_by(
-            '-post_id__post_date'
-        ).all()
+        queryset = super().get_queryset()
+        self.filterset = PostDownloadFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
@@ -73,6 +78,7 @@ class SummaryHubView(generic.ListView):
             post.dislike_icon_style(self.request.user) for post in
             context['summary_post_list']]
         context['profiles_list'] = profiles_list
+        context['form'] = self.filterset.form
 
         return context
 
@@ -80,12 +86,15 @@ class SummaryHubView(generic.ListView):
 class TricksHubView(generic.ListView):
     """Redirect to Tricks-Hub page for tricks posts."""
 
+    queryset = Post.objects.filter(tag_id=3).order_by('-post_date')
     template_name: str = 'kuhub/tricks.html'
     context_object_name: str = 'tricks_list'
 
     def get_queryset(self) -> QuerySet[Post]:
         """Return Post objects with tag_id=3 and order by post_date."""
-        return Post.objects.filter(tag_id=3).order_by('-post_date')
+        queryset = super().get_queryset()
+        self.filterset = PostFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
@@ -100,6 +109,7 @@ class TricksHubView(generic.ListView):
             post.dislike_icon_style(self.request.user) for post in
             context['tricks_list']]
         context['profiles_list'] = profiles_list
+        context['form'] = self.filterset.form
 
         return context
 
@@ -138,10 +148,19 @@ class GenEdTypeListView(generic.ListView):
         """Return user'group data as contect data"""
         context = super().get_context_data(**kwargs)
         subject_list = Subject.objects.all().order_by('course_code')
-        for subject in subject_list:
+
+        subject_filter = GenedFilter(
+            self.request.GET,
+            queryset=subject_list
+        )
+        for subject in subject_filter.qs:
             subject.type = subject.type.replace("_", " ")
 
-        context['subject_list'] = subject_list
+        context['subject_list'] = subject_filter.qs
+        for i in subject_filter.qs:
+            print(i.type)
+        context['form'] = subject_filter.form
+
         return context
 
 
