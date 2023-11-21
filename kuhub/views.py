@@ -54,7 +54,7 @@ class SummaryHubView(generic.ListView):
     """Redirect to Summary-Hub page for summary posts."""
 
     queryset = ((PostDownload.objects
-                .select_related('post_id__tag_id'))
+                 .select_related('post_id__tag_id'))
                 .order_by('-post_id__post_date').all())
     template_name: str = 'kuhub/summary.html'
     context_object_name: str = 'summary_post_list'
@@ -569,6 +569,7 @@ def edit_post(request, pk):
     context = {'form': form, 'user': request.user, 'post': post}
     return render(request, 'kuhub/edit_post.html', context)
 
+
 def report_post(request, pk):
     post = Post.objects.get(pk=pk)
 
@@ -580,7 +581,7 @@ def report_post(request, pk):
             PostReport.objects.create(post_id=post,
                                       report_reason=reason,
                                       report_date=dt.datetime.now(),
-                                      report_count=report_count+1)
+                                      report_count=report_count + 1)
 
     else:
         form = ReportForm()
