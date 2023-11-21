@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "ku-hub-403109",
+  "private_key_id": "d333bb4ea845887d090b6a3e0c254ef096cd37ec",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDJ/nqbN+latXB3\nvSOVP4/Krot2NxwLpjGeH3T89TTYPgBgrMhwXeaitNiMiyaml9CaWSDfkw2Llz8S\nT1p0/qU+Da60xcjNIChIGzw+S22PpYEka37+IWzO/dy/CF0cuHpt8J3ZaDQM3oO2\nE02tEqO7fQ+1uwFihHkiwC2HSec5fzDt8wmfvO/FaRrO5E9i+LYnaxM6m9iH6uZV\nILS4SxhSnonnfRue0j1tC3xl4m5aTmE/IWMXnN5tjG88clCk69RS6x3clQmtdpPU\nsvDkUIxHa5U71yGsHlJqKJ4wfBi+rE4rQeevbr+UZg02jLkRquwyByY6p+630uTe\nf4AM/FQ9AgMBAAECggEALrUdwDkaSFuWrVVqvjbzprwcKwJ8xXPRWt0uxdRkexFB\nMJmbgqIv89UqEruVfSWzOpGcAJ7GHc5kKvV29wEwEAyFZq8qasZCEkRb9pKl+7ab\nSWLi+1waxzVb/z9tmnfM9ZGTSoOmL4iff7Fwf3IFMtQtFwpuPEviH+c8z+EGqtxF\nN8760VdG1GvqTXBp4K+A2YgxdxMOZxeLLVfasNhyksbrkDxDoyLuFAbvdOUJx9rh\nQVvkDC/+oLIkVvTJuZiO9bGfcjiyErtC0E518tLc+WuvuwEKT+Rr6dEoYeBjJ3kl\nDBvJoEG3EFME667jcIhkNYmsYMh78VBA/AopHKGyKQKBgQDzl3ma8/ZkV3z/UI0H\nHPHk+5yKQRw8BYVSzzBy1rD7pWnm2eOjBKDeAwT/LiLl2JaeGrqSEs+UBxg4GYc4\n8/P8UeN5m8iwD90YBVBytMmbaS/u9Z0099ls+nYdCFBRnA+nwUHTaKGiwuK+A7/M\nHpsn/iuHZ6/gbZci9D9Wh6EjVQKBgQDUSI4xDYIVRK613R+nF41J4Qzu9hXzWFal\nlFbW1wU8XkGrFlpbYidRWfw6GLQHx651+bKwQxKl02vu2YzSlYzhgZrcfyF+dvBI\nd5D6Xo9txRBjabwiZkmNs/XjGxuzEZh9ZMmTCUrd4g/5C5Hg4GXRugCo3QxF2rPt\nzEezzCY9SQKBgQDvSpJPQfF9yOQl+39OyYRnKTUyK5wM6m96VcaGSZk629gYy1rv\nvZA6CEVUWII3wHjVf/RfotL/26hTE+DedefsqpUH1Z1kN3E+M5o/1JFodgB8ghOZ\nARE6GSEGjDA6u1A1v4dmopaGSWRsvUogvsA0nV8teRIxKfcag03lNv94sQKBgQDG\nVe+79uH12xDcy/dZ11BjmUfLL9J8ZKm31Ct6WLUEnQ//uEe9n6wafteAtDnoFvFy\nOlRwCIqwsiLiqxG+YomY282De6ggjyGao1OqCJU7OuY/67ch8K2CHoR6poYvvR3a\n8kK/BOyU+DRyPBQUpbObyov5OWXREjAP2k+XtgJ4OQKBgBbGGEyrSVp8SoA0Lmsn\nQdPv+qZ/+qkqA1XTp+JVUYdyZYw9fIhdfEfv8mAHqfLN9hl9afmiBvG7ySgmBGBD\nhjVUm8lVaqtPfLgj90VQRF49y8ZYKsk25SWKpFDDSfU0PMBFcvjUt4kEdnbC8KuJ\nuFtHEIHgQWFiKF4t+mNyiFKy\n-----END PRIVATE KEY-----\n",
+  "client_email": "kuhub-calendar-service@ku-hub-403109.iam.gserviceaccount.com",
+  "client_id": "112585413322942496000",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/kuhub-calendar-service%40ku-hub-403109.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

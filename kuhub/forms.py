@@ -63,6 +63,33 @@ class GroupForm(forms.Form):
     )
 
 
+class EventForm(forms.Form):
+    start_time = forms.DateTimeField(
+        widget=forms.TextInput(attrs={'type': 'datetime-local'}),
+        label='Start Time',
+        required=True
+    )
+    end_time = forms.DateTimeField(
+        widget=forms.TextInput(attrs={'type': 'datetime-local'}),
+        label='End Time',
+        required=True
+    )
+    summary = forms.CharField(
+        widget=forms.Textarea(attrs={'cols': 50, 'rows': 1}),
+        label='Event name:',
+        required=True
+    )
+    location = forms.CharField(
+        widget=forms.Textarea(attrs={'cols': 50, 'rows': 1}),
+        label='Location:',
+        required=True
+    )
+    description = forms.CharField(
+        widget=forms.Textarea(attrs={'cols': 70, 'rows': 2}),
+        label='Location:',
+        required=True
+    )
+
 class CommentForm(forms.ModelForm):
 
     class Meta:
@@ -72,3 +99,4 @@ class CommentForm(forms.ModelForm):
 
 class ReportForm(forms.Form):
     reason = forms.CharField(widget=forms.Textarea)
+
