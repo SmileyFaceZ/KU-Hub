@@ -8,6 +8,14 @@
 {% endblock %}
 {% block content %}
 <body>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="font-family: 'Poppins'">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
     <div class="container">
         <div class="group_header" style="display: inline;">
             <h2 style="display: inline;">{{ group }}</h2>
@@ -17,20 +25,21 @@
             {% endfor %}
         </div>
 
-<!--        <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">-->
-<!--            create event-->
-<!--        </button>-->
-
-         <div class="modal" id="eventModal" data-backdrop="static" data-keyboard="false">
+         <div class="modal" id="noteModal" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <!-- Modal Header -->
                     <div class="modal-header">
-                        <h3>Create Meeting Events</h3>
+                        <h3>Add note</h3>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <!-- Modal Body -->
                     <div class="modal-body">
+                        <form action="{% url 'kuhub:group_note' group.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="text" name="note" value="note">
+                            <input type="submit" value="Add">
+                        </form>
                     </div>
                 </div>
             </div>
@@ -45,8 +54,17 @@
                             Notes
                         </div>
                         <div class="card-body">
-
+                            {% for note in notes %}
+                            <div class="card border border-dark border-1 m-2 rounded-3" style="line-height: 1; margin-top: 10px;">
+                                    <p class="textid">{{note.note_text}}</p>
+                            </div>
+                        {% endfor %}
                         </div>
+                        <button type="submit" class="btn btn-primary rounded-circle btn-floating btn-lg"
+                                data-toggle="modal" data-target="#noteModal"
+                                style="position: absolute;bottom: 10px; right: 10px;">
+                            <i class="fas fa-circle-plus"></i>
+                        </button>
                  </div>
                 </div>
                  <div class="row">
@@ -68,7 +86,7 @@
                     </div>
                     <div class="card-body">
                         {% for event in events %}
-                            <div class="card border border-dark border-3 m-2 rounded-3" style="line-height: 1; margin-top: 10px;">
+                            <div class="card border border-dark border-2 m-2 rounded-3" style="line-height: 1; margin-top: 10px;">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <span>Event: {{ event.summary }}</span>
                                     <form method="post" action="{% url 'kuhub:event_delete' event.id %}">
@@ -97,7 +115,22 @@
             </div>
         </div>
     </div>
-
+<script>
+    function replaceURLWithHTMLLinks() {
+        var textElements = document.getElementsByClassName("textid");
+        for (var i = 0; i < textElements.length; i++) {
+            var textid = textElements[i].innerHTML;
+            var exp = /(https?:\/\/\S+)/ig;  // Simplified regular expression for URLs
+            var replacedText = textid.replace(exp, function(match) {
+                console.log("Found URL:", match);
+                return "<a href='" + match + "' target='_blank'>" + match + "</a>";
+            });
+            textElements[i].innerHTML = replacedText;
+        }
+    }
+    replaceURLWithHTMLLinks();
+</script>
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

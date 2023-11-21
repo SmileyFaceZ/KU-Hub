@@ -19,7 +19,8 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
 from kuhub.forms import PostForm, ProfileForm, GroupForm, EventForm
-from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group, GroupTags, GroupPassword, GroupEvent
+from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group, GroupTags, GroupPassword, GroupEvent, \
+    Note
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from .calendar import create_calendar, add_participate, create_event, delete_event, generate_meeting
@@ -189,6 +190,7 @@ class GroupDetail(generic.DetailView):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             context['events'] = self.object.groupevent_set.all()
+            context['notes'] = self.object.note_set.all()
         return context
 
 
@@ -447,3 +449,11 @@ def group_event_delete(request,event_id):
     event.delete()
     messages.success(request,'delete event successful')
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
+def add_note(request,group_id):
+    group = get_object_or_404(Group, pk=group_id)
+    if request.method == 'POST':
+        text = request.POST.get('note', '')
+        Note.objects.create(group=group,note_text=text)
+        messages.success(request,'create note successful')
+        return redirect(reverse('kuhub:group_detail', args=(group_id,)))

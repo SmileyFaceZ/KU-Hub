@@ -7,6 +7,14 @@
 <div class="container">
 
 {% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="font-family: 'Poppins'">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
     <div class="nav flex-column">
         <div class="row">
             <div class="col-md-2 d-none d-md-block bg-light sidebar" style="background-color: white; height: 100vh;">
@@ -16,9 +24,6 @@
                     <a href="{% url 'kuhub:group_detail' group.id %}">{{ group.group_name }}</a>
                 {% endfor %}
                 {% endif %}
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
             </div>
         </div>
     </div>
