@@ -8,7 +8,6 @@ from .profile_view import (
     profile_view, profile_settings, toggle_follow,
     followers_page, following_page
 )
-from .review_view import ReviewHubView
 from .subject_detail_view import SubjectDetailView
 from .summary_view import SummaryHubView
-from .tricks_view import TricksHubView
+from .base_view import ReviewHubView, TricksHubView
