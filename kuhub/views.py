@@ -3,19 +3,26 @@ Contains view functions for handling requests.
 related to Review-Hub, Summary-Hub and Tricks-Hub
 in the kuhub web application.
 """
+import datetime
+from django.http import HttpResponseRedirect
+from django.utils.decorators import method_decorator
+from django.views import generic
+from django.views.generic import TemplateView
 from django.http import Http404
 import json
 import datetime as dt
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import QuerySet, Count
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
+from kuhub.forms import PostForm, ProfileForm, GroupForm, EventForm
+from .calendar import create_calendar, add_participate, create_event, delete_event, generate_meetin
 from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
 from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostReport,
-                          Group, GroupTags, GroupPassword, Subject, Notification, PostComments)
+                          Group, GroupTags, GroupPassword, Subject, Notification, PostComments, GroupEvent, Note)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
@@ -209,7 +216,11 @@ def join(request, group_id):
     Join Group button
     """
     user = request.user
-    group = get_object_or_404(Group, pk=group_id)
+    group = get_object_or_404(Group,pk=group_id)
+    if not user.email:
+        messages.error(request, "Please add email in your profile")
+        return redirect(reverse('kuhub:groups'))
+
     if user in group.group_member.all():
         messages.error(request, "You already a member of this group")
         return redirect(reverse('kuhub:groups'))
@@ -220,6 +231,7 @@ def join(request, group_id):
                 messages.error(request, "Wrong password")
                 return redirect(reverse('kuhub:groups'))
     group.group_member.add(user)
+    add_participate(user,group.group_calendar)
     messages.success(request, "You join the group success!")
     return redirect(reverse('kuhub:groups'))
 
@@ -249,13 +261,16 @@ def create_group(request: HttpRequest):
             if data['password']:
                 password = GroupPassword.objects.create(group_password=data['password'])
                 password.set_password(password.group_password)
+            calendar = create_calendar("calendar")
             group = Group.objects.create(
                 group_name=data['name'],
                 group_description=data['description'],
                 group_password=password,
+                group_calendar=calendar['id']
             )
             group.group_tags.set([group_tag])
             group.group_member.set([user])
+            add_participate(user, group.group_calendar)
             messages.success(request, f'Create group successful your group id is {group.id}')
             return redirect(reverse('kuhub:groups'))
     return render(
@@ -263,6 +278,25 @@ def create_group(request: HttpRequest):
         template_name='kuhub/group_create.html',
         context={'form': GroupForm}
     )
+
+
+@method_decorator(login_required, name='dispatch')
+class GroupDetail(generic.DetailView):
+    """Group manage and detail page"""
+    model = Group
+    template_name = 'kuhub/group_detail.html'
+
+    def get_queryset(self):
+        return Group.objects.all()
+
+    def get_context_data(self, **kwargs):
+        """Return user'group data as contect data"""
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            context['events'] = self.object.groupevent_set.all()
+            context['notes'] = self.object.note_set.all()
+        return context
+
 
 
 @login_required
@@ -478,6 +512,65 @@ def following_page(request):
     return render(request, "kuhub/following_page.html", context={'followings': following})
 
 
+def group_event_create(request,group_id):
+    user = request.user
+    group = get_object_or_404(Group,pk=group_id)
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            event = create_event(calendar_id=group.group_calendar,
+                                 summary=data['summary'],
+                                 description=data['description'],
+                                 location=data['location'],
+                                 attendees=group.group_member.all(),
+                                 start_datetime=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
+                                 end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'))
+            group_event = GroupEvent.objects.create(
+                group=group,
+                summary=data['summary'],
+                location=data['location'],
+                description=data['description'],
+                start_time=data['start_time'].strftime("%a. %d %b %Y %H:%M:%S"),
+                end_time=data['end_time'].strftime("%a. %d %b %Y %H:%M:%S"),
+                event_id=event['id']
+            )
+            # update = generate_meeting(group.group_calendar,group_event)
+            messages.success(request, f'create event successful')
+            return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+    return render(
+        request,
+        template_name='kuhub/group_event.html',
+        context={'form': EventForm,'group':group}
+    )
+
+def group_event_delete(request,event_id):
+    user = request.user
+    event = get_object_or_404(GroupEvent, pk=event_id)
+    group_id = event.group.id
+    #delete event in calendar
+    delete_event(event.group.group_calendar,event.event_id)
+    #delete GroupEvent object
+    event.delete()
+    messages.success(request,'delete event successful')
+    return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
+def add_note(request,group_id):
+    group = get_object_or_404(Group, pk=group_id)
+    if request.method == 'POST':
+        text = request.POST.get('note', '')
+        Note.objects.create(group=group,note_text=text)
+        messages.success(request,'create note successful')
+        return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
+def delete_note(request,note_id):
+    note = get_object_or_404(Note, pk=note_id)
+    group_id = note.group.id
+    note.delete()
+    messages.success(request,'delete note successful')
+    return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
+
 # views.py
 from django.shortcuts import render
 from itertools import zip_longest  # Import zip_longest for handling different lengths
@@ -587,3 +680,4 @@ def report_post(request, pk):
         form = ReportForm()
 
     return render(request, 'kuhub/report_post.html', {'form': form, 'post': post})
+
