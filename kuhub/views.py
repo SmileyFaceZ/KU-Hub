@@ -4,90 +4,120 @@ related to Review-Hub, Summary-Hub and Tricks-Hub
 in the kuhub web application.
 """
 import datetime
-
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.generic import TemplateView
+from django.http import Http404
 import json
 import datetime as dt
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Count
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
 from kuhub.forms import PostForm, ProfileForm, GroupForm, EventForm
-from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group, GroupTags, GroupPassword, GroupEvent, \
-    Note
+from .calendar import create_calendar, add_participate, create_event, delete_event, generate_meetin
+from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
+from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostReport,
+                          Group, GroupTags, GroupPassword, Subject, Notification, PostComments, GroupEvent, Note)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
-from .calendar import create_calendar, add_participate, create_event, delete_event, generate_meeting
+from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
 
 
 class ReviewHubView(generic.ListView):
     """Redirect to Review-Hub page for review posts."""
-
+    queryset = Post.objects.all().filter(tag_id=1).order_by('-post_date')
     template_name: str = 'kuhub/review.html'
     context_object_name: str = 'posts_list'
 
     def get_queryset(self) -> QuerySet[Post]:
-        """Return Post objects with tag_id=1 and order by post_date."""
-        return Post.objects.filter(tag_id=1).order_by('-post_date')
+        queryset = super().get_queryset()
+        self.filterset = PostFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
+
+        profiles_list = [Profile.objects.filter(user=post.username).first()
+                         for post in context['posts_list']]
+
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
                                        for post in context['posts_list']]
         context['dislike_icon_styles'] = [
             post.dislike_icon_style(self.request.user) for post in
             context['posts_list']]
+        context['profiles_list'] = profiles_list
+        context['form'] = self.filterset.form
+
         return context
 
 
 class SummaryHubView(generic.ListView):
     """Redirect to Summary-Hub page for summary posts."""
 
+    queryset = ((PostDownload.objects
+                 .select_related('post_id__tag_id'))
+                .order_by('-post_id__post_date').all())
     template_name: str = 'kuhub/summary.html'
     context_object_name: str = 'summary_post_list'
 
     def get_queryset(self) -> QuerySet[PostDownload]:
         """Return PostDownload objects with tag_id=2 and order by post_date."""
-        return PostDownload.objects.select_related('post_id__tag_id').order_by(
-            '-post_id__post_date'
-        ).all()
+        queryset = super().get_queryset()
+        self.filterset = PostDownloadFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
+
+        profiles_list = [Profile.objects.filter(user=post.post_id.username).first()
+                         for post in context['summary_post_list']]
+
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
                                        for post in context['summary_post_list']]
         context['dislike_icon_styles'] = [
             post.dislike_icon_style(self.request.user) for post in
             context['summary_post_list']]
+        context['profiles_list'] = profiles_list
+        context['form'] = self.filterset.form
+
         return context
 
 
 class TricksHubView(generic.ListView):
     """Redirect to Tricks-Hub page for tricks posts."""
 
+    queryset = Post.objects.filter(tag_id=3).order_by('-post_date')
     template_name: str = 'kuhub/tricks.html'
     context_object_name: str = 'tricks_list'
 
     def get_queryset(self) -> QuerySet[Post]:
         """Return Post objects with tag_id=3 and order by post_date."""
-        return Post.objects.filter(tag_id=3).order_by('-post_date')
+        queryset = super().get_queryset()
+        self.filterset = PostFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
+
+        profiles_list = [Profile.objects.filter(user=post.username).first()
+                         for post in context['tricks_list']]
+
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
                                        for post in context['tricks_list']]
         context['dislike_icon_styles'] = [
             post.dislike_icon_style(self.request.user) for post in
             context['tricks_list']]
+        context['profiles_list'] = profiles_list
+        context['form'] = self.filterset.form
+
         return context
 
 
@@ -109,8 +139,79 @@ class GroupView(generic.ListView):
             context['user_groups'] = self.request.user.group_set.all()
         return context
 
+
+class GenEdTypeListView(generic.ListView):
+    """Redirect to show a type all subject type list."""
+    template_name = 'kuhub/gened_list.html'
+    context_object_name = 'type_list'
+
+    def get_queryset(self):
+        """Return QuerySet of all subjects ordered by course_code"""
+        tag_list = (Subject.objects.values_list("type", flat=True)
+                    .distinct().order_by('type'))
+        return [tag.replace("_", " ") for tag in tag_list]
+
+    def get_context_data(self, **kwargs):
+        """Return user'group data as contect data"""
+        context = super().get_context_data(**kwargs)
+        subject_list = Subject.objects.all().order_by('course_code')
+
+        subject_filter = GenedFilter(
+            self.request.GET,
+            queryset=subject_list
+        )
+        for subject in subject_filter.qs:
+            subject.type = subject.type.replace("_", " ")
+
+        context['subject_list'] = subject_filter.qs
+        for i in subject_filter.qs:
+            print(i.type)
+        context['form'] = subject_filter.form
+
+        return context
+
+
+class SubjectDetailView(generic.ListView):
+    """Redirect to review and summary detail of each subject page."""
+    template_name = 'kuhub/subject_detail.html'
+    context_object_name = 'subject_detail'
+
+    def get(self, request: HttpRequest, **kwargs):
+        try:
+            key = kwargs["course_code"]
+            subject = get_object_or_404(Subject, course_code=key)
+        except Http404:
+            messages.warning(
+                request,
+                f"Subject Course Code {key} does not exist.❗️")
+            return redirect("kuhub:gen_ed_type_list")
+
+        course_code_post = [
+            post for post in Post.objects.all().order_by('-post_date')
+            if key == post.subject.course_code
+        ]
+
+        return render(
+            request,
+            'kuhub/subject_detail.html',
+            context={
+                "course_code_post": course_code_post,
+                "subject": subject.course_code + " " + subject.name_eng,
+            }
+        )
+
+
+class NotificationView(generic.ListView):
+    """Redirect users to notification page and show list of notification"""
+    template_name = 'kuhub/notification.html'
+    context_object_name = 'notifications_list'
+
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user).order_by("-id")
+
+
 @login_required
-def join(request,group_id):
+def join(request, group_id):
     """
     Join Group button
     """
@@ -119,6 +220,7 @@ def join(request,group_id):
     if not user.email:
         messages.error(request, "Please add email in your profile")
         return redirect(reverse('kuhub:groups'))
+
     if user in group.group_member.all():
         messages.error(request, "You already a member of this group")
         return redirect(reverse('kuhub:groups'))
@@ -133,6 +235,7 @@ def join(request,group_id):
     messages.success(request, "You join the group success!")
     return redirect(reverse('kuhub:groups'))
 
+
 @login_required
 def create_group(request: HttpRequest):
     """
@@ -143,8 +246,8 @@ def create_group(request: HttpRequest):
         form = GroupForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            #check password and password(again) is the same
-            if data['password'] != data['password_2'] :
+            # check password and password(again) is the same
+            if data['password'] != data['password_2']:
                 messages.error(request, "Password is not the same")
                 return render(
                     request,
@@ -176,6 +279,7 @@ def create_group(request: HttpRequest):
         context={'form': GroupForm}
     )
 
+
 @method_decorator(login_required, name='dispatch')
 class GroupDetail(generic.DetailView):
     """Group manage and detail page"""
@@ -192,6 +296,7 @@ class GroupDetail(generic.DetailView):
             context['events'] = self.object.groupevent_set.all()
             context['notes'] = self.object.note_set.all()
         return context
+
 
 
 @login_required
@@ -342,7 +447,6 @@ def profile_settings(request):
 
 
 def profile_view(request, username):
-
     # Retrieve the user based on the username
     user = get_object_or_404(User, username=username)
 
@@ -407,6 +511,7 @@ def following_page(request):
 
     return render(request, "kuhub/following_page.html", context={'followings': following})
 
+
 def group_event_create(request,group_id):
     user = request.user
     group = get_object_or_404(Group,pk=group_id)
@@ -464,3 +569,115 @@ def delete_note(request,note_id):
     note.delete()
     messages.success(request,'delete note successful')
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
+
+# views.py
+from django.shortcuts import render
+from itertools import zip_longest  # Import zip_longest for handling different lengths
+
+
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    comments_list = PostComments.objects.filter(post_id=post)
+
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            form = CommentForm(request.POST)
+
+            if form.is_valid():
+                data = form.cleaned_data['comment']
+                PostComments.objects.create(username=request.user,
+                                            post_id=post,
+                                            comment=data,
+                                            comment_date=dt.datetime.now())
+
+        else:
+            return redirect('account_login')
+    else:
+        form = CommentForm()
+
+    owner_profile = Profile.objects.filter(user=post.username)
+    comments_profiles = [Profile.objects.filter(user=comment.username).first()
+                         for comment in comments_list]
+
+    # Use zip_longest to handle different lengths
+    comments_and_profiles = zip_longest(comments_list, comments_profiles)
+
+    context = {
+        'post': post,
+        'comments_and_profiles': comments_and_profiles,
+        'form': form,
+        'owner_profile': owner_profile,
+    }
+
+    return render(request, 'kuhub/post_detail.html', context)
+
+
+@login_required
+def edit_post(request, pk):
+    """User can edit their own post content, tag and subject."""
+    try:
+        post = get_object_or_404(Post, pk=pk)
+    except Http404:
+        messages.warning(
+            request,
+            f"Pos️t ID {pk} does not exist.❗️"
+        )
+        return redirect("kuhub:review")
+
+    if request.user != post.username:
+        print('do this')
+        messages.warning(
+            request,
+            f"You are not the owner of this post.❗️"
+        )
+
+        return redirect('kuhub:post_detail', pk=post.pk)
+
+    if request.method == "POST":
+        print('xxxxxxx')
+        form = PostForm(request.POST)
+        if form.is_valid():
+            tag_name = form.cleaned_data['tag_name']
+
+            tag = get_object_or_404(Tags, tag_text=tag_name)
+            post.tag_id = tag
+
+            subject_code = form.cleaned_data['subject']
+            subject = get_object_or_404(Subject, course_code=subject_code)
+            post.subject = subject
+
+            post.post_content = form.cleaned_data['review']
+
+            post.save()
+
+            return redirect('kuhub:post_detail', pk=post.pk)
+    else:
+        form = PostForm(
+            initial={'tag_name': post.tag_id.tag_text,
+                     'subject': post.subject.course_code,
+                     'review': post.post_content}
+        )
+
+    context = {'form': form, 'user': request.user, 'post': post}
+    return render(request, 'kuhub/edit_post.html', context)
+
+
+def report_post(request, pk):
+    post = Post.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data['reason']
+            report_count = PostReport.objects.filter(post_id=post).aggregate(Count('id'))['id__count']
+            PostReport.objects.create(post_id=post,
+                                      report_reason=reason,
+                                      report_date=dt.datetime.now(),
+                                      report_count=report_count + 1)
+
+    else:
+        form = ReportForm()
+
+    return render(request, 'kuhub/report_post.html', {'form': form, 'post': post})
+

@@ -16,6 +16,7 @@ class Post(models.Model):
         liked (ManyToManyField): The number of likes the post.
         disliked (ManyToManyField): The number of dislikes the post.
         tag_id (ForeignKey): The tag associated with the post.
+        subject_id (ForeignKey): The subject associated with the post.
 
     Methods:
         was_published_recently(): Checks if the post was published recently.
@@ -45,8 +46,14 @@ class Post(models.Model):
         on_delete=models.CASCADE,
         default=1
     )
+    subject = models.ForeignKey(
+        'Subject',
+        on_delete=models.CASCADE,
+        blank=True,
+        default=1
+    )
 
-    def was_published_recently(self) -> bool:
+    def was_published_recently_post(self) -> bool:
         """
         Checks if the post was published recently.
 

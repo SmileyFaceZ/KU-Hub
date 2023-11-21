@@ -1,0 +1,31 @@
+/* Style profile_setting.html */
+body{
+    
+    background-color:#B3E5FC;
+    border-radius: 10px;
+
+}
+.card{
+    width: 450px;
+    border: none;
+    border-radius: 10px;
+    background-color: #fff;
+}
+.stats{
+    background: #f2f5f8 !important;
+    color: #000 !important;
+}
+.followers{
+    font-size: small;
+    color: #a1aab9;
+}
+.countfollowers{
+  font-weight:500;
+}
+.following{
+    font-size: small;
+    color: #a1aab9;
+}
+.countfollowing{
+  font-weight:500;
+}

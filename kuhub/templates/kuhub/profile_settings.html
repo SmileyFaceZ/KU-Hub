@@ -5,61 +5,54 @@
 {% endblock %}
 
 {% load static %}
-<script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 
 {% block content %}
 {% if messages %}
     {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="font-family: 'Poppins'">
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     {% endfor %}
 {% endif %}
 
-<div class="container mt-4">
+<div class="container mt-5 d-flex justify-content-center" style="font-family: 'Poppins'">
     {% if user.is_authenticated %}
-        <div class="alert alert-success" role="alert">
-            <div class="welcome-user-box">
-                <div class="profile-photo-container">
+            <div class="card p-3">
+                <div class="d-flex align-items-center">
                     {% if profile.display_photo %}
-                        <img src="{{ profile.display_photo.url }}" alt="Profile Photo" class="profile-photo">
+                        <img src="{{ profile.display_photo.url }}" alt="Profile Photo" class="profile-photo" width="155">
                     {% else %}
-                        <img src="{% static 'media/media/store/profile_photos/IMG_7967.jpeg' %}" alt="Default Profile Photo" class="profile-photo">
+                        <img src="{% static 'media/media/store/profile_photos/IMG_7967.jpeg' %}" alt="Default Profile Photo" class="profile-photo" width="155">
                     {% endif %}
-                </div>
-                <div class="welcome-user-info">
-                    <h2>Welcome, {{ user.username }}!</h2>
-                    <p>Followers: {{ followers.count }} Following: {{ following.count }}</p>
-                </div>
-            </div>
-        </div>
-
-        {% if biography %}
-            <div class="card mb-4">
-                <div class="card-body">
-                    <p class="card-text">Biography: {{ profile.biography }}</p>
-                    <button class="btn btn-primary" onclick="showEditForm()">Edit</button>
-                    <div id="editForm" style="display: none;">
-                        <form method="post" enctype="multipart/form-data" class="mt-3">
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                            <button type="submit" class="btn btn-success">Save</button>
-                        </form>
+                    <div class="welcome-user-info ml-3 w-100" style="margin-left: 5%;">
+                        <h4 class="mb-0 mt-0">{{ user.username }}</h4>
+                        <span class="biography">{{ profile.biography }}</span>
+                        <div class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats">
+                            <div class="d-flex flex-column">
+                                <span class="followers">Followers</span>
+                                <span class="countfollowers">{{ followers.count }}</span>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <span class="following">Following</span>
+                                <span class="countfollowing">{{ following.count }}</span>
+                            </div>
+                        </div>
+                            <div class="button mt-2 d-flex justify-content-end mt-2">
+                                <button type="button" class="btn btn-primary btn-sm" onclick="showEditForm()">Edit Profile</button>
+                            </div>
                     </div>
                 </div>
-            </div>
-        {% else %}
-            <div class="card mt-3">
-                <div class="card-body">
-                    <form method="post" enctype="multipart/form-data">
+                <div id="editForm" style="display: none;">
+                    <form method="post" enctype="multipart/form-data" class="mt-3">
                         {% csrf_token %}
                         {{ form.as_p }}
-                        <button type="submit" class="btn btn-success mt-3">Save</button>
+                        <button type="submit" class="btn btn-success">Save</button>
                     </form>
                 </div>
             </div>
-        {% endif %}
     {% else %}
         <div class="alert alert-warning" role="alert">
             <h1>Please login or signup first.</h1>
@@ -67,43 +60,11 @@
     {% endif %}
 </div>
 
-
-<style>
-    .welcome-user-box {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .profile-photo-container {
-        width: 80px;
-        height: 80px;
-        overflow: hidden;
-        border-radius: 50%;
-        margin-right: 20px;
-    }
-
-    .profile-photo {
-        width: 100%;
-        height: auto;
-    }
-
-    .welcome-user-info {
-        flex-grow: 1;
-    }
-
-    .card {
-        margin-top: 20px;
-    }
-</style>
-
-
-
 <script>
     function showEditForm() {
         document.getElementById('editForm').style.display = 'block';
     }
 </script>
 
-<link rel="stylesheet" href="{% static 'kuhub/style.css' %}">
+<link rel="stylesheet" href="{% static 'kuhub/profile.css' %}">
 {% endblock %}
