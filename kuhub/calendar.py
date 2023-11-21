@@ -20,7 +20,12 @@ def get_google_calendar_service(request):
     except SocialToken.DoesNotExist:
         # Handle the case where the user hasn't connected their Google account
          return None
-    scope = ['https://www.googleapis.com/auth/calendar']
+    scope = ['https://www.googleapis.com/auth/calendar',
+            'https://www.googleapis.com/auth/calendar.events',
+            'https://www.googleapis.com/auth/calendar.settings',
+            'https://www.googleapis.com/auth/calendar.events.owned',
+            'https://www.googleapis.com/auth/calendar.events.readonly'
+             ]
     user_info = {
             "client_id": "298266224776-o5thmj41tjhabonol6nf853qt9f8np7l.apps.googleusercontent.com",
             "client_secret": "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",
@@ -72,7 +77,7 @@ def add_participate(user, calendar_id,request):
         return redirect(reverse('kuhub:groups'))
 
 
-def create_event(calendar_id,summary,location, attendees, start_datetime, end_datetime, description):
+def create_event(calendar_id,summary,location, start_datetime, end_datetime, description):
     """
     Create a new event in the Group's Google Calendar.
     """
@@ -91,8 +96,9 @@ def create_event(calendar_id,summary,location, attendees, start_datetime, end_da
                 'dateTime': end_datetime,
                 'timeZone': 'Asia/Bangkok'
             },
+            "conferenceDataVersion": 1,
             'reminders': {
-                'useDefault': True,
+                'useDefault': False,
                 'overrides': [
                     {'method': 'email', 'minutes': 24 * 60},
                     {'method': 'popup', 'minutes': 10},
@@ -115,7 +121,8 @@ def generate_meeting(calendar_id,eventobj):
                                 }
 
     updated_event = service.events().update(calendarId=calendar_id, eventId=eventobj.event_id, body=event).execute()
-    return updated_event
+    meet_link = updated_event.get('hangoutLink')
+    return updated_event,meet_link
 
 def delete_event(calendar_id,event_id):
     service = get_service_by_service_account()

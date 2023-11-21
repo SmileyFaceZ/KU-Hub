@@ -18,7 +18,7 @@ class GroupEvent(models.Model):
         if not self.requests_id:
             self.requests_id = uuid.uuid4()
         super().save(*args, **kwargs)
-        return self.requests_id
+        return str(self.requests_id)
 
     def __str__(self):
         return self.summary

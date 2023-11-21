@@ -17,7 +17,7 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.views import generic
 from kuhub.forms import EventForm
-from .calendar import create_calendar, add_participate, create_event, delete_event
+from .calendar import create_calendar, add_participate, create_event, delete_event, generate_meeting
 from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
 from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostReport,
                           Group, GroupTags, GroupPassword, Subject, Notification, PostComments, GroupEvent, Note)
@@ -521,9 +521,10 @@ def group_event_create(request,group_id):
                                  summary=data['summary'],
                                  description=data['description'],
                                  location=data['location'],
-                                 attendees=group.group_member.all(),
                                  start_datetime=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
-                                 end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'))
+                                 end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'),
+
+                                 )
             group_event = GroupEvent.objects.create(
                 group=group,
                 summary=data['summary'],
@@ -533,7 +534,9 @@ def group_event_create(request,group_id):
                 end_time=data['end_time'].strftime("%a. %d %b %Y %H:%M:%S"),
                 event_id=event['id']
             )
-            # update = generate_meeting(group.group_calendar,group_event)
+            update,meet_link = generate_meeting(group.group_calendar,group_event)
+            group_event.link = meet_link
+            print(meet_link)
             messages.success(request, f'create event successful')
             return redirect(reverse('kuhub:group_detail', args=(group_id,)))
     return render(
