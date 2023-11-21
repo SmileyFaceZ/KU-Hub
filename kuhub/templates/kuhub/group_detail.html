@@ -21,7 +21,9 @@
             <h2 style="display: inline;">{{ group }}</h2>
             <b>group member:</b>
             {% for member in group.group_member.all %}
-                <span style="display: inline;"><a href="{% url 'kuhub:profile_view' member.username %}">{{ member }}</a> </span>
+                <span style="display: inline;"><a href="{% url 'kuhub:profile_view' member.username %}">
+                    {{ member }}</a>
+                </span>
             {% endfor %}
         </div>
 
@@ -52,19 +54,27 @@
                     <div class="card border border-dark border-3 m-2 rounded-3" style="min-height: 40vh; max-height: 40vh; overflow-y: auto;">
                         <div class="card-header">
                             Notes
+                            <button type="submit" class="btn btn-primary rounded-circle btn-floating btn-xs"
+                                data-toggle="modal" data-target="#noteModal"
+                            >
+                            <i class="fas fa-circle-plus"></i>
+                        </button>
                         </div>
                         <div class="card-body">
                             {% for note in notes %}
                             <div class="card border border-dark border-1 m-2 rounded-3" style="line-height: 1; margin-top: 10px;">
+                                <span>
+                                    <form method="post" action="{% url 'kuhub:note_delete' note.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-success rounded-circle btn-floating btn-xs" style="position:absolute; left:90%; top:-20%;">
+                                            <i class="fas fa-circle-minus"></i>
+                                        </button>
+                                    </form>
                                     <p class="textid">{{note.note_text}}</p>
+                                </span>
                             </div>
                         {% endfor %}
                         </div>
-                        <button type="submit" class="btn btn-primary rounded-circle btn-floating btn-lg"
-                                data-toggle="modal" data-target="#noteModal"
-                                style="position: absolute;bottom: 10px; right: 10px;">
-                            <i class="fas fa-circle-plus"></i>
-                        </button>
                  </div>
                 </div>
                  <div class="row">

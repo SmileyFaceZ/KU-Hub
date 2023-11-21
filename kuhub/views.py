@@ -457,3 +457,10 @@ def add_note(request,group_id):
         Note.objects.create(group=group,note_text=text)
         messages.success(request,'create note successful')
         return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
+def delete_note(request,note_id):
+    note = get_object_or_404(Note, pk=note_id)
+    group_id = note.group.id
+    note.delete()
+    messages.success(request,'delete note successful')
+    return redirect(reverse('kuhub:group_detail', args=(group_id,)))
