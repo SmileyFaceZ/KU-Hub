@@ -1,3 +1,4 @@
+"""Module for display a list of all tricks posts."""
 from django.db.models.query import QuerySet
 from django.views import generic
 from kuhub.filters import PostFilter
@@ -11,6 +12,11 @@ class TricksHubView(generic.ListView):
     template_name: str = 'kuhub/tricks.html'
     context_object_name: str = 'tricks_list'
 
+    def __init__(self):
+        """Initialize TricksHubView."""
+        super().__init__()
+        self.filterset = None
+
     def get_queryset(self) -> QuerySet[Post]:
         """Return Post objects with tag_id=3 and order by post_date."""
         queryset = super().get_queryset()
@@ -18,7 +24,7 @@ class TricksHubView(generic.ListView):
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
-        """Add like and dislike icon styles to context."""
+        """Get context data icon styles, profiles list and form."""
         context = super().get_context_data(**kwargs)
 
         profiles_list = [Profile.objects.filter(user=post.username).first()

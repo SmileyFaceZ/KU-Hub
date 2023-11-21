@@ -1,3 +1,4 @@
+"""Module for display user profile and user profile settings."""
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from kuhub.forms import ProfileForm
@@ -9,6 +10,7 @@ from django.views.decorators.http import require_POST
 
 @login_required
 def profile_settings(request):
+    """Change user profile by using ProfileForm."""
     user = request.user
     profile = user.profile
 
@@ -21,23 +23,21 @@ def profile_settings(request):
     else:
         form = ProfileForm(instance=profile)
 
-    following = UserFollower.objects.filter(user_followed=user)
-    followers = UserFollower.objects.filter(follower=user)
-    biography = Profile.objects.filter(biography=profile.biography)
-
-    return render(request,
-                  template_name='kuhub/profile_settings.html',
-                  context={
-                      'form': form,
-                      'user': user,
-                      'profile': profile,
-                      'following': following,
-                      'followers': followers,
-                      'biography': biography
-                  })
+    return render(
+        request,
+        template_name='kuhub/profile_settings.html',
+        context={
+            'form': form,
+            'user': user,
+            'profile': profile,
+            'following': UserFollower.objects.filter(user_followed=user),
+            'followers': UserFollower.objects.filter(follower=user),
+            'biography': Profile.objects.filter(biography=profile.biography)
+        })
 
 
 def profile_view(request, username):
+    """Display user profile and user profile settings."""
     # Retrieve the user based on the username
     user = get_object_or_404(User, username=username)
 
@@ -52,7 +52,9 @@ def profile_view(request, username):
     # Check if the current user is following the viewed profile
     is_following = False
     if request.user.is_authenticated:
-        is_following = request.user.follower.filter(user_followed=user).exists()
+        is_following = (
+            request.user.follower.filter(user_followed=user).exists()
+        )
 
     context = {
         'profile': profile,
@@ -65,38 +67,64 @@ def profile_view(request, username):
 
     return render(request, 'kuhub/profile.html', context)
 
+
 @login_required
 @require_POST
 def toggle_follow(request, user_id):
+    """Toggle follow/unfollow a user."""
     user_to_follow = User.objects.get(pk=user_id)
     follower = request.user
 
-    is_following = UserFollower.objects.filter(user_followed=user_to_follow, follower=follower).exists()
+    is_following = UserFollower.objects.filter(
+        user_followed=user_to_follow,
+        follower=follower
+    ).exists()
 
     if is_following:
         # If already following, unfollow
-        UserFollower.objects.filter(user_followed=user_to_follow, follower=follower).delete()
+        UserFollower.objects.filter(
+            user_followed=user_to_follow,
+            follower=follower
+        ).delete()
     else:
         # If not following, follow
-        UserFollower.objects.create(user_followed=user_to_follow, follower=follower)
+        UserFollower.objects.create(
+            user_followed=user_to_follow,
+            follower=follower
+        )
 
     # Recalculate counts
-    followers_count = UserFollower.objects.filter(user_followed=user_to_follow).count()
+    followers_count = UserFollower.objects.filter(
+        user_followed=user_to_follow
+    ).count()
 
-    return JsonResponse({'is_following': not is_following, 'followers_count': followers_count})
+    return JsonResponse({
+        'is_following': not is_following,
+        'followers_count': followers_count
+    })
 
 
 @login_required
 def followers_page(request):
+    """Display user's followers."""
     user = request.user
     followers = UserFollower.objects.filter(user_followed=user)
 
-    return render(request, "kuhub/followers_page.html", context={'followers': followers})
+    return render(
+        request,
+        "kuhub/followers_page.html",
+        context={'followers': followers}
+    )
 
 
 @login_required
 def following_page(request):
+    """Display user's following."""
     user = request.user
     following = UserFollower.objects.filter(follower=user)
 
-    return render(request, "kuhub/following_page.html", context={'followings': following})
+    return render(
+        request,
+        "kuhub/following_page.html",
+        context={'followings': following}
+    )

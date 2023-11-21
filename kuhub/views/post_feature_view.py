@@ -1,3 +1,4 @@
+"""Module for feature that related to post."""
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, JsonResponse, Http404
@@ -130,7 +131,9 @@ def create_post(request: HttpRequest):
         }
     )
 
+
 def post_detail(request, pk):
+    """Display post detail and comment section."""
     post = get_object_or_404(Post, pk=pk)
     comments_list = PostComments.objects.filter(post_id=post)
 
@@ -166,6 +169,7 @@ def post_detail(request, pk):
 
     return render(request, 'kuhub/post_detail.html', context)
 
+
 @login_required
 def edit_post(request, pk):
     """User can edit their own post content, tag and subject."""
@@ -179,16 +183,17 @@ def edit_post(request, pk):
         return redirect("kuhub:review")
 
     if request.user != post.username:
-        print('do this')
         messages.warning(
             request,
-            f"You are not the owner of this post.❗️"
+            "You are not the owner of this post.❗️"
         )
 
-        return redirect('kuhub:post_detail', pk=post.pk)
+        return redirect(
+            'kuhub:post_detail',
+            pk=post.pk
+        )
 
     if request.method == "POST":
-        print('xxxxxxx')
         form = PostForm(request.POST)
         if form.is_valid():
             tag_name = form.cleaned_data['tag_name']
@@ -204,31 +209,54 @@ def edit_post(request, pk):
 
             post.save()
 
-            return redirect('kuhub:post_detail', pk=post.pk)
+            return redirect(
+                'kuhub:post_detail',
+                pk=post.pk
+            )
     else:
         form = PostForm(
-            initial={'tag_name': post.tag_id.tag_text,
-                     'subject': post.subject.course_code,
-                     'review': post.post_content}
+            initial={
+                'tag_name': post.tag_id.tag_text,
+                'subject': post.subject.course_code,
+                'review': post.post_content
+            }
         )
 
-    context = {'form': form, 'user': request.user, 'post': post}
-    return render(request, 'kuhub/edit_post.html', context)
+    return render(
+        request,
+        'kuhub/edit_post.html',
+        {
+            'form': form,
+            'user': request.user,
+            'post': post
+        }
+    )
+
 
 def report_post(request, pk):
+    """Report a post when user has a unacceptable content."""
     post = Post.objects.get(pk=pk)
 
     if request.method == 'POST':
         form = ReportForm(request.POST)
         if form.is_valid():
             reason = form.cleaned_data['reason']
-            report_count = PostReport.objects.filter(post_id=post).aggregate(Count('id'))['id__count']
-            PostReport.objects.create(post_id=post,
-                                      report_reason=reason,
-                                      report_date=dt.datetime.now(),
-                                      report_count=report_count+1)
+            report_count = (
+                PostReport.objects.filter(
+                    post_id=post).aggregate(Count('id'))
+            )['id__count']
+            PostReport.objects.create(
+                post_id=post,
+                report_reason=reason,
+                report_date=dt.datetime.now(),
+                report_count=report_count + 1
+            )
 
     else:
         form = ReportForm()
 
-    return render(request, 'kuhub/report_post.html', {'form': form, 'post': post})
+    return render(
+        request,
+        'kuhub/report_post.html',
+        {'form': form, 'post': post}
+    )

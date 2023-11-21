@@ -1,3 +1,4 @@
+"""Module for display a list of all subject and information of each subject."""
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.http import HttpRequest, Http404
@@ -6,14 +7,20 @@ from kuhub.models import Subject, Post
 
 
 class SubjectDetailView(generic.ListView):
-    """Redirect to review and summary detail of each subject page."""
+    """Display to review and summary detail of each subject page."""
+
     template_name = 'kuhub/subject_detail.html'
     context_object_name = 'subject_detail'
 
     def get(self, request: HttpRequest, **kwargs):
+        """Get a type of gen-ed and display all subject in that type."""
+        global key
         try:
             key = kwargs["course_code"]
-            subject = get_object_or_404(Subject, course_code=key)
+            subject = get_object_or_404(
+                Subject,
+                course_code=kwargs["course_code"]
+            )
         except Http404:
             messages.warning(
                 request,

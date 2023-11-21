@@ -1,3 +1,4 @@
+"""Module represent a list of all group from group database."""
 from django.views import generic
 from kuhub.models import Group
 from django.shortcuts import render, redirect, get_object_or_404
@@ -20,7 +21,7 @@ class GroupView(generic.ListView):
         return Group.objects.all().order_by('-create_date')[:100]
 
     def get_context_data(self, **kwargs):
-        """Return user'group data as contect data"""
+        """Return user'group data as contect data."""
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             context['user_groups'] = self.request.user.group_set.all()
@@ -29,9 +30,7 @@ class GroupView(generic.ListView):
 
 @login_required
 def join(request, group_id):
-    """
-    Join Group button
-    """
+    """Register user to group and display a group that user join."""
     user = request.user
     group = get_object_or_404(Group, pk=group_id)
     if user in group.group_member.all():
@@ -50,9 +49,7 @@ def join(request, group_id):
 
 @login_required
 def create_group(request: HttpRequest):
-    """
-    Create Group
-    """
+    """Create Group when user click create group button."""
     user = request.user
     if request.method == 'POST':
         form = GroupForm(request.POST)
@@ -67,11 +64,17 @@ def create_group(request: HttpRequest):
                     context={'form': GroupForm}
                 )
             # if not have the tag in groupTag object create it
-            group_tag, created = GroupTags.objects.get_or_create(tag_text=data['tag_name'])
+            group_tag, created = (
+                GroupTags.objects.get_or_create(tag_text=data['tag_name'])
+            )
             # create group object
             password = None
             if data['password']:
-                password = GroupPassword.objects.create(group_password=data['password'])
+                password = (
+                    GroupPassword.objects.create(
+                        group_password=data['password']
+                    )
+                )
                 password.set_password(password.group_password)
             group = Group.objects.create(
                 group_name=data['name'],
@@ -80,7 +83,10 @@ def create_group(request: HttpRequest):
             )
             group.group_tags.set([group_tag])
             group.group_member.set([user])
-            messages.success(request, f'Create group successful your group id is {group.id}')
+            messages.success(
+                request,
+                f'Create group successful your group id is {group.id}'
+            )
             return redirect(reverse('kuhub:groups'))
     return render(
         request,

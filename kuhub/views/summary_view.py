@@ -1,3 +1,4 @@
+"""Module for display a list of all summary posts."""
 from django.db.models import QuerySet
 from django.views import generic
 from kuhub.filters import PostDownloadFilter
@@ -13,24 +14,36 @@ class SummaryHubView(generic.ListView):
     template_name: str = 'kuhub/summary.html'
     context_object_name: str = 'summary_post_list'
 
+    def __init__(self):
+        """Initialize SummaryHubView."""
+        super().__init__()
+        self.filterset = None
+
     def get_queryset(self) -> QuerySet[PostDownload]:
         """Return PostDownload objects with tag_id=2 and order by post_date."""
         queryset = super().get_queryset()
-        self.filterset = PostDownloadFilter(self.request.GET, queryset=queryset)
+        self.filterset = PostDownloadFilter(
+            self.request.GET,
+            queryset=queryset
+        )
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
-        """Add like and dislike icon styles to context."""
+        """Get context data icon styles, profiles list and form."""
         context = super().get_context_data(**kwargs)
 
-        profiles_list = [Profile.objects.filter(user=post.post_id.username).first()
-                         for post in context['summary_post_list']]
-
-        context['like_icon_styles'] = [post.like_icon_style(self.request.user)
-                                       for post in context['summary_post_list']]
+        profiles_list = [
+            Profile.objects.filter(user=post.post_id.username).first()
+            for post in context['summary_post_list']
+        ]
+        context['like_icon_styles'] = [
+            post.like_icon_style(self.request.user)
+            for post in context['summary_post_list']
+        ]
         context['dislike_icon_styles'] = [
-            post.dislike_icon_style(self.request.user) for post in
-            context['summary_post_list']]
+            post.dislike_icon_style(self.request.user)
+            for post in context['summary_post_list']
+        ]
         context['profiles_list'] = profiles_list
         context['form'] = self.filterset.form
 
