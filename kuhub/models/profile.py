@@ -8,7 +8,7 @@ class Profile(models.Model):
     display_photo = models.ImageField(upload_to='media/store/profile_photos/',
                                       null=True,
                                       blank=True,
-                                      default='media/media/store/profile_photos/IMG_7967.jpeg')
+                                      default='kuhub\static\images\default_profile.jpg')
 
     def __str__(self):
         return self.user.username

@@ -11,12 +11,14 @@
 {% load static %}
 
 <style>
+    body {
+        background-color: #D88C9A;
+    }
     .custom-border {
-        border: 2px solid #0b791a;
         border-radius: 10px;
         padding: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        background-color: #d9f7be;
+        background-color: #e4b3bc;
     }
 </style>
 
@@ -31,25 +33,26 @@
 {% endif %}
 </div>
 
-<div class="container mt-4 custom-border">
+<!-- Search box -->
+<div class="container mt-4 custom-border shadow-lg" style="font-family: 'Poppins'; margin-bottom: 5%;">
     <form method="get" action="{% url 'kuhub:review' %}">
         <div class="row">
-            <div class="col-md-4 mb-3">
-                <label class="form-label"><strong>{{ form.post_content.label }}:</strong></label>
+            <div class="col-md-4">
+                <label class="form-label"><strong>{{ form.post_content.label }}</strong></label>
                 <div class="input-group" style="max-width: 400px;">
                     {{ form.post_content }}
                 </div>
             </div>
 
             <div class="col-md-3">
-                <label class="form-label"><strong>{{ form.order_by_liked_disliked.label }}:</strong></label>
+                <label class="form-label"><strong>{{ form.order_by_liked_disliked.label }}</strong></label>
                 <div class="input-group" style="max-width: 200px;">
                     {{ form.order_by_liked_disliked }}
                 </div>
             </div>
 
             <div class="col-md-5">
-                <label class="form-label"><strong>{{ form.order_by_post.label }}:</strong></label>
+                <label class="form-label"><strong>{{ form.order_by_post.label }}</strong></label>
                 <div class="input-group" style="max-width: 200px;">
                     {{ form.order_by_post }}
                 </div>
@@ -65,13 +68,14 @@
     </form>
 </div>
 
+<!-- Post -->
 <div class="container" style="font-family: 'Poppins'">
     {% if posts_list %}
         {% for post in posts_list %}
             <div class="card border border-1 rounded-4">
                 <div class="card-header">
                     {% if post.was_published_recently_post %}
-                        <span class="badge" style="background-color: red; text-align: center; margin-right: 5px;">New!</span>
+                        <span class="badge rounded-pill text-bg-danger" style="text-align: center; margin-right: 5px;">New!</span>
                     {% endif %}
                     {{ post.tag_id.tag_text }} |
                     <a href="{% url 'kuhub:subject_detail' post.subject.course_code %}">{{ post.subject.course_code }} {{ post.subject.name_eng }}</a> |
@@ -93,7 +97,7 @@
                     <a href="{% url 'kuhub:profile_view' username=post.username %}">
                         {% with profile=post.username.profile %}
                             <div class="d-flex align-items-center">
-                                <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                                <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'images/default_profile.jpg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
                                 <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ post.username }}</h4>
                             </div>
                         {% endwith %}
