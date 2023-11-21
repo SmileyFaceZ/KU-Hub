@@ -6,20 +6,18 @@ in the kuhub web application.
 import datetime
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
-from django.views import generic
-from django.views.generic import TemplateView
 from django.http import Http404
 import json
 import datetime as dt
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import QuerySet, Count
 from django.http import HttpRequest, JsonResponse
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django.views import generic
-from kuhub.forms import PostForm, ProfileForm, GroupForm, EventForm
-from .calendar import create_calendar, add_participate, create_event, delete_event, generate_meetin
+from kuhub.forms import EventForm
+from .calendar import create_calendar, add_participate, create_event, delete_event
 from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
 from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostReport,
                           Group, GroupTags, GroupPassword, Subject, Notification, PostComments, GroupEvent, Note)
