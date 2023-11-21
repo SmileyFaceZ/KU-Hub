@@ -23,8 +23,7 @@ class BaseHubView(generic.ListView):
         queryset = super().get_queryset()
         print('get_queryset', queryset)
         self.filterset = PostFilter(self.request.GET, queryset=queryset)
-        return self.filterset.qs.filter(tag_id=self.tag_id).order_by(
-            '-post_date')
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         """Get context data icon styles, profiles list, and form."""

@@ -1,6 +1,5 @@
 from .gened_type_view import GenEdTypeListView
 from .group_view import GroupView, create_group, join
-from .notification_view import NotificationView
 from .post_feature_view import (
     create_post, post_detail, edit_post, report_post, like_post, dislike_post
 )

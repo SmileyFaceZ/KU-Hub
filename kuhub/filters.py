@@ -39,7 +39,6 @@ class PostFilter(django_filters.FilterSet):
     def filter_by_liked_disliked(self, queryset, name, value):
         """Return queryset ordered by liked or disliked."""
         if value == 'asc':
-
             return (
                 queryset
                 .annotate(like_count=Count('liked'))
