@@ -22,7 +22,8 @@ from kuhub.forms import PostForm, ProfileForm, GroupForm, EventForm
 from kuhub.models import Post, PostDownload, Tags, Profile, UserFollower, Group, GroupTags, GroupPassword, GroupEvent
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
-from .calendar import create_calendar, add_participate, create_event, delete_event
+from .calendar import create_calendar, add_participate, create_event, delete_event, generate_meeting
+
 
 class ReviewHubView(generic.ListView):
     """Redirect to Review-Hub page for review posts."""
@@ -165,6 +166,7 @@ def create_group(request: HttpRequest):
             )
             group.group_tags.set([group_tag])
             group.group_member.set([user])
+            add_participate(user, group.group_calendar)
             messages.success(request, f'Create group successful your group id is {group.id}')
             return redirect(reverse('kuhub:groups'))
     return render(
@@ -426,6 +428,7 @@ def group_event_create(request,group_id):
                 end_time=data['end_time'].strftime("%a. %d %b %Y %H:%M:%S"),
                 event_id=event['id']
             )
+            update = generate_meeting(group.group_calendar,event)
             messages.success(request, f'create event successful')
             return redirect(reverse('kuhub:group_detail', args=(group_id,)))
     return render(

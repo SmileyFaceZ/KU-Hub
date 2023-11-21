@@ -3,8 +3,7 @@ from google.oauth2.credentials import Credentials
 from allauth.socialaccount.models import SocialToken
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
-from django.contrib import messages
-from django.urls import reverse
+from kuhub.models import group_event
 
 
 def get_google_calendar_service(request):
@@ -60,8 +59,8 @@ def add_participate(user, calendar_id):
     try:
         service = get_service_by_service_account()
         service.acl().insert(calendarId=calendar_id,
-                             body={'role': 'reader',
-                                   'scope': {'type': 'user',
+                             body={'role': 'owner',
+                                   'scope': {'type': 'group',
                                              'value': user.email
                                              }}).execute()
     except user.email.DoesNotExist:
@@ -73,7 +72,8 @@ def create_event(calendar_id,summary,location, attendees, start_datetime, end_da
     Create a new event in the Group's Google Calendar.
     """
     service = get_service_by_service_account()
-    attendees_field = [{'email': attendee.email} for attendee in attendees]
+
+    group_event.GroupEvent
     if service:
         event = {
             'summary': summary,
@@ -87,7 +87,6 @@ def create_event(calendar_id,summary,location, attendees, start_datetime, end_da
                 'dateTime': end_datetime,
                 'timeZone': 'Asia/Bangkok'
             },
-            # 'attendees': attendees_field,
             'reminders': {
                 'useDefault': False,
                 'overrides': [
@@ -95,19 +94,24 @@ def create_event(calendar_id,summary,location, attendees, start_datetime, end_da
                     {'method': 'popup', 'minutes': 10},
                 ],
             },
-            'conferenceData': {
-                'createRequest': {
-                    'requestId': 'randomstring',
-                },
-            },
         }
 
         created_event = service.events().insert(calendarId=calendar_id, body=event,conferenceDataVersion=1).execute()
-        event = service.events().get(calendarId=calendar_id, eventId=created_event['id']).execute()
-        meet_link = event.get('conferenceData', {}).get('entryPoints', [{}])[0].get('uri', '')
-        event['description'] = description + f' Google Meet link: {meet_link}'
-        updated_event = service.events().update(calendarId=calendar_id, eventId=event['id'], body=event).execute()
-        return updated_event
+        return created_event
+def generate_meeting(calendar_id,eventobj):
+    service = get_service_by_service_account()
+    eventobj.generate_request_id()
+    event = service.events().get(calendarId=calendar_id, eventId=eventobj.event_id).execute()
+    event['conferenceData'] = {'createRequest': {
+                                    'requestId': eventobj.requests_id,
+                                    'conferenceSolutionKey': {
+                                            'type': 'hangoutsMeet'
+                                            }
+                                    }
+                                }
+
+    updated_event = service.events().update(calendarId=calendar_id, eventId=eventobj.event_id, body=event).execute()
+    return updated_event
 
 def delete_event(calendar_id,event_id):
     service = get_service_by_service_account()
