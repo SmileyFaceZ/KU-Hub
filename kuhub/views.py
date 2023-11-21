@@ -430,7 +430,7 @@ def group_event_create(request,group_id):
                 end_time=data['end_time'].strftime("%a. %d %b %Y %H:%M:%S"),
                 event_id=event['id']
             )
-            update = generate_meeting(group.group_calendar,group_event)
+            # update = generate_meeting(group.group_calendar,group_event)
             messages.success(request, f'create event successful')
             return redirect(reverse('kuhub:group_detail', args=(group_id,)))
     return render(
