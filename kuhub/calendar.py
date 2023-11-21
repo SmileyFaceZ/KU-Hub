@@ -3,6 +3,9 @@ from google.oauth2.credentials import Credentials
 from allauth.socialaccount.models import SocialToken
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
+from googleapiclient.errors import HttpError
+from django.contrib import messages
+from django.urls import reverse
 from kuhub.models import group_event
 
 
@@ -52,7 +55,7 @@ def create_calendar(name):
     created_calendar = service.calendars().insert(body=new_calendar).execute()
     return created_calendar
 
-def add_participate(user, calendar_id):
+def add_participate(user, calendar_id,request):
     """
     add user to can edit the group's calendar
     """
@@ -60,11 +63,13 @@ def add_participate(user, calendar_id):
         service = get_service_by_service_account()
         service.acl().insert(calendarId=calendar_id,
                              body={'role': 'owner',
-                                   'scope': {'type': 'group',
+                                   'scope': {'type': 'user',
                                              'value': user.email
-                                             }}).execute()
-    except user.email.DoesNotExist:
-        print("email does not exists")
+                                         }}).execute()
+    except HttpError as e:
+        error_message = e._get_reason() if e._get_reason() else str(e)
+        messages.error(request,error_message)
+        return redirect(reverse('kuhub:groups'))
 
 
 def create_event(calendar_id,summary,location, attendees, start_datetime, end_datetime, description):
@@ -73,7 +78,6 @@ def create_event(calendar_id,summary,location, attendees, start_datetime, end_da
     """
     service = get_service_by_service_account()
 
-    group_event.GroupEvent
     if service:
         event = {
             'summary': summary,
@@ -88,7 +92,7 @@ def create_event(calendar_id,summary,location, attendees, start_datetime, end_da
                 'timeZone': 'Asia/Bangkok'
             },
             'reminders': {
-                'useDefault': False,
+                'useDefault': True,
                 'overrides': [
                     {'method': 'email', 'minutes': 24 * 60},
                     {'method': 'popup', 'minutes': 10},

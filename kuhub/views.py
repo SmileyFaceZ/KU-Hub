@@ -229,7 +229,7 @@ def join(request, group_id):
                 messages.error(request, "Wrong password")
                 return redirect(reverse('kuhub:groups'))
     group.group_member.add(user)
-    add_participate(user,group.group_calendar)
+    add_participate(user, group.group_calendar, request)
     messages.success(request, "You join the group success!")
     return redirect(reverse('kuhub:groups'))
 
@@ -268,7 +268,7 @@ def create_group(request: HttpRequest):
             )
             group.group_tags.set([group_tag])
             group.group_member.set([user])
-            add_participate(user, group.group_calendar)
+            add_participate(user, group.group_calendar, request)
             messages.success(request, f'Create group successful your group id is {group.id}')
             return redirect(reverse('kuhub:groups'))
     return render(
