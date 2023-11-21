@@ -100,10 +100,10 @@ def create_event(calendar_id,summary,location, attendees, start_datetime, end_da
         return created_event
 def generate_meeting(calendar_id,eventobj):
     service = get_service_by_service_account()
-    eventobj.generate_request_id()
+    reqid = eventobj.generate_request_id()
     event = service.events().get(calendarId=calendar_id, eventId=eventobj.event_id).execute()
     event['conferenceData'] = {'createRequest': {
-                                    'requestId': eventobj.requests_id,
+                                    'requestId': reqid,
                                     'conferenceSolutionKey': {
                                             'type': 'hangoutsMeet'
                                             }
