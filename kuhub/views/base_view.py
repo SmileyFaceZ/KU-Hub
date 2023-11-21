@@ -21,7 +21,6 @@ class BaseHubView(generic.ListView):
     def get_queryset(self) -> QuerySet[Post]:
         """Return Post objects with tag_id and order by post_date."""
         queryset = super().get_queryset()
-        print('get_queryset', queryset)
         self.filterset = PostFilter(self.request.GET, queryset=queryset)
         return self.filterset.qs
 
