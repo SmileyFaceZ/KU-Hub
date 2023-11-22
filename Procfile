@@ -1,2 +1,2 @@
 web: gunicorn isp_project.wsgi
-release: python manage.py migrate
+release: ./manage.py migrate
