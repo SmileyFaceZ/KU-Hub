@@ -28,9 +28,7 @@ SECRET_KEY = config("SECRET_KEY", default="secret-key-value-without-quotes")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", cast=bool, default=True)
 
-ALLOWED_HOSTS = config(
-    "ALLOWED_HOSTS", cast=Csv(), default="127.0.0.1,localhost"
-)
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv(), default="*")
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
