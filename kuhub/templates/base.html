@@ -21,29 +21,64 @@
     <nav class="navbar navbar-expand-lg shadow">
         <div class="container-fluid">
             {% if user.is_authenticated %}
-                <button class="btn btn-success me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" style="font-family: 'Poppins'">Menu</button>
+                <button class="toggler-menu"type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
             {% endif %}
             <img src="{% static 'images/ku-icon.png' %}" alt="ku-icon" width="50" height="50" class="me-2 rounded-icon">
 
             <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                <ul class="navbar-nav mb-2 mb-lg-0">
-                    <li class="nav-item"><a href="{% url 'kuhub:review' %}" class="nav-link" style="font-family: 'Poppins'; font-weight: 600;" >Home</a></li>
-                    <li class="nav-item"><a href="{% url 'kuhub:review' %}" class="nav-link" style="font-family: 'Poppins'; font-weight: 600;">Review-Hub</a></li> 
-                    <li class="nav-item"><a href="{% url 'kuhub:summary' %}" class="nav-link" style="font-family: 'Poppins'; font-weight: 600;">Summary-Hub</a></li>
-                    <li class="nav-item"><a href="{% url 'kuhub:tricks' %}" class="nav-link" style="font-family: 'Poppins'; font-weight: 600;">Tricks-Hub</a></li>
-                    <li class="nav-item"><a href="{% url 'kuhub:groups' %}" class="nav-link" style="font-family: 'Poppins'; font-weight: 600;">Group-Hub</a></li>
-                    <li class="nav-item"><a href="{% url 'kuhub:gen_ed_type_list' %}" class="nav-link" style="font-family: 'Poppins'; font-weight: 600;">Gen-ed List</a></li>
-                </ul>
-                <form class="d-flex" action="action_page.php">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="font-family: 'Poppins'">
-                    <button class="btn btn-outline-success" type="submit"><i class="fa fa-search"></i></button>
-                </form>
+                <nav class="nav nav-pills flex-column flex-sm-row" style="font-family: 'Poppins'; margin-left: 20px;">
+                    {% url 'kuhub:review' as review_url %}
+                    {% url 'kuhub:summary' as summary_url %}
+                    {% url 'kuhub:tricks' as tricks_url %}
+                    {% url 'kuhub:groups' as groups_url %}
+                    {% url 'kuhub:gen_ed_type_list' as gened_url %}
+
+                    {% if request.path == review_url %}
+                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:review' %}" style="background-color: #D88C9A;">Review-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:summary' %}" style="color: black;">Summary-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:tricks' %}" style="color: black;">Tricks-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:groups' %}" style="color: black;">Group-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:gen_ed_type_list' %}" style="color: black;">Gen-ed List</a>
+                    {% elif request.path == summary_url %}
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:review' %}" style="color: black;">Review-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:summary' %}" style="background-color: #EDB87C;">Summary-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:tricks' %}" style="color: black;">Tricks-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:groups' %}" style="color: black;">Group-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:gen_ed_type_list' %}" style="color: black;">Gen-ed List</a>
+                    {% elif request.path == tricks_url %}
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:review' %}" style="color: black;">Review-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:summary' %}" style="color: black;">Summary-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:tricks' %}" style="background-color: #8CAFD4;">Tricks-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:groups' %}" style="color: black;">Group-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:gen_ed_type_list' %}" style="color: black;">Gen-ed List</a>
+                    {% elif request.path == groups_url %}
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:review' %}" style="color: black;">Review-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:summary' %}" style="color: black;">Summary-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:tricks' %}" style="color: black;">Tricks-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:groups' %}" style="background-color: #B5A7DA;">Group-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:gen_ed_type_list' %}" style="color: black;">Gen-ed List</a>
+                    {% elif request.path == gened_url %}
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:review' %}" style="color: black;">Review-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:summary' %}" style="color: black;">Summary-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:tricks' %}" style="color: black;">Tricks-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:groups' %}" style="color: black;">Group-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:gen_ed_type_list' %}">Gen-ed List</a>
+                    {% else %}
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:review' %}" style="color: black;">Review-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:summary' %}" style="color: black;">Summary-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:tricks' %}" style="color: black;">Tricks-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:groups' %}" style="color: black;">Group-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:gen_ed_type_list' %}" style="color: black;">Gen-ed List</a>
+                    {% endif %}
+                </nav>
                 <a href="{% url 'kuhub:profile_settings' %}" class="me-2 rounded-circle">
                     {% if user.is_authenticated %}
                         {% if user.profile.display_photo %}
-                            <img src="{{ user.profile.display_photo.url }}" alt="Profile Photo" width="45px" height="50" class="rounded-icon" style="margin-left: 23%;">
+                            <img src="{{ user.profile.display_photo.url }}" alt="Profile Photo" width="45px" height="50" class="rounded-icon" style="margin-left: 23%; position: fixed;">
                         {% else %}
-                            <img src="{% static 'media/media/store/profile_photos/IMG_7967.jpeg' %}" alt="Default Profile Photo" width="45px" height="50" class="rounded-icon" style="margin-left: 23%;">
+                            <img src="{% static 'images\default_profile.jpg' %}" alt="Default Profile Photo" width="45px" height="45px" class="rounded-icon" style="margin-left: 23%;">
                         {% endif %}
                     {% else %}
                         <a href="{% url 'account_login' %}" class="btn btn-secondary me-3" style="font-family: 'Poppins'" role="button">Sign In</a>

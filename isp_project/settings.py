@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY", default="secret-key-value-without-quotes")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG", cast=bool, default=True)
+DEBUG = config("DEBUG", cast=bool, default=False)
 
 ALLOWED_HOSTS = config(
     "ALLOWED_HOSTS", cast=Csv(), default="127.0.0.1,localhost"
@@ -53,14 +53,15 @@ INSTALLED_APPS = [
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        # For each OAuth based provider, either add a ``SocialApp``
-        # (``socialaccount`` app) containing the required client
-        # credentials, or list them here:
         'APP': {
             'client_id': config('GOOGLE_OAUTH_CLIENT_ID', default='google-oauth-client-id'),
             'secret': config('GOOGLE_OAUTH_SECRET_KEY', default='google-oauth-secret-key'),
             'key': ''
-        }
+        },
+        'SCOPE': ['profile', 'email',
+                  'https://www.googleapis.com/auth/calendar'],
+        'AUTH_PARAMS': {'access_type': 'offline'},
+
     }
 }
 
@@ -71,6 +72,8 @@ AUTHENTICATION_BACKENDS = (
 SITE_ID = 1
 LOGIN_REDIRECT_URL = 'kuhub:review'
 LOGOUT_REDIRECT_URL = 'account_login'
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_STORE_TOKENS = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

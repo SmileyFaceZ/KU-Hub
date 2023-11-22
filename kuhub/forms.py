@@ -1,5 +1,5 @@
 from django import forms
-from kuhub.models import Tags, Subject, Profile, PostComments, PostReport
+from kuhub.models import Tags, Subject, Profile, PostComments
 
 
 class PostForm(forms.Form):
@@ -60,6 +60,34 @@ class GroupForm(forms.Form):
         widget=forms.PasswordInput,
         label='Password',
         required=False
+    )
+
+
+class EventForm(forms.Form):
+    start_time = forms.DateTimeField(
+        widget=forms.TextInput(attrs={'type': 'datetime-local'}),
+        label='Start Time',
+        required=True
+    )
+    end_time = forms.DateTimeField(
+        widget=forms.TextInput(attrs={'type': 'datetime-local'}),
+        label='End Time',
+        required=True
+    )
+    summary = forms.CharField(
+        widget=forms.Textarea(attrs={'cols': 50, 'rows': 1}),
+        label='Event name:',
+        required=True
+    )
+    location = forms.CharField(
+        widget=forms.Textarea(attrs={'cols': 50, 'rows': 1}),
+        label='Location:',
+        required=True
+    )
+    description = forms.CharField(
+        widget=forms.Textarea(attrs={'cols': 70, 'rows': 2}),
+        label='Location:',
+        required=True
     )
 
 

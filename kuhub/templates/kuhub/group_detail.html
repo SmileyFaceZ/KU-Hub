@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% load static %}
+<!-- Add this to your HTML head section -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+{% block title %}
+<title>{{group}} Group</title>
+{% endblock %}
+{% block content %}
+<body>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="font-family: 'Poppins'">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+    <div class="container">
+        <div class="group_header" style="display: inline;">
+            <h2 style="display: inline;">{{ group }}</h2>
+            <b>group member:</b>
+            {% for member in group.group_member.all %}
+                <span style="display: inline;"><a href="{% url 'kuhub:profile_view' member.username %}">
+                    {{ member }}</a>
+                </span>
+            {% endfor %}
+        </div>
+
+         <div class="modal" id="noteModal" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h3>Add note</h3>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                        <form action="{% url 'kuhub:group_note' group.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="text" name="note" value="note">
+                            <input type="submit" value="Add">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="card border border-dark border-3 m-2 rounded-3" style="min-height: 40vh; max-height: 40vh; overflow-y: auto;">
+                        <div class="card-header">
+                            Notes
+                            <button type="submit" class="btn btn-primary rounded-circle btn-floating btn-xs"
+                                data-toggle="modal" data-target="#noteModal"
+                            >
+                            <i class="fas fa-circle-plus"></i>
+                        </button>
+                        </div>
+                        <div class="card-body">
+                            {% for note in notes %}
+                            <div class="card border border-dark border-1 m-2 rounded-3" style="line-height: 1; margin-top: 10px;">
+                                <span>
+                                    <form method="post" action="{% url 'kuhub:note_delete' note.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-success rounded-circle btn-floating btn-xs" style="position:absolute; left:90%; top:-20%;">
+                                            <i class="fas fa-circle-minus"></i>
+                                        </button>
+                                    </form>
+                                    <p class="textid">{{note.note_text}}</p>
+                                </span>
+                            </div>
+                        {% endfor %}
+                        </div>
+                 </div>
+                </div>
+                 <div class="row">
+                    <div class="card border border-dark border-3 m-2 rounded-3" style="min-height: 40vh; max-height: 40vh; overflow-y: auto;">
+                        <div class="card-header">
+                            Tasks
+                        </div>
+                        <div class="card-body">
+
+                        </div>
+                 </div>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="card border border-dark border-3 m-2 rounded-3" style="min-height: 82vh; max-height: 83vh; overflow-y: auto;">
+                    <div class="card-header">
+                        Meeting Event
+                    </div>
+                    <div class="card-body">
+                        {% for event in events %}
+                            <div class="card border border-dark border-2 m-2 rounded-3" style="line-height: 1; margin-top: 10px;">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span>Event: {{ event.summary }}</span>
+                                    <form method="post" action="{% url 'kuhub:event_delete' event.id %}">
+                                        {% csrf_token %}
+                                        <input type="submit" class="btn btn-primary" value="delete">
+                                    </form>
+                                </div>
+                                <div class="card-body">
+                                    <ul>Description: {{ event.description }}</ul>
+                                    <ul>Location: {{ event.location }}</ul>
+                                    <ul>{{ event.start_time }} - </ul>
+                                    <ul>{{ event.end_time }}</ul>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                 <button type="button" class="btn btn-success rounded-circle btn-floating btn-lg " style="position: relative; bottom: 6%; left: 90%;">
+                    <a href="{% url 'kuhub:group_event' group.id %}" style="color: white;">
+                        <i class="fas fa-circle-plus"></i>
+                    </a>
+                 </button>
+            </div>
+            <div class="col-md-4">
+                <iframe src="https://calendar.google.com/calendar/embed?src={{ group.group_calendar}}&hl=en" style="border: 0; " width="500" height="500" frameborder="0" scrolling="yes"></iframe>
+            </div>
+        </div>
+    </div>
+<script>
+    function replaceURLWithHTMLLinks() {
+        var textElements = document.getElementsByClassName("textid");
+        for (var i = 0; i < textElements.length; i++) {
+            var textid = textElements[i].innerHTML;
+            var exp = /(https?:\/\/\S+)/ig;  // Simplified regular expression for URLs
+            var replacedText = textid.replace(exp, function(match) {
+                console.log("Found URL:", match);
+                return "<a href='" + match + "' target='_blank'>" + match + "</a>";
+            });
+            textElements[i].innerHTML = replacedText;
+        }
+    }
+    replaceURLWithHTMLLinks();
+</script>
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+{% endblock %}
