@@ -138,6 +138,8 @@
       import timeGridPlugin from '@fullcalendar/timegrid'
 
       document.addEventListener('DOMContentLoaded', function() {
+        const colors = [];
+        colors.push("#F96E39", "#FFC300", "#900C3F", "#85D19B", "#498CAF");
         const calendarEl = document.getElementById('calendar')
         const calendar = new Calendar(calendarEl, {
           plugins: [dayGridPlugin, timeGridPlugin],
@@ -152,7 +154,7 @@
                     title: "{{ i.summary}}",
                     start: '{{ i.start_time }}',
                     end: '{{ i.end_time }}',
-
+                    color: colors[{{i.id}}%5]
                 },
                 {% endfor %}
 
