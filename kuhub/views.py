@@ -214,7 +214,7 @@ def join(request, group_id):
     Join Group button
     """
     user = request.user
-    group = get_object_or_404(Group,pk=group_id)
+    group = get_object_or_404(Group, pk=group_id)
     if not user.email:
         messages.error(request, "Please add email in your profile")
         return redirect(reverse('kuhub:groups'))
@@ -229,7 +229,7 @@ def join(request, group_id):
                 messages.error(request, "Wrong password")
                 return redirect(reverse('kuhub:groups'))
     group.group_member.add(user)
-    add_participate(user,group.group_calendar)
+    add_participate(user, group.group_calendar)
     messages.success(request, "You join the group success!")
     return redirect(reverse('kuhub:groups'))
 
@@ -294,7 +294,6 @@ class GroupDetail(generic.DetailView):
             context['events'] = self.object.groupevent_set.all()
             context['notes'] = self.object.note_set.all()
         return context
-
 
 
 @login_required
@@ -423,6 +422,7 @@ def profile_settings(request):
         form = ProfileForm(request.POST, request.FILES, instance=user.profile)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Changed successfully!')
             return redirect('kuhub:profile_settings')
 
     else:
@@ -510,9 +510,9 @@ def following_page(request):
     return render(request, "kuhub/following_page.html", context={'followings': following})
 
 
-def group_event_create(request,group_id):
+def group_event_create(request, group_id):
     user = request.user
-    group = get_object_or_404(Group,pk=group_id)
+    group = get_object_or_404(Group, pk=group_id)
     if request.method == 'POST':
         form = EventForm(request.POST)
         if form.is_valid():
@@ -539,33 +539,36 @@ def group_event_create(request,group_id):
     return render(
         request,
         template_name='kuhub/group_event.html',
-        context={'form': EventForm,'group':group}
+        context={'form': EventForm, 'group': group}
     )
 
-def group_event_delete(request,event_id):
+
+def group_event_delete(request, event_id):
     user = request.user
     event = get_object_or_404(GroupEvent, pk=event_id)
     group_id = event.group.id
-    #delete event in calendar
-    delete_event(event.group.group_calendar,event.event_id)
-    #delete GroupEvent object
+    # delete event in calendar
+    delete_event(event.group.group_calendar, event.event_id)
+    # delete GroupEvent object
     event.delete()
-    messages.success(request,'delete event successful')
+    messages.success(request, 'delete event successful')
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
-def add_note(request,group_id):
+
+def add_note(request, group_id):
     group = get_object_or_404(Group, pk=group_id)
     if request.method == 'POST':
         text = request.POST.get('note', '')
-        Note.objects.create(group=group,note_text=text)
-        messages.success(request,'create note successful')
+        Note.objects.create(group=group, note_text=text)
+        messages.success(request, 'create note successful')
         return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
-def delete_note(request,note_id):
+
+def delete_note(request, note_id):
     note = get_object_or_404(Note, pk=note_id)
     group_id = note.group.id
     note.delete()
-    messages.success(request,'delete note successful')
+    messages.success(request, 'delete note successful')
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
 
@@ -588,6 +591,10 @@ def post_detail(request, pk):
                                             post_id=post,
                                             comment=data,
                                             comment_date=dt.datetime.now())
+                messages.success(request, 'Commented successfully!')
+
+                # Create new instance form to clear it.
+                form = CommentForm
 
         else:
             return redirect('account_login')
@@ -662,7 +669,7 @@ def edit_post(request, pk):
 
 
 def report_post(request, pk):
-    post = Post.objects.get(pk=pk)
+    post = get_object_or_404(Post, pk=pk)
 
     if request.method == 'POST':
         form = ReportForm(request.POST)
@@ -673,9 +680,10 @@ def report_post(request, pk):
                                       report_reason=reason,
                                       report_date=dt.datetime.now(),
                                       report_count=report_count + 1)
+            messages.success(request, 'Report successfully!')
+            form = ReportForm()
 
     else:
         form = ReportForm()
 
     return render(request, 'kuhub/report_post.html', {'form': form, 'post': post})
-
