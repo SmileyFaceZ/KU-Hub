@@ -121,17 +121,6 @@
 
                 </div>
                 <div class="card-footer custom-footer">
-                    <div class="follow-button-section">
-                        {% if user.is_authenticated and user != profile.user %}
-                            <button type="button" id="followBtn" class="btn btn-primary" onclick="toggleFollow({{ profile.user.id }}, {{ is_following|yesno:"true,false" }}, event)">
-                                {% if is_following %}
-                                    Unfollow
-                                {% else %}
-                                    Follow
-                                {% endif %}
-                            </button>
-                        {% endif %}
-                    </div>
                     <div class="button-group">
                         {% if user.is_authenticated %}
                             <button type="button" class="btn btn-link" id="like-btn-{{ post.post_id.pk }}" data-content="{{ post.post_id.pk }}" onclick="like_button_click('{{ post.post_id.pk }}')">

@@ -103,6 +103,7 @@
                             <i class="{{ dislike_icon_styles|slice:forloop.counter0|slice:"-1" }}"></i>
                         </button>
                         <span id="dislikes-count-{{ post.pk }}">{{ post.total_dislikes }}</span>
+
                     {% else %}
                         <form action="{% url 'account_login' %}">
                             <button type="submit" class="btn btn-link">
