@@ -681,6 +681,7 @@ def report_post(request, pk):
                                       report_date=dt.datetime.now(),
                                       report_count=report_count + 1)
             messages.success(request, 'Report successfully!')
+            form = ReportForm()
 
     else:
         form = ReportForm()
