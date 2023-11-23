@@ -39,4 +39,3 @@ sqlparse
 typing_extensions
 uritemplate
 urllib3
-django_heroku
