@@ -422,6 +422,7 @@ def profile_settings(request):
         form = ProfileForm(request.POST, request.FILES, instance=user.profile)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Changed successfully!')
             return redirect('kuhub:profile_settings')
 
     else:
@@ -590,6 +591,7 @@ def post_detail(request, pk):
                                             post_id=post,
                                             comment=data,
                                             comment_date=dt.datetime.now())
+                messages.success(request, 'Commented successfully!')
 
         else:
             return redirect('account_login')
@@ -675,6 +677,7 @@ def report_post(request, pk):
                                       report_reason=reason,
                                       report_date=dt.datetime.now(),
                                       report_count=report_count + 1)
+            messages.success(request, 'Report successfully!')
 
     else:
         form = ReportForm()

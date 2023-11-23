@@ -77,6 +77,18 @@
                     {{ form.as_p }}
                     <button type="submit">Post comment</button>
                 </form>
+
+                <script>
+                    // This script clears the comment field after form submission
+                    document.addEventListener("DOMContentLoaded", function() {
+                        var commentForm = document.querySelector("#comment-form");
+                        commentForm.addEventListener("submit", function() {
+                            // Assuming your comment form input field has an id of 'id_comment'
+                            var commentInput = document.querySelector("#id_comment");
+                            commentInput.value = "";  // Clear the input field
+                        });
+                    });
+                </script>
             {% else %}
                 <p>Please log in to add a comment.</p>
             {% endif %}
