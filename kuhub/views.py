@@ -593,6 +593,9 @@ def post_detail(request, pk):
                                             comment_date=dt.datetime.now())
                 messages.success(request, 'Commented successfully!')
 
+                # Create new instance form to clear it.
+                form = CommentForm
+
         else:
             return redirect('account_login')
     else:
