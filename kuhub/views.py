@@ -529,8 +529,9 @@ def group_event_create(request,group_id):
                 summary=data['summary'],
                 location=data['location'],
                 description=data['description'],
-                start_time=data['start_time'].strftime("%a. %d %b %Y %H:%M:%S"),
-                end_time=data['end_time'].strftime("%a. %d %b %Y %H:%M:%S"),
+                start_time=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
+                # strftime("%a. %d %b %Y %H:%M:%S")
+                end_time=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'),
                 event_id=event['id']
             )
             # update = generate_meeting(group.group_calendar,group_event)

@@ -1,7 +1,8 @@
 """Import path from django"""
-from django.urls import path
+from django.urls import path, re_path
 from django.views.generic import RedirectView
 from kuhub import views
+from django.views.generic import TemplateView
 
 
 app_name = "kuhub"
@@ -35,6 +36,6 @@ urlpatterns = [
     path('post/<int:pk>/', views.post_detail, name='post_detail'),
     path('post/<int:pk>/edit/', views.edit_post, name='edit_post'),
     path('report/<int:pk>/', views.report_post, name='report_post'),
-
+    re_path(r'^calendar/', TemplateView.as_view(template_name="kuhub/calendar.html"),name='calendar'),
 
 ]

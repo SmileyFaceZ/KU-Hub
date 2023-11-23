@@ -120,11 +120,56 @@
                     </a>
                  </button>
             </div>
-            <div class="col-md-4">
-                <iframe src="https://calendar.google.com/calendar/embed?src={{ group.group_calendar}}&hl=en" style="border: 0; " width="500" height="500" frameborder="0" scrolling="yes"></iframe>
+            <div class="col-md-5">
+                 <head>
+    <script type='importmap'>
+      {
+        "imports": {
+          "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.9",
+          "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.9",
+          "@fullcalendar/timegrid": "https://cdn.skypack.dev/@fullcalendar/timegrid@6.1.9"
+
+        }
+      }
+    </script>
+    <script type='module'>
+      import { Calendar } from '@fullcalendar/core'
+      import dayGridPlugin from '@fullcalendar/daygrid'
+      import timeGridPlugin from '@fullcalendar/timegrid'
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar')
+        const calendar = new Calendar(calendarEl, {
+          plugins: [dayGridPlugin, timeGridPlugin],
+          headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          },
+          events: [
+                {% for i in events %}
+                {
+                    title: "{{ i.summary}}",
+                    start: '{{ i.start_time }}',
+                    end: '{{ i.end_time }}',
+
+                },
+                {% endfor %}
+
+            ]
+        })
+        calendar.render()
+      })
+
+    </script>
+  </head>
+  <body>
+    <div id='calendar'></div>
+  </body>
             </div>
         </div>
     </div>
+
 <script>
     function replaceURLWithHTMLLinks() {
         var textElements = document.getElementsByClassName("textid");
@@ -139,7 +184,6 @@
         }
     }
     replaceURLWithHTMLLinks();
-</script>
 </script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
