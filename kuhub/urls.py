@@ -2,10 +2,12 @@
 from django.urls import path
 from django.views.generic import RedirectView
 from kuhub import views
+from django.urls import re_path
 
 
 app_name = "kuhub"
 urlpatterns = [
+    re_path(r'^.*/$', RedirectView.as_view(url='/kuhub/review-hub/', permanent=True), name='redirect_to_review_hub')
     path('', RedirectView.as_view(url="review-hub/")),
     path('review-hub/', views.ReviewHubView.as_view(), name='review'),
     path('summary-hub/', views.SummaryHubView.as_view(), name='summary'),
@@ -35,6 +37,4 @@ urlpatterns = [
     path('post/<int:pk>/', views.post_detail, name='post_detail'),
     path('post/<int:pk>/edit/', views.edit_post, name='edit_post'),
     path('report/<int:pk>/', views.report_post, name='report_post'),
-
-
 ]
