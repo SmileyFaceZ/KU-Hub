@@ -479,7 +479,7 @@ def profile_view(request, username):
     # Get followers and following counts
     following = UserFollower.objects.filter(user_followed=user)
     followers = UserFollower.objects.filter(follower=user)
-    posts_list = Post.objects.filter(username=user)
+    posts_list = Post.objects.filter(username=user).order_by('-post_date')
 
     # Check if the current user is following the viewed profile
     is_following = False
