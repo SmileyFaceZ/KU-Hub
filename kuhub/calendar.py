@@ -43,8 +43,8 @@ def get_service_by_service_account():
     service = build('calendar', 'v3', credentials=credentials)
     return service
 
-def create_calendar(name):
-    service = get_service_by_service_account()
+def create_calendar(request, name):
+    service = get_google_calendar_service(request)
     new_calendar = {
         'summary': name,
         'timeZone': 'Asia/Bangkok'
@@ -67,11 +67,11 @@ def add_participate(user, calendar_id):
         print("email does not exists")
 
 
-def create_event(calendar_id,summary,location, attendees, start_datetime, end_datetime, description):
+def create_event(request ,summary ,location, start_datetime, end_datetime, description):
     """
-    Create a new event in the Group's Google Calendar.
+    Create a new event in the User's Google Calendar.
     """
-    service = get_service_by_service_account()
+    service = get_google_calendar_service(request)
 
     group_event.GroupEvent
     if service:
@@ -96,12 +96,14 @@ def create_event(calendar_id,summary,location, attendees, start_datetime, end_da
             },
         }
 
-        created_event = service.events().insert(calendarId=calendar_id, body=event,conferenceDataVersion=1).execute()
+        created_event = service.events().insert(calendarId='primary', body=event,conferenceDataVersion=1).execute()
         return created_event
-def generate_meeting(calendar_id,eventobj):
-    service = get_service_by_service_account()
+
+
+def generate_meeting(request, eventobj, event_id):
+    service = get_google_calendar_service(request)
     reqid = eventobj.generate_request_id()
-    event = service.events().get(calendarId=calendar_id, eventId=eventobj.event_id).execute()
+    event = service.events().get(calendarId='primary', eventId=event_id).execute()
     event['conferenceData'] = {'createRequest': {
                                     'requestId': reqid,
                                     'conferenceSolutionKey': {
@@ -110,9 +112,9 @@ def generate_meeting(calendar_id,eventobj):
                                     }
                                 }
 
-    updated_event = service.events().update(calendarId=calendar_id, eventId=eventobj.event_id, body=event).execute()
+    updated_event = service.events().update(calendarId='primary', eventId=event_id, body=event).execute()
     return updated_event
 
-def delete_event(calendar_id,event_id):
-    service = get_service_by_service_account()
-    service.events().delete(calendarId=calendar_id, eventId=event_id).execute()
+def delete_event(request ,event_id):
+    service = get_google_calendar_service(request)
+    service.events().delete(calendarId='primary', eventId=event_id).execute()
