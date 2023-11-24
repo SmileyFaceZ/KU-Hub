@@ -508,6 +508,7 @@ def following_page(request):
 
 def group_event_create(request, group_id):
     user = request.user
+    is_google_user = user.socialaccount_set.filter(provider='google').exists()
     group = get_object_or_404(Group, pk=group_id)
     if request.method == 'POST':
         form = EventForm(request.POST)
@@ -524,12 +525,16 @@ def group_event_create(request, group_id):
                 end_time=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'),
             )
             if data['is_meeting']:
-                event, meet_link = create_event(request=request,
-                                     summary=data['summary'],
-                                     description=data['description'],
-                                     location=data['location'],
-                                     start_datetime=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
-                                     end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'))
+                try:
+                    event, meet_link = create_event(request=request,
+                                         summary=data['summary'],
+                                         description=data['description'],
+                                         location=data['location'],
+                                         start_datetime=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
+                                         end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'))
+                except:
+                    messages.error("You have to login with google before using this feature")
+                    return redirect(reverse('kuhub:group_detail', args=(group_id,)))
             group_event.link = str(meet_link)
             group_event.save()
             messages.success(request, f'create event successful')
@@ -537,7 +542,7 @@ def group_event_create(request, group_id):
     return render(
         request,
         template_name='kuhub/group_event.html',
-        context={'form': EventForm, 'group': group}
+        context={'form': EventForm, 'group': group, 'user':user, 'is_google':is_google_user}
     )
 
 

@@ -1,11 +1,8 @@
 import uuid
 
-from django.shortcuts import redirect
 from google.oauth2.credentials import Credentials
 from allauth.socialaccount.models import SocialToken
 from googleapiclient.discovery import build
-from google.oauth2 import service_account
-from kuhub.models import group_event
 from decouple import config
 
 
@@ -68,7 +65,6 @@ def create_event(request, summary, location, start_datetime, end_datetime, descr
         }
 
         created_event = service.events().insert(calendarId='primary', body=event, conferenceDataVersion=1).execute()
-        # id = created_event['id']
 
         # Retrieve Hangouts Meet link
         meet_link = created_event.get('conferenceData', {}).get('entryPoints', [])[0].get('uri', '')
