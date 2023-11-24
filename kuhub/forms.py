@@ -89,6 +89,11 @@ class EventForm(forms.Form):
         label='Location:',
         required=True
     )
+    is_meeting = forms.BooleanField(
+        required=False,
+        widget=forms.RadioSelect(choices=[(True, 'Generate meet')]),
+        initial=False,
+    )
 
 class CommentForm(forms.ModelForm):
 
