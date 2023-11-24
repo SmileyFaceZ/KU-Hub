@@ -4,25 +4,25 @@
 {% block title %}
     <title>Home</title>
 {% endblock %}
-
+<script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
 
 {% block content %}
+
 {% load custom_filters %}
 {% load static %}
 
 <style>
     body {
-        background-color: #D88C9A;
+        background-color: #8CAFD4;
     }
     .custom-border {
         border-radius: 10px;
         padding: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        background-color: #e4b3bc;
+        background-color: #acc3db;
     }
 </style>
 
-<div class="container mt-4">
 {% if messages %}
     {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="font-family: 'Poppins'">
@@ -31,28 +31,27 @@
         </div>
     {% endfor %}
 {% endif %}
-</div>
 
 <!-- Search box -->
-<div class="container mt-4 custom-border shadow-lg" style="font-family: 'Poppins'; margin-bottom: 5%;">
-    <form method="get" action="{% url 'kuhub:home' %}">
+<div class="container mt-4 custom-border shadow-lg" style="font-family: 'Poppins'">
+    <form method="get" action="{% url 'kuhub:tricks' %}">
         <div class="row">
-            <div class="col-md-4">
-                <label class="form-label"><strong>{{ form.post_content.label }}</strong></label>
+            <div class="col-md-4 mb-3">
+                <label class="form-label"><strong>{{ form.post_content.label }}:</strong></label>
                 <div class="input-group" style="max-width: 400px;">
                     {{ form.post_content }}
                 </div>
             </div>
 
             <div class="col-md-3">
-                <label class="form-label"><strong>{{ form.order_by_liked_disliked.label }}</strong></label>
+                <label class="form-label"><strong>{{ form.order_by_liked_disliked.label }}:</strong></label>
                 <div class="input-group" style="max-width: 200px;">
                     {{ form.order_by_liked_disliked }}
                 </div>
             </div>
 
             <div class="col-md-5">
-                <label class="form-label"><strong>{{ form.order_by_post.label }}</strong></label>
+                <label class="form-label"><strong>{{ form.order_by_post.label }}:</strong></label>
                 <div class="input-group" style="max-width: 200px;">
                     {{ form.order_by_post }}
                 </div>
@@ -74,12 +73,12 @@
         {% for post in followed_users_posts %}
             <div class="card border border-1 rounded-4">
                 <div class="card-header">
-                    {% if post.was_published_recently_post %}
-                        <span class="badge rounded-pill text-bg-danger" style="text-align: center; margin-right: 5px;">New!</span>
-                    {% endif %}
-                    {{ post.tag_id.tag_text }} |
-                    <a href="{% url 'kuhub:subject_detail' post.subject.course_code %}">{{ post.subject.course_code }} {{ post.subject.name_eng }}</a> |
-                    <a href="{% url 'kuhub:gen_ed_type_list' %}#{{ post.subject.type|slugify }}">{{ post.subject.type }}</a>
+                    <div class="tag-text">
+                        {% if post.was_published_recently_post %}
+                            <span class="badge rounded-pill text-bg-danger" style="text-align: center; margin-right: 5px;">New!</span>
+                        {% endif %}
+                        {{ post.tag_id.tag_text }}
+                    </div>
                 </div>
                 <div class="card-body position-relative">
                     <div class="dropdown position-absolute top-0 end-0">
@@ -90,21 +89,21 @@
                             {% if user.is_authenticated and post.username == user %}
                                 <li><a class="dropdown-item" href="#">Edit Post</a></li>
                             {% else %}
-                                <li><a class="dropdown-item" href="{% url 'kuhub:report_post' post.id %}">Report</a></li>
+                                <li><a class="dropdown-item" href="#">Report</a></li>
                             {% endif %}
                         </ul>
                     </div>
                     <a href="{% url 'kuhub:profile_view' username=post.username %}">
                         {% with profile=post.username.profile %}
-                            <div class="d-flex align-items-center">
-                                <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'images/default_profile.jpg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                            <div class="d-flex align-items-center"> <!-- Use a flex container for alignment -->
+                                <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
                                 <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ post.username }}</h4>
                             </div>
                         {% endwith %}
                     </a>
                     <br>
                     <p class="card-text">{{ post.post_content }}</p>
-                    <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 10px;"></i>{{ post.post_date }}</h6>
+                    <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 5px;"></i>{{ post.post_date }}</h6>
                 </div>
                 <div class="card-footer custom-footer">
                     <div class="button-group">
@@ -118,7 +117,6 @@
                                 <i class="{{ dislike_icon_styles|index:forloop.counter0 }}"></i>
                             </button>
                             <span id="dislikes-count-{{ post.pk }}">{{ post.total_dislikes }}</span>
-
 
                         {% else %}
                             <form action="{% url 'account_login' %}">
@@ -198,7 +196,6 @@ function dislike_button_click(postId) {
         console.log('Error:', error);
     });
 }
-
 </script>
 
 <style>
@@ -214,5 +211,5 @@ function dislike_button_click(postId) {
         margin: 10px;
     }
 </style>
-{% endblock %}
 
+{% endblock %}

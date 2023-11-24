@@ -1,8 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-from asgiref.sync import async_to_sync
-from kuhub.models import Profile, Notification, PostReport, PostComments
+from kuhub.models import Profile
 from channels.layers import get_channel_layer
 
 

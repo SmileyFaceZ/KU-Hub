@@ -20,38 +20,64 @@ from kuhub.forms import EventForm
 from .calendar import create_calendar, add_participate, create_event, delete_event
 from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
 from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostReport,
-                          Group, GroupTags, GroupPassword, Subject, Notification, PostComments, GroupEvent, Note)
+                          Group, GroupTags, GroupPassword, Subject, PostComments, GroupEvent, Note)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
 
 
-class HomePageView(LoginRequiredMixin, View):
+class HomePageView(generic.ListView):
     template_name = 'kuhub/home_page.html'
+    context_object_name: str = 'followed_users_posts'
 
-    def get(self, request, *args, **kwargs):
-        # Retrieve followed users
-        followed_users = UserFollower.objects.filter(follower=request.user).values_list('user_followed', flat=True)
+    # def get(self, request, *args, **kwargs):
+    #     # Retrieve followed users
+    #     followed_users = UserFollower.objects.filter(follower=request.user).values_list('user_followed', flat=True)
+    #
+    #     # Retrieve posts from followed users, ordered by the newest posts first
+    #     followed_users_posts = Post.objects.filter(username__in=followed_users).order_by('-post_date')
+    #
+    #     like_icon_styles = [post.like_icon_style(self.request.user)
+    #                         for post in followed_users_posts]
+    #     dislike_icon_styles = [post.dislike_icon_style(self.request.user)
+    #                            for post in followed_users_posts]
+    #
+    #     profiles_list = [Profile.objects.filter(user=post.username).first()
+    #                      for post in followed_users_posts]
+    #
+    #     context = {
+    #         'followed_users_posts': followed_users_posts,
+    #         'like_icon_styles': like_icon_styles,
+    #         'dislike_icon_styles': dislike_icon_styles,
+    #         'profiles_list': profiles_list
+    #     }
+    #
+    #     return render(request, self.template_name, context)
 
-        # Retrieve posts from followed users, ordered by the newest posts first
+    def get_queryset(self) -> QuerySet[Post]:
+        followed_users = UserFollower.objects.filter(follower=self.request.user).values_list('user_followed', flat=True)
         followed_users_posts = Post.objects.filter(username__in=followed_users).order_by('-post_date')
 
-        like_icon_styles = [post.like_icon_style(self.request.user)
-                            for post in followed_users_posts]
-        dislike_icon_styles = [post.dislike_icon_style(self.request.user)
-                               for post in followed_users_posts]
+        queryset = followed_users_posts
+        self.filterset = PostFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs):
+        """Add like and dislike icon styles to context."""
+        context = super().get_context_data(**kwargs)
 
         profiles_list = [Profile.objects.filter(user=post.username).first()
-                         for post in followed_users_posts]
+                         for post in context['followed_users_posts']]
 
-        context = {
-            'followed_users_posts': followed_users_posts,
-            'like_icon_styles': like_icon_styles,
-            'dislike_icon_styles': dislike_icon_styles,
-            'profiles_list': profiles_list
-        }
+        context['like_icon_styles'] = [post.like_icon_style(self.request.user)
+                                       for post in context['followed_users_posts']]
+        context['dislike_icon_styles'] = [
+            post.dislike_icon_style(self.request.user) for post in
+            context['followed_users_posts']]
+        context['profiles_list'] = profiles_list
+        context['form'] = self.filterset.form
 
-        return render(request, self.template_name, context)
+        return context
 
 
 class ReviewHubView(generic.ListView):
