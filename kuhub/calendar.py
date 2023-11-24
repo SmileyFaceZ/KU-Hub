@@ -22,8 +22,8 @@ def get_google_calendar_service(request):
          return None
     scope = ['https://www.googleapis.com/auth/calendar']
     user_info = {
-            "client_id": "298266224776-o5thmj41tjhabonol6nf853qt9f8np7l.apps.googleusercontent.com",
-            "client_secret": "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",
+            "client_id": config('GOOGLE_OAUTH_CLIENT_ID', default='google-oauth-client-id'),
+            "client_secret": config('GOOGLE_OAUTH_SECRET_KEY', default='google-oauth-secret-key'),
             "refresh_token": str(access_token),
         }
     credentials = Credentials.from_authorized_user_info(info=user_info,scopes=scope)
