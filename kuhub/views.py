@@ -3,8 +3,6 @@ Contains view functions for handling requests.
 related to Review-Hub, Summary-Hub and Tricks-Hub
 in the kuhub web application.
 """
-import datetime
-from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.http import Http404
 import json
@@ -12,6 +10,8 @@ import datetime as dt
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet, Count
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, get_object_or_404
@@ -24,6 +24,23 @@ from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostR
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
+
+
+class HomePageView(LoginRequiredMixin, View):
+    template_name = 'kuhub/home_page.html'
+
+    def get(self, request, *args, **kwargs):
+        # Retrieve followed users
+        followed_users = UserFollower.objects.filter(follower=request.user).values_list('user_followed', flat=True)
+
+        # Retrieve posts from followed users, ordered by the newest posts first
+        followed_users_posts = Post.objects.filter(username__in=followed_users).order_by('-post_date')
+
+        context = {
+            'followed_users_posts': followed_users_posts,
+        }
+
+        return render(request, self.template_name, context)
 
 
 class ReviewHubView(generic.ListView):
