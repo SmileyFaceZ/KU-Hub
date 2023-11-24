@@ -3,8 +3,6 @@ Contains view functions for handling requests.
 related to Review-Hub, Summary-Hub and Tricks-Hub
 in the kuhub web application.
 """
-import datetime
-from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.http import Http404
 import json
@@ -20,10 +18,46 @@ from kuhub.forms import EventForm
 from .calendar import create_calendar, add_participate, create_event, delete_event
 from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
 from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostReport,
-                          Group, GroupTags, GroupPassword, Subject, Notification, PostComments, GroupEvent, Note)
+                          Group, GroupTags, GroupPassword, Subject, PostComments, GroupEvent, Note)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
+
+
+class HomePageView(generic.ListView):
+    template_name = 'kuhub/home_page.html'
+    context_object_name: str = 'followed_users_posts'
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            raise Http404("You must be logged in to view this page.")
+
+        followed_users = UserFollower.objects.filter(follower=self.request.user).values_list('user_followed', flat=True)
+        followed_users_posts = Post.objects.filter(username__in=followed_users).order_by('-post_date')
+
+        if not followed_users.exists():
+            messages.info(self.request, "You are not following anyone yet.")
+
+        queryset = followed_users_posts
+        self.filterset = PostFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs):
+        """Add like and dislike icon styles to context."""
+        context = super().get_context_data(**kwargs)
+
+        profiles_list = [Profile.objects.filter(user=post.username).first()
+                         for post in context['followed_users_posts']]
+
+        context['like_icon_styles'] = [post.like_icon_style(self.request.user)
+                                       for post in context['followed_users_posts']]
+        context['dislike_icon_styles'] = [
+            post.dislike_icon_style(self.request.user) for post in
+            context['followed_users_posts']]
+        context['profiles_list'] = profiles_list
+        context['form'] = self.filterset.form
+
+        return context
 
 
 class ReviewHubView(generic.ListView):
@@ -197,15 +231,6 @@ class SubjectDetailView(generic.ListView):
                 "subject": subject.course_code + " " + subject.name_eng,
             }
         )
-
-
-class NotificationView(generic.ListView):
-    """Redirect users to notification page and show list of notification"""
-    template_name = 'kuhub/notification.html'
-    context_object_name = 'notifications_list'
-
-    def get_queryset(self):
-        return Notification.objects.filter(user=self.request.user).order_by("-id")
 
 
 @login_required
@@ -456,12 +481,17 @@ def profile_view(request, username):
     # Get followers and following counts
     following = UserFollower.objects.filter(user_followed=user)
     followers = UserFollower.objects.filter(follower=user)
-    posts_list = Post.objects.filter(username=user)
+    posts_list = Post.objects.filter(username=user).order_by('-post_date')
 
     # Check if the current user is following the viewed profile
     is_following = False
     if request.user.is_authenticated:
         is_following = request.user.follower.filter(user_followed=user).exists()
+
+    like_icon_styles = [post.like_icon_style(request.user)
+                        for post in posts_list]
+    dislike_icon_styles = [post.dislike_icon_style(request.user)
+                           for post in posts_list]
 
     context = {
         'profile': profile,
@@ -470,6 +500,8 @@ def profile_view(request, username):
         'is_following': is_following,
         'user': request.user,
         'posts_list': posts_list,
+        'like_icon_styles': like_icon_styles,
+        'dislike_icon_styles': dislike_icon_styles
     }
 
     return render(request, 'kuhub/profile.html', context)
@@ -606,6 +638,8 @@ def post_detail(request, pk):
     owner_profile = Profile.objects.filter(user=post.username)
     comments_profiles = [Profile.objects.filter(user=comment.username).first()
                          for comment in comments_list]
+    like_icon_styles = post.like_icon_style(request.user)
+    dislike_icon_styles = post.dislike_icon_style(request.user)
 
     # Use zip_longest to handle different lengths
     comments_and_profiles = zip_longest(comments_list, comments_profiles)
@@ -615,6 +649,8 @@ def post_detail(request, pk):
         'comments_and_profiles': comments_and_profiles,
         'form': form,
         'owner_profile': owner_profile,
+        'like_icon_styles': like_icon_styles,
+        'dislike_icon_styles': dislike_icon_styles
     }
 
     return render(request, 'kuhub/post_detail.html', context)
