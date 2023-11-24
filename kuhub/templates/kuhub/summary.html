@@ -6,6 +6,12 @@
 {% endblock %}
     
 <script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
+<!-- Add this to the head of your HTML document -->
+<script src="https://www.gstatic.com/firebasejs/9.2.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.2.0/firebase-storage.js"></script>
+<script src="{% static 'kuhub/js/firebase-config.js' %}"></script>
+<script src="{% static 'kuhub/js/filebase-store.js' %}"></script>
+
 
 {% block content %}
 
@@ -114,8 +120,7 @@
                     <br>
                     <p class="card-text">{{ post.post_id.post_content }}</p>
                     <p class="card-text">
-                        <a href="{{ post.file.url }}" class="btn btn-outline-primary" target="_blank">View File</a>
-                        <a href="{{ post.file.url }}" class="btn btn-outline-warning" id="download_link" download>Download File</a>
+                        <button onclick="viewFile('{{ post.file.name }}')">View File</button>
                     </p>
                     <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 5px;"></i>{{ post.post_id.post_date }}</h6>
 
@@ -211,5 +216,40 @@ function dislike_button_click(postId) {
         console.log('Error:', error);
     });
 }
+
+function viewFile(fileName) {
+    console.log('Original fileName:', fileName);
+    const relativePath = fileName.replace('store/pdfs/', '');
+    console.log('Relative path:', relativePath);
+
+    const storageRef = firebase.storage().ref(relativePath);
+
+    // Check if Firebase is initialized
+    if (firebase.apps.length) {
+        storageRef.getDownloadURL()
+            .then(function (url) {
+                window.open(url, '_blank');
+            })
+            .catch(function (error) {
+                console.error("Error getting download URL: ", error);
+            });
+    } else {
+        // Wait for Firebase to initialize and try again
+        const firebaseInitInterval = setInterval(function () {
+            if (firebase.apps.length) {
+                clearInterval(firebaseInitInterval);
+                storageRef.getDownloadURL()
+                    .then(function (url) {
+                        window.open(url, '_blank');
+                    })
+                    .catch(function (error) {
+                        console.error("Error getting download URL: ", error);
+                    });
+            }
+        }, 100);
+    }
+}
+
+
 </script>
 {% endblock %}
