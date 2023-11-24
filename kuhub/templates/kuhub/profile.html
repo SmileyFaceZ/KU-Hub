@@ -95,12 +95,12 @@
                 <div class="button-group">
                     {% if user.is_authenticated %}
                         <button type="button" class="btn btn-link" id="like-btn-{{ post.pk }}" data-content="{{ post.pk }}" onclick="like_button_click('{{ post.pk }}')">
-                            <i class="{{ like_icon_styles|slice:forloop.counter0|slice:"-1" }}"></i>
+                            <i class="{{ like_icon_styles.forloop.counter0 }}"></i>
                         </button>
                         <span id="likes-count-{{ post.pk }}">{{ post.total_likes }}</span>
 
                         <button type="button" class="btn btn-link" id="dislike-btn-{{post.pk}}" data-content="{{ post.pk }}" onclick="dislike_button_click('{{ post.pk }}')">
-                            <i class="{{ dislike_icon_styles|slice:forloop.counter0|slice:"-1" }}"></i>
+                            <i class="{{ dislike_icon_styles.forloop.counter0 }}"></i>
                         </button>
                         <span id="dislikes-count-{{ post.pk }}">{{ post.total_dislikes }}</span>
 

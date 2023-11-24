@@ -10,8 +10,6 @@ import datetime as dt
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.views import View
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet, Count
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, get_object_or_404
@@ -29,30 +27,6 @@ from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
 class HomePageView(generic.ListView):
     template_name = 'kuhub/home_page.html'
     context_object_name: str = 'followed_users_posts'
-
-    # def get(self, request, *args, **kwargs):
-    #     # Retrieve followed users
-    #     followed_users = UserFollower.objects.filter(follower=request.user).values_list('user_followed', flat=True)
-    #
-    #     # Retrieve posts from followed users, ordered by the newest posts first
-    #     followed_users_posts = Post.objects.filter(username__in=followed_users).order_by('-post_date')
-    #
-    #     like_icon_styles = [post.like_icon_style(self.request.user)
-    #                         for post in followed_users_posts]
-    #     dislike_icon_styles = [post.dislike_icon_style(self.request.user)
-    #                            for post in followed_users_posts]
-    #
-    #     profiles_list = [Profile.objects.filter(user=post.username).first()
-    #                      for post in followed_users_posts]
-    #
-    #     context = {
-    #         'followed_users_posts': followed_users_posts,
-    #         'like_icon_styles': like_icon_styles,
-    #         'dislike_icon_styles': dislike_icon_styles,
-    #         'profiles_list': profiles_list
-    #     }
-    #
-    #     return render(request, self.template_name, context)
 
     def get_queryset(self) -> QuerySet[Post]:
         followed_users = UserFollower.objects.filter(follower=self.request.user).values_list('user_followed', flat=True)
@@ -515,6 +489,11 @@ def profile_view(request, username):
     if request.user.is_authenticated:
         is_following = request.user.follower.filter(user_followed=user).exists()
 
+    like_icon_styles = [post.like_icon_style(request.user)
+                        for post in posts_list]
+    dislike_icon_styles = [post.dislike_icon_style(request.user)
+                           for post in posts_list]
+
     context = {
         'profile': profile,
         'followers_count': following,
@@ -522,6 +501,8 @@ def profile_view(request, username):
         'is_following': is_following,
         'user': request.user,
         'posts_list': posts_list,
+        'like_icon_styles': like_icon_styles,
+        'dislike_icon_styles': dislike_icon_styles
     }
 
     return render(request, 'kuhub/profile.html', context)
@@ -658,6 +639,8 @@ def post_detail(request, pk):
     owner_profile = Profile.objects.filter(user=post.username)
     comments_profiles = [Profile.objects.filter(user=comment.username).first()
                          for comment in comments_list]
+    like_icon_styles = post.like_icon_style(request.user)
+    dislike_icon_styles = post.dislike_icon_style(request.user)
 
     # Use zip_longest to handle different lengths
     comments_and_profiles = zip_longest(comments_list, comments_profiles)
@@ -667,6 +650,8 @@ def post_detail(request, pk):
         'comments_and_profiles': comments_and_profiles,
         'form': form,
         'owner_profile': owner_profile,
+        'like_icon_styles': like_icon_styles,
+        'dislike_icon_styles': dislike_icon_styles
     }
 
     return render(request, 'kuhub/post_detail.html', context)
