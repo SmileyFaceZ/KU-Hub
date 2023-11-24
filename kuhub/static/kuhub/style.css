@@ -2,9 +2,8 @@
 .rounded-icon {
     border-radius: 50%;
 }
-.navbar .btn-secondary {
+.btn-secondary {
     font-size: 16px;
-    margin-left: 40%;
     background-color: rgb(255, 255, 255);
     border-color: rgb(255, 255, 255);
     color: black;
@@ -12,20 +11,12 @@
 .navbar {
     background-color: whitesmoke;
 }
-.navbar .toggler-menu {
-    border-radius: 0.5rem;
-    margin-right: 10px;
-    background-color: whitesmoke;
-    padding: 4px 8px;
-    border: 1px solid gray;
-}
 .navbar-nav .nav-link {
     color: rgb(0, 91, 65);
     font-weight: 500; 
 }
 .offcanvas.offcanvas-start {
-    /* background-color: rgb(15, 169, 149); */
-    background-color: rgb(139, 139, 139);
+    background-color: whitesmoke;
 }
 .offcanvas-body {
     margin-left: 20px;
