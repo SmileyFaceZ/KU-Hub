@@ -1,5 +1,5 @@
 from django import forms
-from kuhub.models import Tags, Subject, Profile, PostComments, PostReport
+from kuhub.models import Tags, Subject, Profile, PostComments
 
 
 class PostForm(forms.Form):
