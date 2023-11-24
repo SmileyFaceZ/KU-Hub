@@ -10,7 +10,6 @@ class GroupEvent(models.Model):
     summary = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    event_id = models.CharField(max_length=255,null=True)
     requests_id = models.CharField(max_length=255, blank=True, null=True)
     link = models.CharField(max_length=255, blank=True, null=True)
 

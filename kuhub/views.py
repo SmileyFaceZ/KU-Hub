@@ -215,9 +215,9 @@ def join(request, group_id):
     """
     user = request.user
     group = get_object_or_404(Group,pk=group_id)
-    if not user.email:
-        messages.error(request, "Please add email in your profile")
-        return redirect(reverse('kuhub:groups'))
+    # if not user.email:
+    #     messages.error(request, "Please add email in your profile")
+    #     return redirect(reverse('kuhub:groups'))
 
     if user in group.group_member.all():
         messages.error(request, "You already a member of this group")
@@ -229,7 +229,6 @@ def join(request, group_id):
                 messages.error(request, "Wrong password")
                 return redirect(reverse('kuhub:groups'))
     group.group_member.add(user)
-    add_participate(user,group.group_calendar)
     messages.success(request, "You join the group success!")
     return redirect(reverse('kuhub:groups'))
 
@@ -259,16 +258,13 @@ def create_group(request: HttpRequest):
             if data['password']:
                 password = GroupPassword.objects.create(group_password=data['password'])
                 password.set_password(password.group_password)
-            calendar = create_calendar("calendar")
             group = Group.objects.create(
                 group_name=data['name'],
                 group_description=data['description'],
                 group_password=password,
-                group_calendar=calendar['id']
             )
             group.group_tags.set([group_tag])
             group.group_member.set([user])
-            add_participate(user, group.group_calendar)
             messages.success(request, f'Create group successful your group id is {group.id}')
             return redirect(reverse('kuhub:groups'))
     return render(
@@ -517,13 +513,13 @@ def group_event_create(request,group_id):
         form = EventForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            event = create_event(calendar_id=group.group_calendar,
-                                 summary=data['summary'],
-                                 description=data['description'],
-                                 location=data['location'],
-                                 attendees=group.group_member.all(),
-                                 start_datetime=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
-                                 end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'))
+            # event = create_event(calendar_id=group.group_calendar,
+            #                      summary=data['summary'],
+            #                      description=data['description'],
+            #                      location=data['location'],
+            #                      attendees=group.group_member.all(),
+            #                      start_datetime=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
+            #                      end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'))
             group_event = GroupEvent.objects.create(
                 group=group,
                 summary=data['summary'],
@@ -532,9 +528,7 @@ def group_event_create(request,group_id):
                 start_time=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
                 # strftime("%a. %d %b %Y %H:%M:%S")
                 end_time=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'),
-                event_id=event['id']
             )
-            # update = generate_meeting(group.group_calendar,group_event)
             messages.success(request, f'create event successful')
             return redirect(reverse('kuhub:group_detail', args=(group_id,)))
     return render(
@@ -547,8 +541,6 @@ def group_event_delete(request,event_id):
     user = request.user
     event = get_object_or_404(GroupEvent, pk=event_id)
     group_id = event.group.id
-    #delete event in calendar
-    delete_event(event.group.group_calendar,event.event_id)
     #delete GroupEvent object
     event.delete()
     messages.success(request,'delete event successful')
