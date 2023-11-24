@@ -369,11 +369,13 @@ def create_post(request: HttpRequest):
         form = PostForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
+            print('data', data)
 
             post = Post.objects.create(
                 username=request.user,
                 post_content=data['review'],
                 post_date=dt.datetime.now(),
+                subject=Subject.objects.get(course_code=data['subject']),
                 tag_id=Tags.objects.get(tag_text=data['tag_name'])
             )
 
