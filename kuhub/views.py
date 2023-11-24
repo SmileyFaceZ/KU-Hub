@@ -36,8 +36,19 @@ class HomePageView(LoginRequiredMixin, View):
         # Retrieve posts from followed users, ordered by the newest posts first
         followed_users_posts = Post.objects.filter(username__in=followed_users).order_by('-post_date')
 
+        like_icon_styles = [post.like_icon_style(self.request.user)
+                            for post in followed_users_posts]
+        dislike_icon_styles = [post.dislike_icon_style(self.request.user)
+                               for post in followed_users_posts]
+
+        profiles_list = [Profile.objects.filter(user=post.username).first()
+                         for post in followed_users_posts]
+
         context = {
             'followed_users_posts': followed_users_posts,
+            'like_icon_styles': like_icon_styles,
+            'dislike_icon_styles': dislike_icon_styles,
+            'profiles_list': profiles_list
         }
 
         return render(request, self.template_name, context)
