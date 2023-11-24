@@ -215,6 +215,10 @@ def join(request, group_id):
     """
     user = request.user
     group = get_object_or_404(Group,pk=group_id)
+    # if not user.email:
+    #     messages.error(request, "Please add email in your profile")
+    #     return redirect(reverse('kuhub:groups'))
+
     if user in group.group_member.all():
         messages.error(request, "You already a member of this group")
         return redirect(reverse('kuhub:groups'))
