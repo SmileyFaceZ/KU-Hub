@@ -217,39 +217,7 @@ function dislike_button_click(postId) {
     });
 }
 
-function viewFile(fileName) {
-    console.log('Original fileName:', fileName);
-    const relativePath = fileName.replace('store/pdfs/', '');
-    console.log('Relative path:', relativePath);
-
-    const storageRef = firebase.storage().ref(relativePath);
-
-    // Check if Firebase is initialized
-    if (firebase.apps.length) {
-        storageRef.getDownloadURL()
-            .then(function (url) {
-                window.open(url, '_blank');
-            })
-            .catch(function (error) {
-                console.error("Error getting download URL: ", error);
-            });
-    } else {
-        // Wait for Firebase to initialize and try again
-        const firebaseInitInterval = setInterval(function () {
-            if (firebase.apps.length) {
-                clearInterval(firebaseInitInterval);
-                storageRef.getDownloadURL()
-                    .then(function (url) {
-                        window.open(url, '_blank');
-                    })
-                    .catch(function (error) {
-                        console.error("Error getting download URL: ", error);
-                    });
-            }
-        }, 100);
-    }
-}
-
 
 </script>
+<script src="{% static 'kuhub/js/view-file.js' %}" type="module"></script>
 {% endblock %}
