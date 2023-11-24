@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
 import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-storage.js";
-import { firebaseConfig } from "./firebase-config.js";
+import firebaseConfig from "./config.js";
 
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
@@ -16,10 +16,10 @@ fileUpload.addEventListener("change", function(event) {
     });
 });
 
-const fileref = ref(storage, file.name)
-
-fileref.getDownloadURL().then(function(url) {
-    document.getElementById("viewer").src = url;
-}).catch(function(error) {
-    console.error("Error getting download URL: ", error);
-});
+// const fileref = ref(storage, file.name)
+//
+// fileref.getDownloadURL().then(function(url) {
+//     document.getElementById("viewer").src = url;
+// }).catch(function(error) {
+//     console.error("Error getting download URL: ", error);
+// });
