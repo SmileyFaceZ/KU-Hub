@@ -95,8 +95,8 @@ class EventForm(forms.Form):
         initial=False,
     )
 
-class CommentForm(forms.ModelForm):
 
+class CommentForm(forms.ModelForm):
     class Meta:
         model = PostComments
         fields = ['comment']
@@ -104,4 +104,3 @@ class CommentForm(forms.ModelForm):
 
 class ReportForm(forms.Form):
     reason = forms.CharField(widget=forms.Textarea)
-
