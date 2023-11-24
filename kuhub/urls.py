@@ -7,7 +7,7 @@ from django.urls import re_path
 
 app_name = "kuhub"
 urlpatterns = [
-    re_path(r'^.*/$', RedirectView.as_view(url='/kuhub/review-hub/', permanent=True), name='redirect_to_review_hub')
+    re_path(r'^.*/$', RedirectView.as_view(url='/kuhub/review-hub/', permanent=True), name='redirect_to_review_hub'),
     path('', RedirectView.as_view(url="review-hub/")),
     path('review-hub/', views.ReviewHubView.as_view(), name='review'),
     path('summary-hub/', views.SummaryHubView.as_view(), name='summary'),
