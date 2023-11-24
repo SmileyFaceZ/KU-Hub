@@ -15,7 +15,7 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.views import generic
 from kuhub.forms import EventForm
-from .calendar import create_calendar, add_participate, create_event, delete_event
+from .calendar import create_event
 from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
 from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostReport,
                           Group, GroupTags, GroupPassword, Subject, PostComments, GroupEvent, Note)
@@ -256,10 +256,10 @@ def join(request, group_id):
     Join Group button
     """
     user = request.user
-    group = get_object_or_404(Group, pk=group_id)
-    if not user.email:
-        messages.error(request, "Please add email in your profile")
-        return redirect(reverse('kuhub:groups'))
+    group = get_object_or_404(Group,pk=group_id)
+    # if not user.email:
+    #     messages.error(request, "Please add email in your profile")
+    #     return redirect(reverse('kuhub:groups'))
 
     if user in group.group_member.all():
         messages.error(request, "You already a member of this group")
@@ -271,7 +271,6 @@ def join(request, group_id):
                 messages.error(request, "Wrong password")
                 return redirect(reverse('kuhub:groups'))
     group.group_member.add(user)
-    add_participate(user, group.group_calendar)
     messages.success(request, "You join the group success!")
     return redirect(reverse('kuhub:groups'))
 
@@ -301,16 +300,13 @@ def create_group(request: HttpRequest):
             if data['password']:
                 password = GroupPassword.objects.create(group_password=data['password'])
                 password.set_password(password.group_password)
-            calendar = create_calendar("calendar")
             group = Group.objects.create(
                 group_name=data['name'],
                 group_description=data['description'],
                 group_password=password,
-                group_calendar=calendar['id']
             )
             group.group_tags.set([group_tag])
             group.group_member.set([user])
-            add_participate(user, group.group_calendar)
             messages.success(request, f'Create group successful your group id is {group.id}')
             return redirect(reverse('kuhub:groups'))
     return render(
@@ -563,34 +559,41 @@ def following_page(request):
 
 def group_event_create(request, group_id):
     user = request.user
+    is_google_user = user.socialaccount_set.filter(provider='google').exists()
     group = get_object_or_404(Group, pk=group_id)
     if request.method == 'POST':
         form = EventForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            event = create_event(calendar_id=group.group_calendar,
-                                 summary=data['summary'],
-                                 description=data['description'],
-                                 location=data['location'],
-                                 attendees=group.group_member.all(),
-                                 start_datetime=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
-                                 end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'))
+            meet_link = ''
             group_event = GroupEvent.objects.create(
                 group=group,
                 summary=data['summary'],
                 location=data['location'],
                 description=data['description'],
-                start_time=data['start_time'].strftime("%a. %d %b %Y %H:%M:%S"),
-                end_time=data['end_time'].strftime("%a. %d %b %Y %H:%M:%S"),
-                event_id=event['id']
+                start_time=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
+                end_time=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'),
+                show_time=f"{data['start_time'].strftime('%a. %d %b %Y %H:%M:%S')} - {data['end_time'].strftime('%a. %d %b %Y %H:%M:%S')}"
             )
-            # update = generate_meeting(group.group_calendar,group_event)
+            if data['is_meeting']:
+                try:
+                    event, meet_link = create_event(request=request,
+                                         summary=data['summary'],
+                                         description=data['description'],
+                                         location=data['location'],
+                                         start_datetime=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
+                                         end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'))
+                except:
+                    messages.error(request, "You have to login with google before using this feature")
+                    return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+            group_event.link = str(meet_link)
+            group_event.save()
             messages.success(request, f'create event successful')
             return redirect(reverse('kuhub:group_detail', args=(group_id,)))
     return render(
         request,
         template_name='kuhub/group_event.html',
-        context={'form': EventForm, 'group': group}
+        context={'form': EventForm, 'group': group, 'user':user, 'is_google':is_google_user}
     )
 
 
@@ -598,9 +601,7 @@ def group_event_delete(request, event_id):
     user = request.user
     event = get_object_or_404(GroupEvent, pk=event_id)
     group_id = event.group.id
-    # delete event in calendar
-    delete_event(event.group.group_calendar, event.event_id)
-    # delete GroupEvent object
+    #delete GroupEvent object
     event.delete()
     messages.success(request, 'delete event successful')
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))

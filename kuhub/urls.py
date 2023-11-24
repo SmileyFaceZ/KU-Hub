@@ -2,7 +2,9 @@
 from django.urls import path, re_path
 from django.views.generic import RedirectView
 from kuhub import views
+from django.views.generic import TemplateView
 from django.urls import re_path
+
 
 app_name = "kuhub"
 urlpatterns = [
@@ -37,3 +39,4 @@ urlpatterns = [
     path('report/<int:pk>/', views.report_post, name='report_post'),
     re_path(r'^.*/$', RedirectView.as_view(url='/kuhub/review-hub/', permanent=True), name='redirect_to_review_hub'),
 ]
+
