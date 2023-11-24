@@ -36,6 +36,5 @@ urlpatterns = [
     path('post/<int:pk>/', views.post_detail, name='post_detail'),
     path('post/<int:pk>/edit/', views.edit_post, name='edit_post'),
     path('report/<int:pk>/', views.report_post, name='report_post'),
-    re_path(r'^calendar/', TemplateView.as_view(template_name="kuhub/calendar.html"),name='calendar'),
 
 ]
