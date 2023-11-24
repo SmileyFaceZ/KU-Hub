@@ -13,7 +13,7 @@
 
 <style>
     body {
-        background-color: #8CAFD4;
+        background-color: #99C1B9;
     }
     .custom-border {
         border-radius: 10px;
@@ -22,6 +22,13 @@
         background-color: #acc3db;
     }
 </style>
+
+{% if not user.is_authenticated %}
+    <script>
+        // Redirect to login page if the user is not authenticated
+        window.location.href = '{% url "account_login" %}';
+    </script>
+{% endif %}
 
 {% if messages %}
     {% for message in messages %}
@@ -69,75 +76,79 @@
 
 <!-- Post -->
 <div class="container" style="font-family: 'Poppins'">
-    {% if followed_users_posts %}
-        {% for post in followed_users_posts %}
-            <div class="card border border-1 rounded-4">
-                <div class="card-header">
-                    <div class="tag-text">
-                        {% if post.was_published_recently_post %}
-                            <span class="badge rounded-pill text-bg-danger" style="text-align: center; margin-right: 5px;">New!</span>
-                        {% endif %}
-                        {{ post.tag_id.tag_text }}
-                    </div>
-                </div>
-                <div class="card-body position-relative">
-                    <div class="dropdown position-absolute top-0 end-0">
-                        <button class="btn btn-link kebab-menu" type="button" id="kebabMenu{{ post.pk }}" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="kebabMenu{{ post.pk }}" style="box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);">
-                            {% if user.is_authenticated and post.username == user %}
-                                <li><a class="dropdown-item" href="#">Edit Post</a></li>
-                            {% else %}
-                                <li><a class="dropdown-item" href="#">Report</a></li>
+    {% if user.is_authenticated %}
+        {% if followed_users_posts %}
+            {% for post in followed_users_posts %}
+                <div class="card border border-1 rounded-4">
+                    <div class="card-header">
+                        <div class="tag-text">
+                            {% if post.was_published_recently_post %}
+                                <span class="badge rounded-pill text-bg-danger" style="text-align: center; margin-right: 5px;">New!</span>
                             {% endif %}
-                        </ul>
+                            {{ post.tag_id.tag_text }}
+                        </div>
                     </div>
-                    <a href="{% url 'kuhub:profile_view' username=post.username %}">
-                        {% with profile=post.username.profile %}
-                            <div class="d-flex align-items-center"> <!-- Use a flex container for alignment -->
-                                <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
-                                <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ post.username }}</h4>
-                            </div>
-                        {% endwith %}
-                    </a>
-                    <br>
-                    <p class="card-text">{{ post.post_content }}</p>
-                    <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 5px;"></i>{{ post.post_date }}</h6>
-                </div>
-                <div class="card-footer custom-footer">
-                    <div class="button-group">
-                        {% if user.is_authenticated %}
-                            <button type="button" class="btn btn-link" id="like-btn-{{ post.pk }}" data-content="{{ post.pk }}" onclick="like_button_click('{{ post.pk }}')">
-                                <i class="{{ like_icon_styles|index:forloop.counter0 }}"></i>
+                    <div class="card-body position-relative">
+                        <div class="dropdown position-absolute top-0 end-0">
+                            <button class="btn btn-link kebab-menu" type="button" id="kebabMenu{{ post.pk }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
                             </button>
-                            <span id="likes-count-{{ post.pk }}">{{ post.total_likes }}</span>
-
-                            <button type="button" class="btn btn-link" id="dislike-btn-{{post.pk}}" data-content="{{ post.pk }}" onclick="dislike_button_click('{{ post.pk }}')">
-                                <i class="{{ dislike_icon_styles|index:forloop.counter0 }}"></i>
-                            </button>
-                            <span id="dislikes-count-{{ post.pk }}">{{ post.total_dislikes }}</span>
-
-                        {% else %}
-                            <form action="{% url 'account_login' %}">
-                                <button type="submit" class="btn btn-link">
-                                    <i class="fa-regular fa-thumbs-up"></i>
+                            <ul class="dropdown-menu" aria-labelledby="kebabMenu{{ post.pk }}" style="box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);">
+                                {% if user.is_authenticated and post.username == user %}
+                                    <li><a class="dropdown-item" href="#">Edit Post</a></li>
+                                {% else %}
+                                    <li><a class="dropdown-item" href="#">Report</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <a href="{% url 'kuhub:profile_view' username=post.username %}">
+                            {% with profile=post.username.profile %}
+                                <div class="d-flex align-items-center"> <!-- Use a flex container for alignment -->
+                                    <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                                    <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ post.username }}</h4>
+                                </div>
+                            {% endwith %}
+                        </a>
+                        <br>
+                        <p class="card-text">{{ post.post_content }}</p>
+                        <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 5px;"></i>{{ post.post_date }}</h6>
+                    </div>
+                    <div class="card-footer custom-footer">
+                        <div class="button-group">
+                            {% if user.is_authenticated %}
+                                <button type="button" class="btn btn-link" id="like-btn-{{ post.pk }}" data-content="{{ post.pk }}" onclick="like_button_click('{{ post.pk }}')">
+                                    <i class="{{ like_icon_styles|index:forloop.counter0 }}"></i>
                                 </button>
-                                <span>{{ post.total_likes }}</span>
-                                <button type="submit" class="btn btn-link">
-                                    <i class="fa-regular fa-thumbs-down"></i>
+                                <span id="likes-count-{{ post.pk }}">{{ post.total_likes }}</span>
+
+                                <button type="button" class="btn btn-link" id="dislike-btn-{{post.pk}}" data-content="{{ post.pk }}" onclick="dislike_button_click('{{ post.pk }}')">
+                                    <i class="{{ dislike_icon_styles|index:forloop.counter0 }}"></i>
                                 </button>
-                                <span>{{ post.total_dislikes }}</span>
-                            </form>
-                        {% endif %}
-                        <a href="{% url 'kuhub:post_detail' pk=post.pk %}" class="btn btn-link">See comments</a>
-                        <a href="{% url 'kuhub:report_post' pk=post.pk %}" class="btn btn-link">Report</a>
+                                <span id="dislikes-count-{{ post.pk }}">{{ post.total_dislikes }}</span>
+
+                            {% else %}
+                                <form action="{% url 'account_login' %}">
+                                    <button type="submit" class="btn btn-link">
+                                        <i class="fa-regular fa-thumbs-up"></i>
+                                    </button>
+                                    <span>{{ post.total_likes }}</span>
+                                    <button type="submit" class="btn btn-link">
+                                        <i class="fa-regular fa-thumbs-down"></i>
+                                    </button>
+                                    <span>{{ post.total_dislikes }}</span>
+                                </form>
+                            {% endif %}
+                            <a href="{% url 'kuhub:post_detail' pk=post.pk %}" class="btn btn-link">See comments</a>
+                            <a href="{% url 'kuhub:report_post' pk=post.pk %}" class="btn btn-link">Report</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+            <h1>You are not following anyone.</h1>
+        {% endif %}
     {% else %}
-        <h1>No posts are available.</h1>
+        <h1>Please login.</h1>
     {% endif %}
 </div>
 

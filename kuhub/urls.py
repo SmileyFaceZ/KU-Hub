@@ -1,5 +1,5 @@
 """Import path from django"""
-from django.urls import path
+from django.urls import path, re_path
 from django.views.generic import RedirectView
 from kuhub import views
 
@@ -31,9 +31,8 @@ urlpatterns = [
     path('following/', views.following_page, name='following_page'),
     path('gen-ed-list/', views.GenEdTypeListView.as_view(), name='gen_ed_type_list'),
     path('subject/<str:course_code>/', views.SubjectDetailView.as_view(), name='subject_detail'),
-    path('notifications/', views.NotificationView.as_view(), name='notifications'),
     path('post/<int:pk>/', views.post_detail, name='post_detail'),
     path('post/<int:pk>/edit/', views.edit_post, name='edit_post'),
     path('report/<int:pk>/', views.report_post, name='report_post'),
-
+    re_path(r'^.*/$', RedirectView.as_view(url='/kuhub/review-hub/', permanent=True), name='redirect_to_review_hub'),
 ]
