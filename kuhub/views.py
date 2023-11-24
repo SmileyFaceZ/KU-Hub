@@ -521,8 +521,8 @@ def group_event_create(request, group_id):
                 location=data['location'],
                 description=data['description'],
                 start_time=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
-                # strftime("%a. %d %b %Y %H:%M:%S")
                 end_time=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'),
+                show_time=f"{data['start_time'].strftime('%a. %d %b %Y %H:%M:%S')} - {data['end_time'].strftime('%a. %d %b %Y %H:%M:%S')}"
             )
             if data['is_meeting']:
                 try:
@@ -533,7 +533,7 @@ def group_event_create(request, group_id):
                                          start_datetime=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
                                          end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'))
                 except:
-                    messages.error("You have to login with google before using this feature")
+                    messages.error(request, "You have to login with google before using this feature")
                     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
             group_event.link = str(meet_link)
             group_event.save()
