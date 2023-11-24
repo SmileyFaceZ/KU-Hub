@@ -28,9 +28,15 @@ class HomePageView(generic.ListView):
     template_name = 'kuhub/home_page.html'
     context_object_name: str = 'followed_users_posts'
 
-    def get_queryset(self) -> QuerySet[Post]:
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            raise Http404("You must be logged in to view this page.")
+
         followed_users = UserFollower.objects.filter(follower=self.request.user).values_list('user_followed', flat=True)
         followed_users_posts = Post.objects.filter(username__in=followed_users).order_by('-post_date')
+
+        if not followed_users.exists():
+            messages.info(self.request, "You are not following anyone yet.")
 
         queryset = followed_users_posts
         self.filterset = PostFilter(self.request.GET, queryset=queryset)
@@ -225,15 +231,6 @@ class SubjectDetailView(generic.ListView):
                 "subject": subject.course_code + " " + subject.name_eng,
             }
         )
-
-
-class NotificationView(generic.ListView):
-    """Redirect users to notification page and show list of notification"""
-    template_name = 'kuhub/notification.html'
-    context_object_name = 'notifications_list'
-
-    def get_queryset(self):
-        return Notification.objects.filter(user=self.request.user).order_by("-id")
 
 
 @login_required
