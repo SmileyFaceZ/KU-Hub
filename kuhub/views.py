@@ -30,16 +30,17 @@ class HomePageView(generic.ListView):
 
     def get_queryset(self):
         if not self.request.user.is_authenticated:
-            raise Http404("You must be logged in to view this page.")
+            messages.info(self.request, "Please login first")
+            return Post.objects.none()
 
         followed_users = UserFollower.objects.filter(follower=self.request.user).values_list('user_followed', flat=True)
         followed_users_posts = Post.objects.filter(username__in=followed_users).order_by('-post_date')
 
         if not followed_users.exists():
             messages.info(self.request, "You are not following anyone yet.")
+            return followed_users_posts.none()
 
-        queryset = followed_users_posts
-        self.filterset = PostFilter(self.request.GET, queryset=queryset)
+        self.filterset = PostFilter(self.request.GET, queryset=followed_users_posts)
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
@@ -55,7 +56,7 @@ class HomePageView(generic.ListView):
             post.dislike_icon_style(self.request.user) for post in
             context['followed_users_posts']]
         context['profiles_list'] = profiles_list
-        context['form'] = self.filterset.form
+        context['form'] = getattr(self, 'filterset', None) and getattr(self.filterset, 'form', None) or None
 
         return context
 
