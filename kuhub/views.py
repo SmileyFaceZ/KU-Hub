@@ -30,32 +30,49 @@ class HomePageView(generic.ListView):
 
     def get_queryset(self):
         if not self.request.user.is_authenticated:
-            raise Http404("You must be logged in to view this page.")
+            messages.info(self.request, "Please login first")
+            return Post.objects.none()
 
         followed_users = UserFollower.objects.filter(follower=self.request.user).values_list('user_followed', flat=True)
         followed_users_posts = Post.objects.filter(username__in=followed_users).order_by('-post_date')
 
         if not followed_users.exists():
-            messages.info(self.request, "You are not following anyone yet.")
+            return followed_users_posts.none()
 
-        queryset = followed_users_posts
-        self.filterset = PostFilter(self.request.GET, queryset=queryset)
+        self.filterset = PostFilter(self.request.GET, queryset=followed_users_posts)
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
-        """Add like and dislike icon styles to context."""
+        """Add like and dislike icon styles and search form to context."""
         context = super().get_context_data(**kwargs)
 
-        profiles_list = [Profile.objects.filter(user=post.username).first()
-                         for post in context['followed_users_posts']]
+        # Check if the user is authenticated
+        if self.request.user.is_authenticated:
+            followed_users = UserFollower.objects.filter(follower=self.request.user).values_list('user_followed', flat=True)
+            followed_users_posts = Post.objects.filter(username__in=followed_users).order_by('-post_date')
 
-        context['like_icon_styles'] = [post.like_icon_style(self.request.user)
-                                       for post in context['followed_users_posts']]
-        context['dislike_icon_styles'] = [
-            post.dislike_icon_style(self.request.user) for post in
-            context['followed_users_posts']]
-        context['profiles_list'] = profiles_list
-        context['form'] = self.filterset.form
+            # Check if the user is following anyone
+            if not followed_users.exists():
+                messages.info(self.request, "You are not following anyone yet.")
+
+            queryset = followed_users_posts
+            self.filterset = PostFilter(self.request.GET, queryset=queryset)
+            context['followed_users_posts'] = self.filterset.qs
+            context['like_icon_styles'] = [post.like_icon_style(self.request.user) for post in context['followed_users_posts']]
+            context['dislike_icon_styles'] = [post.dislike_icon_style(self.request.user) for post in context['followed_users_posts']]
+
+        else:
+            # User is not authenticated, display a message
+            messages.info(self.request, "Please log in to see posts from people you follow.")
+
+            # Provide an empty queryset to prevent errors
+            context['followed_users_posts'] = Post.objects.none()
+
+        # Include search form in the context
+        context['form'] = getattr(self, 'filterset', None) and getattr(self.filterset, 'form', None)
+
+        # Include profiles list in the context
+        context['profiles_list'] = [Profile.objects.filter(user=post.username).first() for post in context['followed_users_posts']]
 
         return context
 
