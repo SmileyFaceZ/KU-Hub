@@ -108,7 +108,9 @@
                                     <ul>Description: {{ event.description }}</ul>
                                     <ul>Location: {{ event.location }}</ul>
                                     <ul>{{ event.show_time }}</ul>
-                                    <ul>Link: {{ event.link }}</ul>
+                                    {% if event.link and event.link != None %}
+                                        <ul>Link: <a href="{{ event.link }}">{{ event.link }}</a></ul>
+                                    {% endif %}
                                 </div>
                             </div>
                         {% endfor %}
