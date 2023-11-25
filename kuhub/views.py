@@ -331,6 +331,7 @@ class GroupDetail(generic.DetailView):
         if self.request.user.is_authenticated:
             context['events'] = self.object.groupevent_set.all()
             context['notes'] = self.object.note_set.all()
+            context['tasks'] = self.object.task_set.all()
         return context
 
 
@@ -634,7 +635,7 @@ def add_task(request, group_id):
         return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
 def change_task_status(request, task_id):
-    task = get_object_or_404(Group, pk=task_id)
+    task = get_object_or_404(Task, pk=task_id)
     group_id = task.group.id
     print(group_id)
     if request.method == 'POST':
