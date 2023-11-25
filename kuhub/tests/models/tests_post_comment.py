@@ -1,7 +1,6 @@
 import datetime
 
-from django.test import TestCase, Client
-from django.urls import reverse
+from django.test import TestCase
 from django.contrib.auth.models import User
 from django.utils import timezone
 from kuhub.models import Post, Tags, Subject, PostComments
