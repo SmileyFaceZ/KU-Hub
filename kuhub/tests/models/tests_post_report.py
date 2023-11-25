@@ -1,7 +1,7 @@
 import datetime
 from django.test import TestCase
 from django.contrib.auth.models import User
-from kuhub.models import Post, PostReport, Tags, Subject
+from kuhub.models import Post, PostReport, Tag, Subject
 
 
 class PostReportModelTests(TestCase):
@@ -9,7 +9,7 @@ class PostReportModelTests(TestCase):
     def setUp(self):
         # Create a user and post for testing
         self.user = User.objects.create_user(username='testuser', password='testpassword')
-        self.tag = Tags()
+        self.tag = Tag()
         self.tag.save()
         self.subject = Subject()
         self.subject.save()

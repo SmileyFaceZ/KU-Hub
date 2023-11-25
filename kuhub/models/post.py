@@ -42,7 +42,7 @@ class Post(models.Model):
         related_name='dislikes'
     )
     tag = models.ForeignKey(
-        'Tags',
+        'Tag',
         on_delete=models.CASCADE,
         default=1
     )

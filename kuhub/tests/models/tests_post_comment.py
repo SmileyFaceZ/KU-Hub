@@ -3,7 +3,7 @@ import datetime
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.utils import timezone
-from kuhub.models import Post, Tags, Subject, PostComments
+from kuhub.models import Post, Tag, Subject, PostComment
 
 
 class PostCommentModelTests(TestCase):
@@ -11,7 +11,7 @@ class PostCommentModelTests(TestCase):
 
     def setUp(self) -> None:
         self.user = User.objects.create_user(username="user", password="password")
-        self.tag = Tags()
+        self.tag = Tag()
         self.tag.save()
         self.subject = Subject()
         self.subject.save()
@@ -26,7 +26,7 @@ class PostCommentModelTests(TestCase):
     def test_comment_post_relationship(self):
         """Post id of comment object should match the post."""
         self.post.save()
-        comment = PostComments(
+        comment = PostComment(
             username=self.user,
             post_id=self.post,
             comment="Test comment"
@@ -37,7 +37,7 @@ class PostCommentModelTests(TestCase):
     def test_comment_user_relationship(self):
         """User of comment object should match the user."""
         self.post.save()
-        comment = PostComments(
+        comment = PostComment(
             username=self.user,
             post_id=self.post,
             comment="Test comment"
@@ -50,7 +50,7 @@ class PostCommentModelTests(TestCase):
         __str__() should return the comment content.
         """
         self.post.save()
-        comment = PostComments(
+        comment = PostComment(
             username=self.user,
             post_id=self.post,
             comment="Test comment."
@@ -63,7 +63,7 @@ class PostCommentModelTests(TestCase):
         """
         custom_date = datetime.datetime(2023, 1, 1, 12, 0, 0)
         self.post.save()
-        comment = PostComments(
+        comment = PostComment(
             username=self.user,
             post_id=self.post,
             comment="Test comment.",

@@ -2,6 +2,6 @@
 from django.db import models
 
 
-class Tags(models.Model):
-    """Class Tags table."""
+class Tag(models.Model):
+    """Class Tag table."""
     tag_text = models.CharField(max_length=200)

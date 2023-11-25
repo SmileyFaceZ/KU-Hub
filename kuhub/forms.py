@@ -1,10 +1,10 @@
 from django import forms
-from kuhub.models import Tags, Subject, Profile, PostComments
+from kuhub.models import Tag, Subject, Profile, PostComment
 
 
 class PostForm(forms.Form):
     TAG_CHOICES = [
-        (tag.tag_text, tag.tag_text) for tag in Tags.objects.all()
+        (tag.tag_text, tag.tag_text) for tag in Tag.objects.all()
     ]
 
     SUBJECT_CHOICES = [
@@ -14,7 +14,7 @@ class PostForm(forms.Form):
 
     tag_name = forms.ChoiceField(
         choices=TAG_CHOICES,
-        label='Tags',
+        label='Tag',
         widget=forms.Select(attrs={'class': 'form-select'})
     )
     subject = forms.ChoiceField(
@@ -43,7 +43,7 @@ class GroupForm(forms.Form):
     )
     tag_name = forms.CharField(
         widget=forms.Textarea(attrs={'cols': 70, 'rows': 1}),
-        label='Tags :',
+        label='Tag :',
         required=False
     )
     description = forms.CharField(
@@ -98,7 +98,7 @@ class EventForm(forms.Form):
 
 class CommentForm(forms.ModelForm):
     class Meta:
-        model = PostComments
+        model = PostComment
         fields = ['comment']
 
 

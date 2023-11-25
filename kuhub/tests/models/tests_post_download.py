@@ -2,7 +2,7 @@ import datetime
 from django.test import TestCase
 from django.utils import timezone
 from django.contrib.auth.models import User
-from kuhub.models import Post, Tags, PostDownload, Subject
+from kuhub.models import Post, Tag, PostDownload, Subject
 
 
 class PostDownloadModel(TestCase):
@@ -10,7 +10,7 @@ class PostDownloadModel(TestCase):
     def setUp(self) -> None:
         # Create a user, tag, and post for testing
         self.user = User.objects.create_user(username='testuser', password='testpassword')
-        self.tag = Tags()
+        self.tag = Tag()
         self.tag.save()
         self.subject = Subject()
         self.subject.save()

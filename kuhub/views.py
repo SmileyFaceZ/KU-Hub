@@ -17,8 +17,8 @@ from django.views import generic
 from kuhub.forms import EventForm
 from .calendar import create_event
 from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
-from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostReport,
-                          Group, GroupTag, GroupPassword, Subject, PostComments, GroupEvent, Note)
+from kuhub.models import (Post, PostDownload, Tag, Profile, UserFollower, PostReport,
+                          Group, GroupTag, GroupPassword, Subject, PostComment, GroupEvent, Note)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
@@ -418,7 +418,7 @@ def create_post(request: HttpRequest):
                 post_content=data['review'],
                 post_date=dt.datetime.now(),
                 subject=Subject.objects.get(course_code=data['subject']),
-                tag_id=Tags.objects.get(tag_text=data['tag_name'])
+                tag_id=Tag.objects.get(tag_text=data['tag_name'])
             )
 
             messages.success(request, 'Create Post Successfully!')
@@ -451,7 +451,7 @@ def create_post(request: HttpRequest):
         request,
         template_name='kuhub/form.html',
         context={
-            "tags_list": Tags.objects.all(),
+            "tags_list": Tag.objects.all(),
             "form": PostForm(),
         }
     )
@@ -635,7 +635,7 @@ from itertools import zip_longest  # Import zip_longest for handling different l
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    comments_list = PostComments.objects.filter(post_id=post)
+    comments_list = PostComment.objects.filter(post_id=post)
 
     if request.method == "POST":
         if request.user.is_authenticated:
@@ -643,10 +643,10 @@ def post_detail(request, pk):
 
             if form.is_valid():
                 data = form.cleaned_data['comment']
-                PostComments.objects.create(user=request.user,
-                                            post_id=post,
-                                            comment=data,
-                                            comment_date=dt.datetime.now())
+                PostComment.objects.create(user=request.user,
+                                           post_id=post,
+                                           comment=data,
+                                           comment_date=dt.datetime.now())
                 messages.success(request, 'Commented successfully!')
 
                 # Create new instance form to clear it.
@@ -705,7 +705,7 @@ def edit_post(request, pk):
         if form.is_valid():
             tag_name = form.cleaned_data['tag_name']
 
-            tag = get_object_or_404(Tags, tag_text=tag_name)
+            tag = get_object_or_404(Tag, tag_text=tag_name)
             post.tag = tag
 
             subject_code = form.cleaned_data['subject']

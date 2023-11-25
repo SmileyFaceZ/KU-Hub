@@ -4,14 +4,14 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils import timezone
-from kuhub.models import Post, Tags, Subject
+from kuhub.models import Post, Tag, Subject
 
 
 class PostModelTests(TestCase):
     def setUp(self) -> None:
         """Set up objects for tests."""
         self.user = User.objects.create_user(username="user", password="password")
-        self.tag = Tags()
+        self.tag = Tag()
         self.tag.save()
         self.subject = Subject()
         self.subject.save()
@@ -29,7 +29,7 @@ class PostModelTests(TestCase):
             username=self.user,
             post_content="future post",
             post_date=timezone.now() + datetime.timedelta(days=30),
-            tag_id=Tags(),
+            tag_id=Tag(),
             subject=Subject()
         )
         self.assertIs(future_post.was_published_recently_post(), False)
@@ -40,7 +40,7 @@ class PostModelTests(TestCase):
             username=self.user,
             post_content="old post",
             post_date=timezone.now() - datetime.timedelta(days=30),
-            tag_id=Tags(),
+            tag_id=Tag(),
             subject=Subject()
         )
         self.assertIs(old_post.was_published_recently_post(), False)
@@ -51,7 +51,7 @@ class PostModelTests(TestCase):
             username=self.user,
             post_content="recent post",
             post_date=timezone.now(),
-            tag_id=Tags(),
+            tag_id=Tag(),
             subject=Subject()
         )
         self.assertIs(recent_post.was_published_recently_post(), True)

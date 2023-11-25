@@ -2,7 +2,7 @@
 from django.db import models
 
 
-class PostComments(models.Model):
+class PostComment(models.Model):
     """
     A class representing the post's comments
 
