@@ -115,7 +115,7 @@ class Migration(migrations.Migration):
                 ('comment', models.TextField()),
                 ('comment_date', models.DateTimeField(blank=True, null=True, verbose_name='date commented')),
                 ('post_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='kuhub.post')),
-                ('username', models.ForeignKey(default=7, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(default=7, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.AddField(
@@ -125,12 +125,12 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='post',
-            name='tag_id',
+            name='tag',
             field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='kuhub.tags'),
         ),
         migrations.AddField(
             model_name='post',
-            name='username',
+            name='user',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),
         migrations.CreateModel(

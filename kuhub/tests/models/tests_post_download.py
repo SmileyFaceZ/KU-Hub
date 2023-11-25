@@ -24,7 +24,7 @@ class PostDownloadModel(TestCase):
 
     def test_str_representation(self):
         """
-        __str__() should return a string representation containing the tag, username, and post content.
+        __str__() should return a string representation containing the tag, user, and post content.
         """
         post_download = PostDownload(
             post_id=self.post,

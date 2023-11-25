@@ -10,18 +10,18 @@ class Post(models.Model):
     A class representing a user's post.
 
     Attributes:
-        username (ForeignKey): The user who created the post.
+        user (ForeignKey): The user who created the post.
         post_content (CharField): The content of the post.
         post_date (DateTimeField): The date and time when the post was created.
         liked (ManyToManyField): The number of likes the post.
         disliked (ManyToManyField): The number of dislikes the post.
-        tag_id (ForeignKey): The tag associated with the post.
+        tag (ForeignKey): The tag associated with the post.
         subject_id (ForeignKey): The subject associated with the post.
 
     Methods:
         was_published_recently(): Checks if the post was published recently.
         """
-    username = models.ForeignKey(
+    user = models.ForeignKey(
         'auth.User',
         on_delete=models.CASCADE
     )
@@ -41,7 +41,7 @@ class Post(models.Model):
         blank=True,
         related_name='dislikes'
     )
-    tag_id = models.ForeignKey(
+    tag = models.ForeignKey(
         'Tags',
         on_delete=models.CASCADE,
         default=1
@@ -86,7 +86,7 @@ class Post(models.Model):
             return 'far fa-thumbs-down'
 
     def __str__(self) -> str:
-        """Return a string with contain the tag, username, and post content."""
-        return self.tag_id.tag_text + ' - ' \
-               + str(self.username) + ' - ' \
+        """Return a string with contain the tag, user, and post content."""
+        return self.tag.tag_text + ' - ' \
+               + str(self.user) + ' - ' \
                + self.post_content

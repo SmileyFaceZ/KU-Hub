@@ -72,7 +72,7 @@ class HomePageView(generic.ListView):
         context['form'] = getattr(self, 'filterset', None) and getattr(self.filterset, 'form', None)
 
         # Include profiles list in the context
-        context['profiles_list'] = [Profile.objects.filter(user=post.username).first() for post in context['followed_users_posts']]
+        context['profiles_list'] = [Profile.objects.filter(user=post.user).first() for post in context['followed_users_posts']]
 
         return context
 
@@ -92,7 +92,7 @@ class ReviewHubView(generic.ListView):
         """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
 
-        profiles_list = [Profile.objects.filter(user=post.username).first()
+        profiles_list = [Profile.objects.filter(user=post.user).first()
                          for post in context['posts_list']]
 
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
@@ -116,7 +116,7 @@ class SummaryHubView(generic.ListView):
     context_object_name: str = 'summary_post_list'
 
     def get_queryset(self) -> QuerySet[PostDownload]:
-        """Return PostDownload objects with tag_id=2 and order by post_date."""
+        """Return PostDownload objects with tag=2 and order by post_date."""
         queryset = super().get_queryset()
         self.filterset = PostDownloadFilter(self.request.GET, queryset=queryset)
         return self.filterset.qs
@@ -125,7 +125,7 @@ class SummaryHubView(generic.ListView):
         """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
 
-        profiles_list = [Profile.objects.filter(user=post.post_id.username).first()
+        profiles_list = [Profile.objects.filter(user=post.post_id.user).first()
                          for post in context['summary_post_list']]
 
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
@@ -147,7 +147,7 @@ class TricksHubView(generic.ListView):
     context_object_name: str = 'tricks_list'
 
     def get_queryset(self) -> QuerySet[Post]:
-        """Return Post objects with tag_id=3 and order by post_date."""
+        """Return Post objects with tag=3 and order by post_date."""
         queryset = super().get_queryset()
         self.filterset = PostFilter(self.request.GET, queryset=queryset)
         return self.filterset.qs
@@ -156,7 +156,7 @@ class TricksHubView(generic.ListView):
         """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
 
-        profiles_list = [Profile.objects.filter(user=post.username).first()
+        profiles_list = [Profile.objects.filter(user=post.user).first()
                          for post in context['tricks_list']]
 
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
@@ -485,7 +485,7 @@ def profile_settings(request):
 
 
 def profile_view(request, username):
-    # Retrieve the user based on the username
+    # Retrieve the user based on the user
     user = get_object_or_404(User, username=username)
 
     # Retrieve the user's profile
@@ -653,8 +653,8 @@ def post_detail(request, pk):
     else:
         form = CommentForm()
 
-    owner_profile = Profile.objects.filter(user=post.username)
-    comments_profiles = [Profile.objects.filter(user=comment.username).first()
+    owner_profile = Profile.objects.filter(user=post.user)
+    comments_profiles = [Profile.objects.filter(user=comment.user).first()
                          for comment in comments_list]
     like_icon_styles = post.like_icon_style(request.user)
     dislike_icon_styles = post.dislike_icon_style(request.user)
@@ -686,7 +686,7 @@ def edit_post(request, pk):
         )
         return redirect("kuhub:review")
 
-    if request.user != post.username:
+    if request.user != post.user:
         print('do this')
         messages.warning(
             request,
@@ -702,7 +702,7 @@ def edit_post(request, pk):
             tag_name = form.cleaned_data['tag_name']
 
             tag = get_object_or_404(Tags, tag_text=tag_name)
-            post.tag_id = tag
+            post.tag = tag
 
             subject_code = form.cleaned_data['subject']
             subject = get_object_or_404(Subject, course_code=subject_code)
@@ -715,7 +715,7 @@ def edit_post(request, pk):
             return redirect('kuhub:post_detail', pk=post.pk)
     else:
         form = PostForm(
-            initial={'tag_name': post.tag_id.tag_text,
+            initial={'tag_name': post.tag.tag_text,
                      'subject': post.subject.course_code,
                      'review': post.post_content}
         )

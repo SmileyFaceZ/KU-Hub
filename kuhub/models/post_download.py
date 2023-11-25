@@ -53,7 +53,7 @@ class PostDownload(models.Model):
             return 'far fa-thumbs-down'
 
     def __str__(self) -> str:
-        """Return a string with contain the tag, username, and post content."""
+        """Return a string with contain the tag, user, and post content."""
         return self.post_id.tag_id.tag_text + ' - ' \
                + str(self.post_id.username) + ' - ' \
                + self.post_id.post_content
