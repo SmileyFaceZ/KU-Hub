@@ -39,3 +39,4 @@ sqlparse
 typing_extensions
 uritemplate
 urllib3
+firebase-admin
