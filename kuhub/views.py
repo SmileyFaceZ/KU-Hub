@@ -18,7 +18,7 @@ from kuhub.forms import EventForm
 from .calendar import create_event
 from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
 from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostReport,
-                          Group, GroupTags, GroupPassword, Subject, PostComments, GroupEvent, Note)
+                          Group, GroupTags, GroupPassword, Subject, PostComments, GroupEvent, Note, Task)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
@@ -623,6 +623,25 @@ def delete_note(request, note_id):
     messages.success(request, 'delete note successful')
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
+def add_task(request, group_id):
+    user = request.user
+    group = get_object_or_404(Group, pk=group_id)
+    if request.method == 'POST':
+        text = request.POST.get('task', '')
+        status = request.POST.get('status', '')
+        Task.objects.create(group=group, task_text=text, status=status, assign_user=user)
+        messages.success(request, 'create task successful')
+        return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
+def change_task_status(request, task_id):
+    task = get_object_or_404(Group, pk=task_id)
+    group_id = task.group.id
+    print(group_id)
+    if request.method == 'POST':
+        status = request.POST.get('status', '')
+        task.status = status
+        messages.success(request, 'Change status successful')
+    return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
 # views.py
 from django.shortcuts import render
