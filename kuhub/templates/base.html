@@ -16,9 +16,11 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="../node_modules/tw-elements/dist/js/tw-elements.umd.min.js"></script>
-
-
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    
+    
+    <!-- Nav bar -->  
     <nav class="navbar navbar-expand-lg shadow">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
@@ -26,7 +28,7 @@
             </button>
             <img src="{% static 'images/ku-icon.png' %}" alt="ku-icon" width="50" height="50" class="me-2 rounded-icon">
             <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                <nav class="nav nav-pills flex-column flex-sm-row" style="font-family: 'Poppins'; margin-left: 20px;">
+                <nav class="nav nav-pills" style="font-family: 'Poppins'; margin-left: 5%;">
                     {% url 'kuhub:review' as review_url %}
                     {% url 'kuhub:summary' as summary_url %}
                     {% url 'kuhub:tricks' as tricks_url %}
@@ -71,20 +73,30 @@
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:gen_ed_type_list' %}" style="color: black;">Gen-ed List</a>
                     {% endif %}
                 </nav>
-                <a href="{% url 'kuhub:profile_settings' %}" class="me-2 rounded-circle">
-                    {% if user.is_authenticated %}
-                        {% if user.profile.display_photo %}
-                            <img src="{{ user.profile.display_photo.url }}" alt="Profile Photo" width="45px" height="50" class="rounded-icon" style="margin-left: 23%; position: fixed;">
-                        {% else %}
-                            <img src="{% static 'images\default_profile.jpg' %}" alt="Default Profile Photo" width="45px" height="45px" class="rounded-icon" style="margin-left: 23%;">
-                        {% endif %}
-                    {% else %}
-                        <a href="{% url 'account_login' %}" class="btn btn-secondary me-3" style="font-family: 'Poppins'; margin-left: 20%;" role="button">Sign In</a>
-                        <a href="{% url 'account_signup' %}" class="btn btn-primary me-3" style="font-family: 'Poppins'" role="button">Sign Up</a>
-                    {% endif %}
-                </a>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'account_login' %}" class="btn btn-secondary me-3" style="font-family: 'Poppins'; margin-left: 20%;" role="button">Sign In</a>
+                    <a href="{% url 'account_signup' %}" class="btn btn-primary me-3" style="font-family: 'Poppins'" role="button">Sign Up</a>
+                {% endif %}
             </div>
-        </div>
+            {% if user.is_authenticated %}
+                    <div class="btn-group" style="font-family: 'Poppins';">
+                        <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if user.profile.display_photo %}
+                                <img src="{{ user.profile.display_photo.url }}" alt="Profile Photo" width="45px" height="45px" class="rounded-icon">   {{ user.username }}
+                            {% else %}
+                                <img src="{% static 'images\default_profile.jpg' %}" alt="Default Profile Photo" width="45px" height="45px" class="rounded-icon">  {{ user.username }}
+                            {% endif %}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'kuhub:profile_settings' %}">Profile Settings</a></li>
+                            <li><a class="dropdown-item" href="{% url 'kuhub:followers_page' %}">My Followers</a></li>
+                            <li><a class="dropdown-item" href="{% url 'kuhub:following_page' %}">My Following</a></li>
+                            <li><a class="dropdown-item" href="#">Display</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'account_logout' %}">Sign Out</a></li>
+                        </ul>
+                    </div>
+            {% endif %}
     </nav>
 
     <!--  When Click Menu Button  -->
