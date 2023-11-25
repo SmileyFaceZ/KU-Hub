@@ -23,9 +23,9 @@
             <div class="card p-3">
                 <div class="d-flex align-items-center">
                     {% if profile.display_photo %}
-                        <img src="{{ profile.display_photo.url }}" alt="Profile Photo" class="profile-photo" width="155">
+                        <img src="{{ profile.display_photo.url }}" alt="Profile Photo" class="float-start me-2 rounded-circle" width="100px" height="100px">
                     {% else %}
-                        <img src="{% static 'images\default_profile.jpg' %}" alt="Default Profile Photo" class="profile-photo" width="155">
+                        <img src="{% static 'images\default_profile.jpg' %}" alt="Default Profile Photo" class="float-start me-2 rounded-circle" width="100px" height="100px">
                     {% endif %}
                     <div class="welcome-user-info ml-3 w-100" style="margin-left: 5%;">
                         <h4 class="mb-0 mt-0">{{ user.username }}</h4>
