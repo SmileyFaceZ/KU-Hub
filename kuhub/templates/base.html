@@ -36,35 +36,35 @@
                     {% url 'kuhub:gen_ed_type_list' as gened_url %}
 
                     {% if request.path == review_url %}
-                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:review' %}" style="background-color: #D88C9A;">Review-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:review' %}" style="background-color: #36816C;">Review-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:summary' %}" style="color: black;">Summary-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:tricks' %}" style="color: black;">Tricks-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:groups' %}" style="color: black;">Group-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:gen_ed_type_list' %}" style="color: black;">Gen-ed List</a>
                     {% elif request.path == summary_url %}
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:review' %}" style="color: black;">Review-Hub</a>
-                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:summary' %}" style="background-color: #EDB87C;">Summary-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:summary' %}" style="background-color: #46AF6B;">Summary-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:tricks' %}" style="color: black;">Tricks-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:groups' %}" style="color: black;">Group-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:gen_ed_type_list' %}" style="color: black;">Gen-ed List</a>
                     {% elif request.path == tricks_url %}
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:review' %}" style="color: black;">Review-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:summary' %}" style="color: black;">Summary-Hub</a>
-                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:tricks' %}" style="background-color: #8CAFD4;">Tricks-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:tricks' %}" style="background-color: #5CC247;">Tricks-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:groups' %}" style="color: black;">Group-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:gen_ed_type_list' %}" style="color: black;">Gen-ed List</a>
                     {% elif request.path == groups_url %}
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:review' %}" style="color: black;">Review-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:summary' %}" style="color: black;">Summary-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:tricks' %}" style="color: black;">Tricks-Hub</a>
-                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:groups' %}" style="background-color: #B5A7DA;">Group-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:groups' %}" style="background-color: #198754;">Group-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:gen_ed_type_list' %}" style="color: black;">Gen-ed List</a>
                     {% elif request.path == gened_url %}
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:review' %}" style="color: black;">Review-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:summary' %}" style="color: black;">Summary-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:tricks' %}" style="color: black;">Tricks-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:groups' %}" style="color: black;">Group-Hub</a>
-                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:gen_ed_type_list' %}">Gen-ed List</a>
+                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:gen_ed_type_list' %}"style="background-color: #ADD421;">Gen-ed List</a>
                     {% else %}
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:review' %}" style="color: black;">Review-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:summary' %}" style="color: black;">Summary-Hub</a>
@@ -172,7 +172,8 @@
     {% block content %}
     {% endblock %}
     {% url 'kuhub:create_post' as create_post_url %}
-    {% if user.is_authenticated and request.path != create_post_url %}
+    {% url 'kuhub:edit_post' post.pk  as edit_post_url %}
+    {% if user.is_authenticated and request.path != create_post_url and request.path != edit_post_url%}
         <button type="button" id=create_post class="round-create"><a href="{% url 'kuhub:create_post' %}" style="text-decoration: none; color: white;">&#9998;</a></button>
     {% endif %}
 </body>

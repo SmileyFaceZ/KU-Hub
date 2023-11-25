@@ -6,14 +6,26 @@
 
 {% block content %}
 {% load static %}
+<link href='https://fonts.googleapis.com/css?family=Kanit' rel='stylesheet'>
 
 <style>
+    body {
+        background-color: #E1F1A7;
+    }
     .custom-border {
-        border: 2px solid #0b791a;
         border-radius: 10px;
         padding: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        background-color: #d9f7be;
+        background-color: #EDF7CA;
+    }
+    .accordion-button {
+        color: #000;
+        background-color: #ae8888;
+    }
+
+    .accordion-button:not(.collapsed) {
+        color: #000;
+        background-color: #ae8888;
     }
 </style>
 
@@ -26,46 +38,47 @@
     {% endfor %}
 {% endif %}
 
-<div class="container mt-4 custom-border">
+<!-- Search box -->
+<div class="container mt-4 custom-border shadow-lg" style="font-family: 'Poppins'; margin-bottom: 2%;">
     <form method="get" action="{% url 'kuhub:gen_ed_type_list' %}">
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <label class="form-label"><strong>{{ form.search.label }}:</strong></label>
-                <div class="input-group" style="max-width: 400px;">
-                    {{ form.search }}
+        <div class="form-group row">
+            <label class="form-label"><strong>{{ form.search.label }}:</strong></label>
+                <div class="input-group"> {{ form.search }}
                     <button type="submit" class="btn btn-success">
-                <i class="fa-solid fa-magnifying-glass fa-fade fa-xl"></i>
-                <span style="font-family: 'Poppins'">Search</span>
-            </button>
+                        <i class="fa-solid fa-magnifying-glass fa-fade fa-xl"></i>
+                        <span style="font-family: 'Poppins'">Search</span>
+                    </button>
                 </div>
-            </div>
-        </div>
+          </div>
     </form>
 </div>
 
+<!-- Container -->
 <div class="container mt-4" style="font-family: 'Poppins'">
     {% if type_list %}
         <ul class="nav nav-tabs" role="tablist">
             {% for type in type_list %}
                 <li class="nav-item">
-                    <a class="nav-link {% if forloop.first %}active{% endif %}" data-bs-toggle="tab" href="#{{ type|slugify }}">{{ type }}</a>
+                    <a class="nav-link" data-bs-toggle="tab" href="#{{ type|slugify }}">{{ type }}</a>
                 </li>
             {% endfor %}
         </ul>
         <div class="tab-content">
             {% for type in type_list %}
-                <div id="{{ type|slugify }}" class="container tab-pane fade {% if forloop.first %}show active{% endif %}"><br>
+                <div id="{{ type|slugify }}" class="container tab-pane"><br>
                     <div id="accordion-basic" class="accordion">
                         {% if subject_list %}
                             {% for subject in subject_list %}
                                 {% if subject.type == type %}
-                                    <div class="accordion-item m-4 ">
-                                        <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#{{ subject.course_code }}">
+                                    <div class="accordion-item m-4">
+                                        <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#{{ subject.course_code }}" aria-expanded="true" aria-controls="collapseOne">
                                             {{ subject.course_code }} {{ subject.name_eng }}
                                         </button>
-                                        <div id="{{ subject.course_code }}" class="panel-collapse collapse">
+                                        <div id="{{ subject.course_code }}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                             <div class="accordion-body">
-                                                <p>Thai Name : {{ subject.name_th }}</p>
+                                                <p>
+                                                    Thai Name : <span style="font-family: 'Kanit';">{{ subject.name_th }}</span>
+                                                </p>
                                                 <p>Unit : {{ subject.unit }}</p>
                                                 <p>Hour : {{ subject.hour }}</p>
                                                 <p>Faculty : {{ subject.faculty }}</p>
@@ -85,4 +98,6 @@
         <h1>No Subject are available.</h1>
     {% endif %}
 </div>
+
+
 {% endblock %}
