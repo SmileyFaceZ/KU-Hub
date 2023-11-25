@@ -19,9 +19,8 @@ class PostDownload(models.Model):
         related_name='downloads'
     )
     file = models.FileField(
-        upload_to='store/pdfs/',
         null=True,
-        blank=True
+        blank=True,
     )
     download_date = models.DateTimeField(
         'date downloaded',
