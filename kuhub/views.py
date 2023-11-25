@@ -637,10 +637,10 @@ def add_task(request, group_id):
 def change_task_status(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
     group_id = task.group.id
-    print(group_id)
     if request.method == 'POST':
         status = request.POST.get('status', '')
         task.status = status
+        task.save()
         messages.success(request, 'Change status successful')
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
