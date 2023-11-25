@@ -95,7 +95,7 @@ class Migration(migrations.Migration):
                 ('report_reason', models.CharField(max_length=200)),
                 ('report_date', models.DateTimeField(blank=True, null=True, verbose_name='date reported')),
                 ('report_count', models.IntegerField(default=1)),
-                ('post_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='kuhub.post')),
+                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='kuhub.post')),
             ],
         ),
         migrations.CreateModel(
@@ -105,7 +105,7 @@ class Migration(migrations.Migration):
                 ('file', models.FileField(blank=True, null=True, upload_to='store/pdfs/')),
                 ('download_date', models.DateTimeField(blank=True, null=True, verbose_name='date downloaded')),
                 ('download_count', models.IntegerField(default=0)),
-                ('post_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='downloads', to='kuhub.post')),
+                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='downloads', to='kuhub.post')),
             ],
         ),
         migrations.CreateModel(
@@ -114,7 +114,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('comment', models.TextField()),
                 ('comment_date', models.DateTimeField(blank=True, null=True, verbose_name='date commented')),
-                ('post_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='kuhub.post')),
+                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='kuhub.post')),
                 ('user', models.ForeignKey(default=7, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),

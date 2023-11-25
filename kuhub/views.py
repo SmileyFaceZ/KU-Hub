@@ -34,7 +34,7 @@ class HomePageView(generic.ListView):
             return Post.objects.none()
 
         followed_users = UserFollower.objects.filter(follower=self.request.user).values_list('user_followed', flat=True)
-        followed_users_posts = Post.objects.filter(username__in=followed_users).order_by('-post_date')
+        followed_users_posts = Post.objects.filter(user__in=followed_users).order_by('-post_date')
 
         if not followed_users.exists():
             return followed_users_posts.none()
@@ -48,8 +48,9 @@ class HomePageView(generic.ListView):
 
         # Check if the user is authenticated
         if self.request.user.is_authenticated:
-            followed_users = UserFollower.objects.filter(follower=self.request.user).values_list('user_followed', flat=True)
-            followed_users_posts = Post.objects.filter(username__in=followed_users).order_by('-post_date')
+            followed_users = UserFollower.objects.filter(follower=self.request.user).values_list('user_followed',
+                                                                                                 flat=True)
+            followed_users_posts = Post.objects.filter(user__in=followed_users).order_by('-post_date')
 
             # Check if the user is following anyone
             if not followed_users.exists():
@@ -58,8 +59,10 @@ class HomePageView(generic.ListView):
             queryset = followed_users_posts
             self.filterset = PostFilter(self.request.GET, queryset=queryset)
             context['followed_users_posts'] = self.filterset.qs
-            context['like_icon_styles'] = [post.like_icon_style(self.request.user) for post in context['followed_users_posts']]
-            context['dislike_icon_styles'] = [post.dislike_icon_style(self.request.user) for post in context['followed_users_posts']]
+            context['like_icon_styles'] = [post.like_icon_style(self.request.user) for post in
+                                           context['followed_users_posts']]
+            context['dislike_icon_styles'] = [post.dislike_icon_style(self.request.user) for post in
+                                              context['followed_users_posts']]
 
         else:
             # User is not authenticated, display a message
@@ -72,7 +75,8 @@ class HomePageView(generic.ListView):
         context['form'] = getattr(self, 'filterset', None) and getattr(self.filterset, 'form', None)
 
         # Include profiles list in the context
-        context['profiles_list'] = [Profile.objects.filter(user=post.user).first() for post in context['followed_users_posts']]
+        context['profiles_list'] = [Profile.objects.filter(user=post.user).first() for post in
+                                    context['followed_users_posts']]
 
         return context
 
@@ -125,7 +129,7 @@ class SummaryHubView(generic.ListView):
         """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
 
-        profiles_list = [Profile.objects.filter(user=post.post_id.user).first()
+        profiles_list = [Profile.objects.filter(user=post.post.user).first()
                          for post in context['summary_post_list']]
 
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
@@ -256,7 +260,7 @@ def join(request, group_id):
     Join Group button
     """
     user = request.user
-    group = get_object_or_404(Group,pk=group_id)
+    group = get_object_or_404(Group, pk=group_id)
     # if not user.email:
     #     messages.error(request, "Please add email in your profile")
     #     return redirect(reverse('kuhub:groups'))
@@ -344,7 +348,7 @@ def like_post(request: HttpRequest) -> JsonResponse:
                     'X-Requested-With') == 'XMLHttpRequest'):
             post_id = request.readline().decode('utf-8')
             js_post = json.loads(post_id)
-            post_obj = get_object_or_404(Post, id=js_post['post_id'])
+            post_obj = get_object_or_404(Post, id=js_post['post'])
 
             if user in post_obj.disliked.all():
                 post_obj.disliked.remove(user)
@@ -377,7 +381,7 @@ def dislike_post(request: HttpRequest) -> JsonResponse:
                     'X-Requested-With') == 'XMLHttpRequest'):
             post_id = request.readline().decode('utf-8')
             js_post = json.loads(post_id)
-            post_obj: Post = get_object_or_404(Post, id=js_post['post_id'])
+            post_obj: Post = get_object_or_404(Post, id=js_post['post'])
 
             if user in post_obj.liked.all():
                 post_obj.liked.remove(user)
@@ -410,7 +414,7 @@ def create_post(request: HttpRequest):
             print('data', data)
 
             post = Post.objects.create(
-                username=request.user,
+                user=request.user,
                 post_content=data['review'],
                 post_date=dt.datetime.now(),
                 subject=Subject.objects.get(course_code=data['subject']),
@@ -494,7 +498,7 @@ def profile_view(request, username):
     # Get followers and following counts
     following = UserFollower.objects.filter(user_followed=user)
     followers = UserFollower.objects.filter(follower=user)
-    posts_list = Post.objects.filter(username=user).order_by('-post_date')
+    posts_list = Post.objects.filter(user=user).order_by('-post_date')
 
     # Check if the current user is following the viewed profile
     is_following = False
@@ -578,11 +582,11 @@ def group_event_create(request, group_id):
             if data['is_meeting']:
                 try:
                     event, meet_link = create_event(request=request,
-                                         summary=data['summary'],
-                                         description=data['description'],
-                                         location=data['location'],
-                                         start_datetime=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
-                                         end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'))
+                                                    summary=data['summary'],
+                                                    description=data['description'],
+                                                    location=data['location'],
+                                                    start_datetime=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
+                                                    end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'))
                 except:
                     messages.error(request, "You have to login with google before using this feature")
                     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
@@ -593,7 +597,7 @@ def group_event_create(request, group_id):
     return render(
         request,
         template_name='kuhub/group_event.html',
-        context={'form': EventForm, 'group': group, 'user':user, 'is_google':is_google_user}
+        context={'form': EventForm, 'group': group, 'user': user, 'is_google': is_google_user}
     )
 
 
@@ -601,7 +605,7 @@ def group_event_delete(request, event_id):
     user = request.user
     event = get_object_or_404(GroupEvent, pk=event_id)
     group_id = event.group.id
-    #delete GroupEvent object
+    # delete GroupEvent object
     event.delete()
     messages.success(request, 'delete event successful')
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
@@ -639,7 +643,7 @@ def post_detail(request, pk):
 
             if form.is_valid():
                 data = form.cleaned_data['comment']
-                PostComments.objects.create(username=request.user,
+                PostComments.objects.create(user=request.user,
                                             post_id=post,
                                             comment=data,
                                             comment_date=dt.datetime.now())

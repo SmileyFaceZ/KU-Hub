@@ -7,13 +7,13 @@ class PostDownload(models.Model):
     A class representing downloads of content on the application.
 
     Attributes:
-        post_id(ForeignKey): ID of the post.
+        post(ForeignKey): ID of the post.
         file(FileField): PDF file(s) attached to the post.
         download_data(DateTimeField): Date when the user download file.
         download_count(IntegerField): Counts of downloads for each post.
 
     """
-    post_id = models.ForeignKey(
+    post = models.ForeignKey(
         'Post',
         on_delete=models.CASCADE,
         related_name='downloads'
@@ -32,28 +32,28 @@ class PostDownload(models.Model):
 
     def total_likes(self) -> int:
         """Return the total number of likes for a post."""
-        return self.post_id.liked.all().count()
+        return self.post.liked.all().count()
 
     def total_dislikes(self) -> int:
         """Return the total number of dislikes for a post."""
-        return self.post_id.disliked.all().count()
+        return self.post.disliked.all().count()
 
     def like_icon_style(self, user) -> str:
         """Return the style of the like icon when the user clicks the like."""
-        if user in self.post_id.liked.all():
+        if user in self.post.liked.all():
             return 'fa-solid fa-thumbs-up'
         else:
             return 'far fa-thumbs-up'
 
     def dislike_icon_style(self, user) -> str:
         """Return the style of the dislike icon when the user clicks the dislike."""
-        if user in self.post_id.disliked.all():
+        if user in self.post.disliked.all():
             return 'fa-solid fa-thumbs-down'
         else:
             return 'far fa-thumbs-down'
 
     def __str__(self) -> str:
         """Return a string with contain the tag, user, and post content."""
-        return self.post_id.tag_id.tag_text + ' - ' \
-               + str(self.post_id.username) + ' - ' \
-               + self.post_id.post_content
+        return self.post.tag_id.tag_text + ' - ' \
+               + str(self.post.username) + ' - ' \
+               + self.post.post_content

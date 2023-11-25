@@ -28,12 +28,12 @@ class PostReportModelTests(TestCase):
 
     # def test_number_of_report(self):
     #     report_1 = PostReport(
-    #         post_id=self.post1,
+    #         post=self.post1,
     #         report_reason="test report"
     #     )
     #     report_1.save()
     #     report_2 = PostReport(
-    #         post_id=self.post1,
+    #         post=self.post1,
     #         report_reason="test report 2"
     #     )
     #     report_2.save()
@@ -41,11 +41,11 @@ class PostReportModelTests(TestCase):
 
     def test_report_post_relationship(self):
         """
-        post_id should establish a ForeignKey relationship with the Post model.
+        post should establish a ForeignKey relationship with the Post model.
         """
         report = PostReport(
             post_id=self.post1,
             report_reason="Inappropriate content."
         )
         report.save()
-        self.assertEqual(report.post_id, self.post1)
+        self.assertEqual(report.post, self.post1)

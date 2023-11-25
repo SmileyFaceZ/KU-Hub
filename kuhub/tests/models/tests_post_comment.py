@@ -43,7 +43,7 @@ class PostCommentModelTests(TestCase):
             comment="Test comment"
         )
         comment.save()
-        self.assertEqual(comment.username, self.user)
+        self.assertEqual(comment.user, self.user)
 
     def test_comment_str_representation(self):
         """
