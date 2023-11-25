@@ -644,6 +644,14 @@ def change_task_status(request, task_id):
         messages.success(request, 'Change status successful')
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
+def delete_task(request, note_id):
+    task = get_object_or_404(Task, pk=note_id)
+    group_id = task.group.id
+    task.delete()
+    messages.success(request, 'delete task successful')
+    return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
+
 # views.py
 from django.shortcuts import render
 from itertools import zip_longest  # Import zip_longest for handling different lengths
