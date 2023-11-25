@@ -173,6 +173,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='group',
             name='group_tags',
-            field=models.ManyToManyField(to='kuhub.grouptags'),
+            field=models.ManyToManyField(to='kuhub.grouptag'),
         ),
     ]
