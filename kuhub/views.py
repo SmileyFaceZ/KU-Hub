@@ -18,7 +18,7 @@ from kuhub.forms import EventForm
 from .calendar import create_event
 from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
 from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostReport,
-                          Group, GroupTags, GroupPassword, Subject, PostComments, GroupEvent, Note)
+                          Group, GroupTag, GroupPassword, Subject, PostComments, GroupEvent, Note)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
@@ -294,7 +294,7 @@ def create_group(request: HttpRequest):
                     context={'form': GroupForm}
                 )
             # if not have the tag in groupTag object create it
-            group_tag, created = GroupTags.objects.get_or_create(tag_text=data['tag_name'])
+            group_tag, created = GroupTag.objects.get_or_create(tag_text=data['tag_name'])
             # create group object
             password = None
             if data['password']:

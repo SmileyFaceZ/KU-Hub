@@ -2,7 +2,7 @@
 from django.db import models
 
 
-class GroupTags(models.Model):
+class GroupTag(models.Model):
     """Class Tags table."""
     tag_text = models.CharField(max_length=200)
 
