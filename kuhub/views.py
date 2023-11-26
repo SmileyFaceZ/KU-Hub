@@ -16,6 +16,8 @@ from django.db.models import QuerySet, Count
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.views import generic
+
+from isp_project import settings
 from kuhub.forms import EventForm
 from .calendar import create_calendar, add_participate, create_event, delete_event
 from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
@@ -24,6 +26,11 @@ from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostR
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
+from firebase_admin import storage
+from datetime import timedelta
+from django.utils import timezone
+import os
+import re
 
 
 class ReviewHubView(generic.ListView):
@@ -73,9 +80,23 @@ class SummaryHubView(generic.ListView):
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
+        bucket = storage.bucket()
+        blobs = bucket.list_blobs(prefix='summary-file/')
+        file_store = {}
 
+        # Dict Format {filename: url} in folder summary-file/ in Firebase
+        for blob in blobs:
+            # Generate a signed URL for each file
+            if not blob.name.endswith('/'):
+                signed_url = blob.generate_signed_url(
+                    expiration=timedelta(seconds=300))
+                delete_folder = blob.name.replace('summary-file/', '')
+                file_store[delete_folder] = signed_url
+
+        # Contain Profile Name
         profiles_list = [Profile.objects.filter(user=post.post_id.username).first()
                          for post in context['summary_post_list']]
+
 
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
                                        for post in context['summary_post_list']]
@@ -84,6 +105,10 @@ class SummaryHubView(generic.ListView):
             context['summary_post_list']]
         context['profiles_list'] = profiles_list
         context['form'] = self.filterset.form
+
+        # Change file name into url
+        for i in context['summary_post_list']:
+            i.file = file_store[i.file.name]
 
         return context
 
@@ -373,7 +398,7 @@ def create_post(request: HttpRequest):
             post = Post.objects.create(
                 username=request.user,
                 post_content=data['review'],
-                post_date=dt.datetime.now(),
+                post_date=timezone.now(),
                 tag_id=Tags.objects.get(tag_text=data['tag_name'])
             )
 
@@ -383,12 +408,22 @@ def create_post(request: HttpRequest):
                 return redirect('kuhub:review')
 
             if data['tag_name'] == 'Summary-Hub':
+                uploaded_file = request.FILES.get('file_upload')
                 PostDownload.objects.create(
                     post_id=post,
-                    file=request.FILES.get('file_upload'),
-                    download_date=dt.datetime.now(),
+                    file=uploaded_file,
+                    download_date=timezone.now(),
                     download_count=0,
                 )
+                # Remove file if it already exists
+                if uploaded_file:
+                    clean_file_name = re.sub(r'\s+', '_', uploaded_file.name)
+                    clean_file_name = re.sub(r'[()]', '', clean_file_name)
+                    clean_file_path = os.path.join(settings.MEDIA_ROOT,
+                                                   clean_file_name)
+                    if os.path.exists(clean_file_path):
+                        os.remove(clean_file_path)
+
                 return redirect('kuhub:summary')
 
             if data['tag_name'] == 'Tricks-Hub':
