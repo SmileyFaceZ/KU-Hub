@@ -37,6 +37,21 @@ import re
 logger = logging.getLogger('kuhub')
 
 
+def separate_folder_firebase(folder: str):
+    bucket = storage.bucket()
+    blobs = bucket.list_blobs(prefix=folder)
+    file_store = {}
+    for blob in blobs:
+        # Generate a signed URL for each file
+        if not blob.name.endswith('/'):
+            signed_url = blob.generate_signed_url(
+                expiration=timedelta(seconds=300))
+            delete_folder = blob.name.replace(folder, '')
+            file_store[delete_folder] = signed_url
+
+    return file_store
+
+
 class ReviewHubView(generic.ListView):
     """Redirect to Review-Hub page for review posts."""
     queryset = Post.objects.all().filter(tag_id=1).order_by('-post_date')
@@ -64,6 +79,9 @@ class ReviewHubView(generic.ListView):
 
         context['form'] = self.filterset.form
 
+        for post in context['posts_list']:
+            post.username.profile.display_photo = separate_folder_firebase('profile/')[post.username.profile.display_photo]
+
         return context
 
 
@@ -82,26 +100,12 @@ class SummaryHubView(generic.ListView):
         self.filterset = PostDownloadFilter(self.request.GET, queryset=queryset)
         return self.filterset.qs
 
-    def separate_folder_firebase(self, folder: str):
-        bucket = storage.bucket()
-        blobs = bucket.list_blobs(prefix=folder)
-        file_store = {}
-        for blob in blobs:
-            # Generate a signed URL for each file
-            if not blob.name.endswith('/'):
-                signed_url = blob.generate_signed_url(
-                    expiration=timedelta(seconds=300))
-                delete_folder = blob.name.replace(folder, '')
-                file_store[delete_folder] = signed_url
-
-        return file_store
-
     def get_context_data(self, **kwargs):
         """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
 
-        file_store_summary = self.separate_folder_firebase('summary-file/')
-        file_store_profile = self.separate_folder_firebase('profile/')
+        file_store_summary = separate_folder_firebase('summary-file/')
+        file_store_profile = separate_folder_firebase('profile/')
 
         # Contain Profile Name
 
