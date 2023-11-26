@@ -153,6 +153,9 @@ class TricksHubView(generic.ListView):
         context['profiles_list'] = profiles_list
         context['form'] = self.filterset.form
 
+        for post in context['tricks_list']:
+            post.username.profile.display_photo = separate_folder_firebase('profile/')[post.username.profile.display_photo]
+
         return context
 
 

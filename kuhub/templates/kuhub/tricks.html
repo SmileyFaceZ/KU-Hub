@@ -94,9 +94,9 @@
                         </ul>
                     </div>
                     <a href="{% url 'kuhub:profile_view' username=post.username %}">
-                        {% with profile=post.username.profile %}
+                        {% with profile=post.username.profile.display_photo %}
                             <div class="d-flex align-items-center"> <!-- Use a flex container for alignment -->
-                                <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                                <img class="me-2 rounded-circle" src="{{ profile }}" width="45" height="45" alt="{{ post.username }}'s Profile">
                                 <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ post.username }}</h4>
                             </div>
                         {% endwith %}
