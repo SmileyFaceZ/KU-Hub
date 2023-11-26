@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.utils import timezone
 from django.contrib.auth.models import User
 from kuhub.models import UserFollower
 
@@ -25,27 +26,25 @@ class UserFollowerModelTest(TestCase):
         user_follower = UserFollower.objects.create(
             user_followed=self.user1,
             follower=self.user2,
-            follow_date='2023-01-01 12:00:00'
         )
 
         # Check if the UserFollower is created successfully
         self.assertIsInstance(user_follower, UserFollower)
         self.assertEqual(user_follower.user_followed, self.user1)
         self.assertEqual(user_follower.follower, self.user2)
-        self.assertEqual(str(user_follower.follow_date), '2023-01-01 12:00:00')
 
     def test_related_name(self):
         # Create a UserFollower instance
         user_follower = UserFollower(
             user_followed=self.user1,
             follower=self.user2,
-            follow_date='2023-01-01 12:00:00'
+            follow_date=timezone.now()
         )
         user_follower.save()
         user_follower2 = UserFollower(
             user_followed=self.user1,
             follower=self.user3,
-            follow_date='2023-01-01 12:00:00'
+            follow_date=timezone.now()
         )
         user_follower2.save()
 

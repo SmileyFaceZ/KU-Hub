@@ -52,7 +52,7 @@ class PostDownloadModel(TestCase):
         """
         download_date and download_count should take the provided values when set explicitly.
         """
-        custom_date = datetime.datetime(2023, 1, 1, 12, 0, 0)
+        custom_date = timezone.now()
         post_download = PostDownload(
             post_id=self.post,
             file='path/to/file.pdf',
