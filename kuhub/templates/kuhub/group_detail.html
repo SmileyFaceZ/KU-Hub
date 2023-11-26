@@ -112,11 +112,27 @@
                     <div class="card border border-dark border-3 m-2 rounded-3"
                          style="min-height: 40vh; max-height: 40vh; overflow-y: auto;">
                         <div class="card-header">
-                            Tasks
-                             <button type="submit" class="btn btn-primary rounded-circle btn-floating btn-xs"
-                                data-toggle="modal" data-target="#taskModal">
-                                <i class="fas fa-circle-plus"></i>
-                             </button>
+                            <div class="row">
+                                <div class="col-7">
+                                    Tasks
+                                     <button type="submit" class="btn btn-primary rounded-circle btn-floating btn-xs"
+                                        data-toggle="modal" data-target="#taskModal">
+                                        <i class="fas fa-circle-plus"></i>
+                                     </button>
+                                </div>
+                                <div class="col-2">
+                                    <form method="get" id="statusForm" style="position:absolute; left:50%; top:15px;">
+                                        <div id="id_status">{{ filter.form.as_p }}</div>
+                                        <script>
+                                            // Attach a change event listener to the dropdown
+                                            $('#id_status').change(function() {
+                                                $('#statusForm').submit();
+                                            });
+                                        </script>
+                                    </form>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="card-body">
                             {% for task in tasks %}

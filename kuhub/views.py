@@ -21,7 +21,7 @@ from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostR
                           Group, GroupTags, GroupPassword, Subject, PostComments, GroupEvent, Note, Task)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
-from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
+from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter, TaskFilter
 
 
 class HomePageView(generic.ListView):
@@ -325,13 +325,17 @@ class GroupDetail(generic.DetailView):
     def get_queryset(self):
         return Group.objects.all()
 
+    def get_filter_set(self):
+        return TaskFilter(self.request.GET, queryset=self.object.task_set.all())
+
     def get_context_data(self, **kwargs):
         """Return user'group data as contect data"""
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             context['events'] = self.object.groupevent_set.all()
             context['notes'] = self.object.note_set.all()
-            context['tasks'] = self.object.task_set.all()
+            context['filter'] = self.get_filter_set()
+            context['tasks'] = self.get_filter_set().qs
         return context
 
 
@@ -650,6 +654,7 @@ def delete_task(request, note_id):
     task.delete()
     messages.success(request, 'delete task successful')
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
 
 
 # views.py
