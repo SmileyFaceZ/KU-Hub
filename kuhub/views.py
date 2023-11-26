@@ -421,6 +421,7 @@ def dislike_post(request: HttpRequest) -> JsonResponse:
 @login_required
 def create_post(request: HttpRequest):
     """Create post of each tag type and redirect to each tag page."""
+    navbar_setting_profile(request)
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
