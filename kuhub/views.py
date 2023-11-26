@@ -29,8 +29,12 @@ from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
 from firebase_admin import storage
 from datetime import timedelta
 from django.utils import timezone
+import logging
+from django.db.utils import DataError
 import os
 import re
+
+logger = logging.getLogger('kuhub')
 
 
 class ReviewHubView(generic.ListView):
@@ -454,10 +458,30 @@ def profile_settings(request):
     profile = user.profile
 
     if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES, instance=user.profile)
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Changed successfully!')
+            try:
+                form.save()
+                display_photo_url = request.POST.get('display_photo_url')
+
+                if display_photo_url:
+                    profile.display_photo = display_photo_url
+                    profile.save()
+
+                    clean_file_name = re.sub(r'\s+', '_', display_photo_url)
+                    clean_file_name = re.sub(r'[()]', '', clean_file_name)
+                    clean_file_path = os.path.join(settings.MEDIA_ROOT,
+                                                   clean_file_name)
+
+                    if os.path.exists(clean_file_path):
+                        os.remove(clean_file_path)
+
+                messages.success(request, 'Profile updated successfully!')
+            except DataError as e:
+                logger.error(
+                    f'Error updating profile for user {user.username}: {e}')
+                messages.warning(request,
+                               'Error updating profile. The file name might be too long. Please try a shorter file name.')
             return redirect('kuhub:profile_settings')
 
     else:
@@ -466,6 +490,21 @@ def profile_settings(request):
     following = UserFollower.objects.filter(user_followed=user)
     followers = UserFollower.objects.filter(follower=user)
     biography = Profile.objects.filter(biography=profile.biography)
+
+    bucket = storage.bucket()
+    blobs = bucket.list_blobs(prefix='profile/')
+    file_store = {}
+
+    for blob in blobs:
+        # Generate a signed URL for each file
+        if not blob.name.endswith('/'):
+            signed_url = blob.generate_signed_url(
+                expiration=timedelta(seconds=300))
+            delete_folder = blob.name.replace('profile/', '')
+            file_store[delete_folder] = signed_url
+
+    # Change file name into url
+    profile.display_photo = file_store[profile.display_photo]
 
     return render(request,
                   template_name='kuhub/profile_settings.html',
@@ -666,7 +705,6 @@ def edit_post(request, pk):
         return redirect("kuhub:review")
 
     if request.user != post.username:
-        print('do this')
         messages.warning(
             request,
             f"You are not the owner of this post.❗️"
@@ -675,7 +713,6 @@ def edit_post(request, pk):
         return redirect('kuhub:post_detail', pk=post.pk)
 
     if request.method == "POST":
-        print('xxxxxxx')
         form = PostForm(request.POST)
         if form.is_valid():
             tag_name = form.cleaned_data['tag_name']

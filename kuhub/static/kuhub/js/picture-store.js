@@ -14,41 +14,40 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
-const fileUploadForm = document.getElementById("file-upload-form");
-const fileInput = document.getElementById("file-upload-input");
-const submitButton = document.getElementById("button_post");
-
-function cleanFileName(filename) {
-    // Replace spaces with underscores and remove parentheses
-    return filename.replace(/\s+/g, '_').replace(/[()]/g, '');
-}
+const fileInput = document.getElementById("id_display_photo"); // Update this ID to match your file input
+const fileUploadForm = document.getElementById("profile-edit-form");
+const submitButton = document.getElementById("button_save");
 
 fileUploadForm.addEventListener("submit", function(event) {
     event.preventDefault();
-
     const file = fileInput.files[0];
+
     if (file) {
-        console.log(file);
-
-        // Clean the file name
         const cleanedFileName = cleanFileName(file.name);
-        console.log(cleanedFileName);
-
-        // Use the cleaned file name for the Firebase storage reference
-        const fileref = ref(storage, 'summary-file/' + cleanedFileName);
+        const fileref = ref(storage, 'profile/' + cleanedFileName);
 
         submitButton.disabled = true;
         submitButton.value = 'Uploading...';
 
         uploadBytes(fileref, file).then((result) => {
             alert("File uploaded successfully!");
-            fileUploadForm.submit();
+
+            // Set the hidden input's value to the cleaned file name
+            const displayPhotoUrlInput = document.getElementById("id_display_photo_url");
+            displayPhotoUrlInput.value = cleanedFileName;
+
+            fileUploadForm.submit();    // Submit the form after file upload
         }).catch((error) => {
             alert("Error during file upload: " + error.message);
             submitButton.disabled = false;
-            submitButton.value = 'Post';
+            submitButton.value = 'Save';
         });
     } else {
-        alert("No file selected!");
+        fileUploadForm.submit();
     }
 });
+
+
+function cleanFileName(filename) {
+    return filename.replace(/\s+/g, '_').replace(/[()]/g, '');
+}
