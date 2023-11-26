@@ -533,7 +533,12 @@ def profile_settings(request):
             file_store[delete_folder] = signed_url
 
     # Change file name into url
-    profile.display_photo = file_store[profile.display_photo]
+    try:
+        profile.display_photo = file_store[profile.display_photo]
+    except KeyError:
+        Profile.objects.filter(user=user).update(display_photo='default_profile_picture.png')
+        update_profile = Profile.objects.get(user=user)
+        profile.display_photo = file_store[update_profile.display_photo]
 
     return render(request,
                   template_name='kuhub/profile_settings.html',
