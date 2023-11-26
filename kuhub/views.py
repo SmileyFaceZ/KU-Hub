@@ -52,6 +52,11 @@ def separate_folder_firebase(folder: str):
     return file_store
 
 
+def navbar_setting_profile(request):
+    request.user.profile.display_photo = separate_folder_firebase('profile/')\
+        [request.user.profile.display_photo]
+
+
 class ReviewHubView(generic.ListView):
     """Redirect to Review-Hub page for review posts."""
     queryset = Post.objects.all().filter(tag_id=1).order_by('-post_date')
@@ -78,6 +83,8 @@ class ReviewHubView(generic.ListView):
         context['profiles_list'] = profiles_list
 
         context['form'] = self.filterset.form
+
+        navbar_setting_profile(self.request)
 
         for post in context['posts_list']:
             post.username.profile.display_photo = separate_folder_firebase('profile/')[post.username.profile.display_photo]
@@ -108,12 +115,12 @@ class SummaryHubView(generic.ListView):
         file_store_profile = separate_folder_firebase('profile/')
 
         # Contain Profile Name
-
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
                                        for post in context['summary_post_list']]
         context['dislike_icon_styles'] = [
             post.dislike_icon_style(self.request.user) for post in
-            context['summary_post_list']]
+            context['summary_post_list']
+        ]
 
         context['form'] = self.filterset.form
 
@@ -121,6 +128,8 @@ class SummaryHubView(generic.ListView):
         for i in context['summary_post_list']:
             i.post_id.username.profile.display_photo = file_store_profile[i.post_id.username.profile.display_photo]
             i.file = file_store_summary[i.file.name]
+
+        navbar_setting_profile(self.request)
 
         return context
 
@@ -156,6 +165,8 @@ class TricksHubView(generic.ListView):
         for post in context['tricks_list']:
             post.username.profile.display_photo = separate_folder_firebase('profile/')[post.username.profile.display_photo]
 
+        navbar_setting_profile(self.request)
+
         return context
 
 
@@ -175,6 +186,8 @@ class GroupView(generic.ListView):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             context['user_groups'] = self.request.user.group_set.all()
+
+        navbar_setting_profile(self.request)
         return context
 
 
@@ -202,10 +215,9 @@ class GenEdTypeListView(generic.ListView):
             subject.type = subject.type.replace("_", " ")
 
         context['subject_list'] = subject_filter.qs
-        for i in subject_filter.qs:
-            print(i.type)
         context['form'] = subject_filter.form
 
+        navbar_setting_profile(self.request)
         return context
 
 
