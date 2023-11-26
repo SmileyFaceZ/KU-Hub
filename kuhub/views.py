@@ -737,6 +737,7 @@ def post_detail(request, pk):
 @login_required
 def edit_post(request, pk):
     """User can edit their own post content, tag and subject."""
+    navbar_setting_profile(request)
     try:
         post = get_object_or_404(Post, pk=pk)
     except Http404:
