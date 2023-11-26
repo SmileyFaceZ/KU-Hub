@@ -25,6 +25,7 @@ urlpatterns = [
     path('<int:note_id>/task/delete', views.delete_task, name='task_delete'),
     path('<int:task_id>/task/change_status', views.change_task_status, name='change_task_status'),
     path('<int:task_id>/task/assign_event', views.assign_task_in_event,name='assign_task_event'),
+    path('<int:task_id>/task/unassign_event', views.unassign_task,name='unassign_task_event'),
     path('<int:event_id>/delete', views.group_event_delete, name='event_delete'),
     path('create-group/', views.create_group, name='create_group'),
     path('<int:group_id>/join', views.join, name='join'),

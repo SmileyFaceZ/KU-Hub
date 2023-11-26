@@ -582,7 +582,8 @@ def group_event_create(request, group_id):
                 description=data['description'],
                 start_time=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
                 end_time=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'),
-                show_time=f"{data['start_time'].strftime('%a. %d %b %Y %H:%M:%S')} - {data['end_time'].strftime('%a. %d %b %Y %H:%M:%S')}"
+                show_time=f"{data['start_time'].strftime('%a. %d %b %Y %H:%M:%S')} - "
+                          f"{data['end_time'].strftime('%a. %d %b %Y %H:%M:%S')}"
             )
             if data['is_meeting']:
                 try:
@@ -791,4 +792,12 @@ def assign_task_in_event(request, task_id):
         task.event = event
         task.save()
         messages.success(request, 'assign to event successfully!')
+    return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
+def unassign_task(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    group_id = task.group.id
+    task.event = None
+    task.save()
+    messages.success(request, 'assign to event successfully!')
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
