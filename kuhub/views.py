@@ -61,6 +61,7 @@ class ReviewHubView(generic.ListView):
             post.dislike_icon_style(self.request.user) for post in
             context['posts_list']]
         context['profiles_list'] = profiles_list
+
         context['form'] = self.filterset.form
 
         return context
@@ -81,38 +82,41 @@ class SummaryHubView(generic.ListView):
         self.filterset = PostDownloadFilter(self.request.GET, queryset=queryset)
         return self.filterset.qs
 
-    def get_context_data(self, **kwargs):
-        """Add like and dislike icon styles to context."""
-        context = super().get_context_data(**kwargs)
+    def separate_folder_firebase(self, folder: str):
         bucket = storage.bucket()
-        blobs = bucket.list_blobs(prefix='summary-file/')
+        blobs = bucket.list_blobs(prefix=folder)
         file_store = {}
-
-        # Dict Format {filename: url} in folder summary-file/ in Firebase
         for blob in blobs:
             # Generate a signed URL for each file
             if not blob.name.endswith('/'):
                 signed_url = blob.generate_signed_url(
                     expiration=timedelta(seconds=300))
-                delete_folder = blob.name.replace('summary-file/', '')
+                delete_folder = blob.name.replace(folder, '')
                 file_store[delete_folder] = signed_url
 
-        # Contain Profile Name
-        profiles_list = [Profile.objects.filter(user=post.post_id.username).first()
-                         for post in context['summary_post_list']]
+        return file_store
 
+    def get_context_data(self, **kwargs):
+        """Add like and dislike icon styles to context."""
+        context = super().get_context_data(**kwargs)
+
+        file_store_summary = self.separate_folder_firebase('summary-file/')
+        file_store_profile = self.separate_folder_firebase('profile/')
+
+        # Contain Profile Name
 
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
                                        for post in context['summary_post_list']]
         context['dislike_icon_styles'] = [
             post.dislike_icon_style(self.request.user) for post in
             context['summary_post_list']]
-        context['profiles_list'] = profiles_list
+
         context['form'] = self.filterset.form
 
         # Change file name into url
         for i in context['summary_post_list']:
-            i.file = file_store[i.file.name]
+            i.post_id.username.profile.display_photo = file_store_profile[i.post_id.username.profile.display_photo]
+            i.file = file_store_summary[i.file.name]
 
         return context
 
