@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-<!-- Add this to your HTML head section -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 {% block title %}
@@ -67,6 +66,14 @@
                                     <option value="in progress">In progress</option>
                                     <option value="done">Done</option>
                                 </select>
+                            <label for="assign_to_event">Event assign</label>
+                            <select name="assign_to_event" id="assign_to_event">
+                                <option value="none" selected disabled hidden>Assign event</option>
+                                <option value="not assign" selected disabled hidden>None</option>
+                                {% for event in events %}
+                                    <option value="{{event.id}}">{{event.summary}}</option>
+                                {% endfor %}
+                            </select>
                             <input type="submit" value="Add">
                         </form>
                     </div>
@@ -261,7 +268,7 @@
                         {% for event in events %}
                             <div class="card border border-dark border-1 m-2 rounded-3" style="line-height: 1; margin-top: 10px;">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <span>Event: {{ event.summary }}</span>
+                                    <a href="{% url 'kuhub:event_detail' event.id%}">{{ event.summary }}</a>
                                     <form method="post" action="{% url 'kuhub:event_delete' event.id %}">
                                         {% csrf_token %}
                                         <input type="submit" class="btn btn-primary" value="delete">
@@ -386,7 +393,11 @@
             </div>
         </div>
     </div>
-
+<style>
+        #create_post {
+            display: none;
+        }
+    </style>
 <script>
     function replaceURLWithHTMLLinks() {
         var textElements = document.getElementsByClassName("textid");

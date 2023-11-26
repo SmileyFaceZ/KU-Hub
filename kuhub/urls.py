@@ -27,6 +27,7 @@ urlpatterns = [
     path('<int:task_id>/task/assign_event', views.assign_task_in_event,name='assign_task_event'),
     path('<int:task_id>/task/unassign_event', views.unassign_task,name='unassign_task_event'),
     path('<int:event_id>/delete', views.group_event_delete, name='event_delete'),
+    path('<int:pk>/event', views.EventDetail.as_view(), name='event_detail'),
     path('create-group/', views.create_group, name='create_group'),
     path('<int:group_id>/join', views.join, name='join'),
     path('liked/', views.like_post, name='like_post'),
