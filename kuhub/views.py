@@ -695,6 +695,7 @@ from itertools import zip_longest  # Import zip_longest for handling different l
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comments_list = PostComments.objects.filter(post_id=post)
+    navbar_setting_profile(request)
 
     if request.method == "POST":
         if request.user.is_authenticated:
@@ -783,7 +784,7 @@ def edit_post(request, pk):
 
 def report_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
-
+    navbar_setting_profile(request)
     if request.method == 'POST':
         form = ReportForm(request.POST)
         if form.is_valid():
