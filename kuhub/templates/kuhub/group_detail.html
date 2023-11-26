@@ -303,7 +303,9 @@
                                                     </span>
                                                 {% endif %}
                                                 {{task.task_text}}
-                                        </ul>
+                                            </ul>
+                                            {% empty %}
+                                            Don't have task.
                                         {% endfor %}
                                     </div>
                                 </div>
