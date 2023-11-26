@@ -3,8 +3,10 @@
 {% block title %}
     <title>Review-Hub</title>
 {% endblock %}
+<script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
 
 {% block content %}
+{% load custom_filters %}
 {% load static %}
 <style>
     body {
@@ -26,33 +28,81 @@
     <h3><span class="badge rounded-pill shadow p-3 d-flex justify-content-center" style="font-family: 'Poppins'; margin-top: 5%; margin-bottom: 3%;font-weight: normal; background-color: #36816C;">{{ subject }}</span></h3>
     <!-- Post Content -->
     {% for post in course_code_post %}
-        <div class="card border border-1 rounded-4">
-            <div class="card-header">
+    {% if post.tag_id.tag_text == 'Summary-Hub' %}
+    <div class="card border border-1 rounded-4">
+        <div class="card-header">
+            <div class="tag-text">
                 {% if post.was_published_recently_post %}
-                    <span class="badge" style="background-color: red; text-align: center; margin-right: 5px;">New!</span>
+                    <span class="badge rounded-pill text-bg-danger" style="text-align: center; margin-right: 5px;">New!</span>
                 {% endif %}
-                {{ post.tag_id.tag_text }} |
-                <a href="{% url 'kuhub:subject_detail' post.subject.course_code %}">{{ post.subject.course_code }} {{ post.subject.name_eng }}</a> |
-                <a href="{% url 'kuhub:gen_ed_type_list' %}#{{ post.subject.type|slugify }}">{{ post.subject.type }}</a>
-            </div>
-            <div class="card-body position-relative">
-                <div class="dropdown position-absolute top-0 end-0">
-                    <!-- Dropdown Menu -->
-                </div>
-                <a href="{% url 'kuhub:profile_view' username=post.username %}" style="text-decoration-line: none;">
-                    {% with profile=post.username.profile %}
-                        <div class="d-flex align-items-center">
-                            <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'kuhub\static\images\default_profile.jpg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
-                            <h4 class="card-title" style="font-weight: 600; margin-bottom: 0;">{{ post.username }}</h4>
-                        </div>
-                    {% endwith %}
-                </a>
-                <br>
-                <p class="card-text">{{ post.post_content }}</p>
-                <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 10px;"></i>{{ post.post_date }}</h6>
+                {{ post.post_id.tag_id.tag_text }} |
+                <a href="#">{{ post.post_id.subject.course_code }} {{ post.post_id.subject.name_eng }}</a> |
+                <a href="{% url 'kuhub:gen_ed_type_list' %}#{{ post.post_id.subject.type|slugify }}">{{ post.post_id.subject.type }}</a>
             </div>
         </div>
-        <br>
+        <div class="card-body position-relative">
+            <div class="dropdown position-absolute top-0 end-0">
+                <button class="btn btn-link kebab-menu" type="button" id="kebabMenu{{ post.pk }}" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="kebabMenu{{ post.pk }}" style="box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);">
+                    {% if user.is_authenticated and post.username == user %}
+                        <li><a class="dropdown-item" href="{% url 'kuhub:edit_post' post.pk %}">Edit Post</a></li>
+                    {% else %}
+                        <li><a class="dropdown-item" href="{% url 'kuhub:report_post' pk=post.pk %}">Report</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <a href="{% url 'kuhub:profile_view' username=post.post_id.username %}" style="text-decoration-line: none;">
+                {% with profile=post.post_id.username.profile %}
+                    <div class="d-flex align-items-center"> <!-- Use a flex container for alignment -->
+                        <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'kuhub\static\images\default_profile.jpg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                        <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ post.post_id.username }}</h4>
+                    </div>
+                {% endwith %}
+            </a>
+            <br>
+            <p class="card-text">{{ post.post_id.post_content }}</p>
+            <p class="card-text">
+                <a href="{{ post.file.url }}" class="btn btn-outline-primary" target="_blank">View File</a>
+                <a href="{{ post.file.url }}" class="btn btn-outline-warning" id="download_link" download>Download File</a>
+            </p>
+            <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 5px;"></i>{{ post.post_id.post_date }}</h6>
+
+        </div>
+        <div class="card-footer custom-footer">
+            <div class="button-group">
+                {% if user.is_authenticated %}
+                    <button type="button" class="btn btn-link" id="like-btn-{{ post.post_id.pk }}" data-content="{{ post.post_id.pk }}" onclick="like_button_click('{{ post.post_id.pk }}')">
+                        <i class="{{ like_icon_styles|index:forloop.counter0 }}"></i>
+                    </button>
+                    <span id="likes-count-{{ post.post_id.pk }}">{{ post.total_likes }}</span>
+
+                    <button type="button" class="btn btn-link" id="dislike-btn-{{post.post_id.pk}}" data-content="{{ post.post_id.pk }}" onclick="dislike_button_click('{{ post.post_id.pk }}')">
+                        <i class="{{ dislike_icon_styles|index:forloop.counter0 }}"></i>
+                    </button>
+                    <span id="dislikes-count-{{ post.post_id.pk }}">{{ post.total_dislikes }}</span>
+                {% else %}
+                    <form action="{% url 'account_login' %}">
+                        <button type="submit" class="btn btn-link">
+                            <i class="fa-regular fa-thumbs-up"></i>
+                        </button>
+                        <span>{{ post.total_likes }}</span>
+                        <button type="submit" class="btn btn-link">
+                            <i class="fa-regular fa-thumbs-down"></i>
+                        </button>
+                        <span>{{ post.total_dislikes }}</span>
+                    </form>
+                {% endif %}
+                <a href="{% url 'kuhub:post_detail' pk=post.post_id.pk %}" class="btn btn-link">See comments</a>
+            </div>
+        </div>
+    </div>
+    <!-- {% elif post.tag_id.tag_text == 'Review-Hub'}
+    {% elif post.tag_id.tag_text == 'Tricks-Hub'} -->
+    {% endif %}
     {% endfor %}
 </div>
+
+
 {% endblock %}
