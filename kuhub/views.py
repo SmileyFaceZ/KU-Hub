@@ -724,6 +724,11 @@ def post_detail(request, pk):
     # Use zip_longest to handle different lengths
     comments_and_profiles = zip_longest(comments_list, comments_profiles)
 
+    post = Post.objects.get(pk=pk)
+    file_name = post.username.profile.display_photo
+    file = separate_folder_firebase('profile/')[file_name]
+    post.username.profile.display_photo = file
+
     context = {
         'post': post,
         'comments_and_profiles': comments_and_profiles,
