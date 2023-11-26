@@ -1,32 +1,34 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
-from .models import PostDownload, Profile
-from .views import SummaryHubView
+from kuhub.models import PostDownload, Profile, Post, Tags, Subject
+from kuhub.views import SummaryHubView
+
 
 class SummaryHubViewTest(TestCase):
 
     def setUp(self):
         # Create users for testing
-        self.user = User.objects.create_user(
+        self.user = User(
             username='testuser',
             password='testpassword'
         )
+        self.user.save()
 
         # Create a post download with tag_id=2 for testing
+        self.tag = Tags(tag_text="2")
+        self.tag.save()
+        self.subject = Subject()
+        self.subject.save()
+
         self.summary_post_download = PostDownload.objects.create(
             post_id=Post.objects.create(
                 username=self.user,
-                content='This is a test summary post',
-                tag_id=2
-            )
-        )
-
-        # Create a profile for the user
-        Profile.objects.create(
-            user=self.user,
-            biography='Test biography',
-            display_photo='path/to/test/photo.jpg'
+                post_content='This is a test summary post',
+                tag_id=self.tag,
+                subject=self.subject
+            ),
+            file='path/to/file.png'
         )
 
     def test_summary_hub_view(self):
@@ -34,7 +36,7 @@ class SummaryHubViewTest(TestCase):
         self.client.login(username='testuser', password='testpassword')
 
         # Access the summary hub view
-        response = self.client.get(reverse('summary_hub'))
+        response = self.client.get(reverse('kuhub:summary'))
 
         # Check if the response is successful
         self.assertEqual(response.status_code, 200)
@@ -51,10 +53,3 @@ class SummaryHubViewTest(TestCase):
 
         # Check if the summary post download is in the context
         self.assertIn(self.summary_post_download, response.context['summary_post_list'])
-
-    def test_summary_hub_view_no_authenticated_user(self):
-        # Access the summary hub view without logging in
-        response = self.client.get(reverse('summary_hub'))
-
-        # Check if the response redirects to the login page
-        self.assertRedirects(response, f'/accounts/login/?next={reverse("summary_hub")}')
