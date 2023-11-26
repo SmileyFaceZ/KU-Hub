@@ -150,14 +150,14 @@
                                         <div class="row">
                                             <div class="col-1 item-center">
                                                 {% if task.status == 'todo' %}
-                                                    <span class="bi rounded-circle bi-xs" style=" color: transparent;
+                                                    <span id="todo" class="bi rounded-circle bi-xs" style=" color: transparent;
                                                                                                                 -webkit-text-stroke-color: rgb(32, 151, 72);
                                                                                                                 background-image: -webkit-linear-gradient(top, rgb(255, 41, 105), rgb(89, 39, 75));
                                                                                                                 width: 20px; height:20px; text-align:center; display: inline-block;">
                                                         1
                                                     </span>
                                                 {% elif task.status == 'done' %}
-                                                    <span class="bi rounded-circle bi-xs" style=" color: transparent;
+                                                    <span id="done" class="bi rounded-circle bi-xs" style=" color: transparent;
                                                                                                                 -webkit-text-stroke-color: rgb(32, 151, 72);
                                                                                                                 background-image: -webkit-linear-gradient(top, rgb(41, 255, 159), rgb(39, 85, 89));
                                                                                                                 width: 20px; height:20px;
@@ -165,7 +165,7 @@
                                                         1
                                                     </span>
                                                 {% elif task.status == 'in progress' %}
-                                                    <span class="bi rounded-circle bi-xs" style=" color: transparent;
+                                                    <span id="progress" class="bi rounded-circle bi-xs" style=" color: transparent;
                                                                                                                 -webkit-text-stroke-color: rgb(32, 151, 72);
                                                                                                                 background-image: -webkit-linear-gradient(top, rgb(255, 252, 163), rgb(209, 153, 0));;
                                                                                                                 width: 20px; height:20px;
@@ -223,6 +223,22 @@
                                                     </script>
                                                 </form>
                                             </div>
+                                                <form id="eventForm{{task.id}}" action="{% url 'kuhub:assign_task_event' task.id %}" method="post">
+                                                    {% csrf_token %}
+                                                    <select name="assign_to_event" id="eventSelect{{task.id}}">
+                                                        <option value="none" selected disabled hidden>Assign to event</option>
+                                                        {% for event in events %}
+                                                            <option value="{{event.id}}">{{event.summary}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <script>
+                                                        // Attach a change event listener to the dropdown
+                                                        $('#eventSelect{{task.id}}').change(function() {
+                                                            // Submit the form when the dropdown value changes
+                                                            $('#eventForm{{task.id}}').submit();
+                                                        });
+                                                    </script>
+                                                </form>
                                         </div>
                                     </div>
                                 </div>
@@ -254,6 +270,42 @@
                                     {% if event.link and event.link != None %}
                                         <ul>Link: <a href="{{ event.link }}">{{ event.link }}</a></ul>
                                     {% endif %}
+                                    <button class="btn btn-link center" data-toggle="collapse" data-target="#eventFooter{{ event.id }}" aria-expanded="true" aria-controls="cardFooter">
+                                        task
+                                    </button>
+                                </div>
+                                <div id="eventFooter{{ event.id }}" class="collapse">
+                                    <div class="card-footer">
+                                        {% for task in event.task_set.all %}
+                                        <ul>
+                                            {% if task.status == 'todo' %}
+                                                    <span class="bi rounded-circle bi-xs" style=" color: transparent;
+                                                                                                                -webkit-text-stroke-color: rgb(32, 151, 72);
+                                                                                                                background-image: -webkit-linear-gradient(top, rgb(255, 41, 105), rgb(89, 39, 75));
+                                                                                                                width: 20px; height:20px; text-align:center; display: inline-block;">
+                                                        1
+                                                    </span>
+                                                {% elif task.status == 'done' %}
+                                                    <span class="bi rounded-circle bi-xs" style=" color: transparent;
+                                                                                                                -webkit-text-stroke-color: rgb(32, 151, 72);
+                                                                                                                background-image: -webkit-linear-gradient(top, rgb(41, 255, 159), rgb(39, 85, 89));
+                                                                                                                width: 20px; height:20px;
+                                                                                                                text-align:center; display: inline-block;">
+                                                        1
+                                                    </span>
+                                                {% elif task.status == 'in progress' %}
+                                                    <span class="bi rounded-circle bi-xs" style=" color: transparent;
+                                                                                                                -webkit-text-stroke-color: rgb(32, 151, 72);
+                                                                                                                background-image: -webkit-linear-gradient(top, rgb(255, 252, 163), rgb(209, 153, 0));;
+                                                                                                                width: 20px; height:20px;
+                                                                                                                text-align:center; display: inline-block;">
+                                                        1
+                                                    </span>
+                                                {% endif %}
+                                                {{task.task_text}}
+                                        </ul>
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
                         {% endfor %}

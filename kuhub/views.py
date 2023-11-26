@@ -257,9 +257,6 @@ def join(request, group_id):
     """
     user = request.user
     group = get_object_or_404(Group,pk=group_id)
-    # if not user.email:
-    #     messages.error(request, "Please add email in your profile")
-    #     return redirect(reverse('kuhub:groups'))
 
     if user in group.group_member.all():
         messages.error(request, "You already a member of this group")
@@ -783,3 +780,15 @@ def report_post(request, pk):
         form = ReportForm()
 
     return render(request, 'kuhub/report_post.html', {'form': form, 'post': post})
+
+def assign_task_in_event(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    group_id = task.group.id
+    if request.method == 'POST':
+        event_id = request.POST.get('assign_to_event', '')
+        print(event_id)
+        event = get_object_or_404(GroupEvent, pk=event_id)
+        task.event = event
+        task.save()
+        messages.success(request, 'assign to event successfully!')
+    return redirect(reverse('kuhub:group_detail', args=(group_id,)))
