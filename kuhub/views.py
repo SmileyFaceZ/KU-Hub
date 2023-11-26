@@ -53,8 +53,12 @@ def separate_folder_firebase(folder: str):
 
 
 def navbar_setting_profile(request):
-    request.user.profile.display_photo = separate_folder_firebase('profile/')\
-        [request.user.profile.display_photo]
+    try:
+        request.user.profile.display_photo = (
+            separate_folder_firebase('profile/'))\
+            [request.user.profile.display_photo]
+    except AttributeError:
+        return None
 
 
 class ReviewHubView(generic.ListView):
@@ -558,6 +562,10 @@ def profile_view(request, username):
     if request.user.is_authenticated:
         is_following = request.user.follower.filter(user_followed=user).exists()
 
+    file_store_profile = separate_folder_firebase('profile/')
+    for post in posts_list:
+        post.username.profile = file_store_profile[post.username.profile]
+
     context = {
         'profile': profile,
         'followers_count': following,
@@ -566,6 +574,8 @@ def profile_view(request, username):
         'user': request.user,
         'posts_list': posts_list,
     }
+
+    navbar_setting_profile(request)
 
     return render(request, 'kuhub/profile.html', context)
 
