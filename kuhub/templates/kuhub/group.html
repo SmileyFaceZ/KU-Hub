@@ -55,11 +55,14 @@
             {% for group in group_list %}
             <div class="col-md-3">
                         <div class="card border border-1 rounded-4" style="max-width: 23rem;">
-                            {% if group.was_published_recently_post %}
-                                <div class="card-header">
+                            <div class="card-header">
+                                {% if group.was_published_recently_post %}
                                     <span class="badge rounded-pill text-bg-danger" style="text-align: center; margin-right: 5px;">New!</span>
-                                </div>
-                            {% endif %}
+                                {% endif %}
+                                {% for tag in group.group_tags.all %}
+                                <span class="badge rounded-pill text-bg" style="color: white !important; background-color: #4BAA7F !important;">{{ tag.tag_text }}</span>
+                                {% endfor %}
+                            </div>
                             <div class="card-body">
                                 <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ group.group_name }}</h4>
                                 <br>
