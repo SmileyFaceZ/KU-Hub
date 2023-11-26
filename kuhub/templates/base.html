@@ -69,7 +69,7 @@
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:review' %}" style="color: black;">Review-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:summary' %}" style="color: black;">Summary-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:tricks' %}" style="color: black;">Tricks-Hub</a>
-                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:groups' %}" style="background-color: #95D85A;">Group-Hub</a>
+                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{% url 'kuhub:groups' %}" style="background-color: #8AD449;">Group-Hub</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:gen_ed_type_list' %}" style="color: black;">Gen-ed List</a>
                     {% elif request.path == gened_url %}
                         <a class="flex-sm-fill text-sm-center nav-link" href="{% url 'kuhub:home' %}" style="color: black;">Home</a>
@@ -105,7 +105,6 @@
                             <li><a class="dropdown-item" href="{% url 'kuhub:profile_settings' %}">Profile Settings</a></li>
                             <li><a class="dropdown-item" href="{% url 'kuhub:followers_page' %}">My Followers</a></li>
                             <li><a class="dropdown-item" href="{% url 'kuhub:following_page' %}">My Following</a></li>
-                            <li><a class="dropdown-item" href="#">Display</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'account_logout' %}">Sign Out</a></li>
                         </ul>
@@ -199,10 +198,5 @@
 <body class="background">
     {% block content %}
     {% endblock %}
-    {% url 'kuhub:create_post' as create_post_url %}
-    {% url 'kuhub:edit_post' post.pk  as edit_post_url %}
-    {% if user.is_authenticated and request.path != create_post_url and request.path != edit_post_url %}
-        <button type="button" id=create_post class="round-create"><a href="{% url 'kuhub:create_post' %}" style="text-decoration: none; color: white;">&#9998;</a></button>
-    {% endif %}
 </body>
 </html>

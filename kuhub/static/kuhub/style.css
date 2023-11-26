@@ -77,7 +77,7 @@
 .card-title {
     margin-top: 13px;
     color: rgb(29, 29, 42);
-    text-decoration: none;
+    text-decoration-line: none;
 }
 .card-subtitle {
     text-align: end;

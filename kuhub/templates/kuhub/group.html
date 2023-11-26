@@ -104,7 +104,7 @@
                                                     <form method="post" action="{% url 'kuhub:join' group.id %}">
                                                         {% csrf_token %}
                                                         <div class="row">
-                                                            <div class="col-12">
+                                                            <div class="d-flex justify-content-end" style="margin-top: 10px;">
                                                                 <input type="submit" class="btn btn-primary" value="Join">
                                                             </div>
                                                         </div>

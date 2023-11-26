@@ -66,8 +66,8 @@
             </div>
         </div>
 
-        <div class="col-md-12 mt-3">
-            <button type="submit" class="btn btn-success">
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-success" style="padding: 5px 30px;">
                 <i class="fa-solid fa-magnifying-glass fa-fade fa-xl"></i>
                 <span style="font-family: 'Poppins'">Search</span>
             </button>
@@ -103,7 +103,7 @@
                             {% endif %}
                         </ul>
                     </div>
-                    <a href="{% url 'kuhub:profile_view' username=post.post_id.username %}">
+                    <a href="{% url 'kuhub:profile_view' username=post.post_id.username %}" style="text-decoration-line: none;">
                         {% with profile=post.post_id.username.profile %}
                             <div class="d-flex align-items-center"> <!-- Use a flex container for alignment -->
                                 <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'kuhub\static\images\default_profile.jpg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
@@ -154,6 +154,9 @@
     {% endif %}
 
 </div>
+{% if user.is_authenticated %}
+    <button type="button" id=create_post class="round-create"><a href="{% url 'kuhub:create_post' %}" style="text-decoration: none; color: white;">&#9998;</a></button>
+{% endif %}
 
 <link rel="stylesheet" href="{% static 'kuhub/style.css' %}">
 

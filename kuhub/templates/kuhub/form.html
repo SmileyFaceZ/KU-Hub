@@ -10,12 +10,12 @@
 
 <style>
     body {
-        background-color: #99C1B9;
+        background-color: #BFE89C;
     }
 </style>
 
     <div class="container mt-4" style="font-family: 'Poppins'; ">
-        <h4><span class="badge text-bg-success" style="margin-top: 3%; padding: 20px; border-radius: 50px; font-weight: normal;">Create Post</span></h4>
+        <h4><span class="badge rounded-pill shadow p-3 d-flex justify-content-center" style="font-family: 'Poppins'; margin-top: 5%; margin-bottom: 3%;font-weight: normal; background-color: #36816C;">Create Post</span></h4>
         <form action="{% url 'kuhub:create_post' %}" id="file-upload-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
@@ -45,7 +45,7 @@
                 <input type="file" name="file_upload" id="file-upload-input" class="form-control" accept=".jpg, .jpeg, .png, .pdf">
             </div>
 
-            <input type="submit" name="post" id="button_post" value="Post" class="btn btn-success">
+            <input type="submit" name="post" id="button_post" value="Post" class="btn btn-success" style="margin-bottom: 5%;">
         </form>
     </div>
     <script src="{% static 'kuhub/js/upload-file.js' %}"></script>

@@ -9,7 +9,7 @@
 
 <style>
     body {
-        background-color: #61BDA3;
+        background-color: #BFE89C;
     }
 </style>
 
@@ -59,21 +59,21 @@
             {% csrf_token %}
 
             <div class="mb-3">
-                <label class="form-label" style="color: white;">Tags</label>
+                <label class="form-label">Tags</label>
                 <div style="width: 300px;">
                     {{ form.tag_name }}
                 </div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label" style="color: white;">Subjects</label>
+                <label class="form-label">Subjects</label>
                 <div style="width: 500px;">
                     {{ form.subject }}
                 </div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label" style="color: white;">Edit Content</label>
+                <label class="form-label">Edit Content</label>
                 <br>
                 {{ form.review }}
             </div>
