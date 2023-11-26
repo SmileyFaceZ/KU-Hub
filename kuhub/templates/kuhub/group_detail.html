@@ -69,7 +69,7 @@
                             <label for="assign_to_event">Event assign</label>
                             <select name="assign_to_event" id="assign_to_event">
                                 <option value="none" selected disabled hidden>Assign event</option>
-                                <option value="not assign" selected disabled hidden>None</option>
+                                <option value="not assign" selected >None</option>
                                 {% for event in events %}
                                     <option value="{{event.id}}">{{event.summary}}</option>
                                 {% endfor %}

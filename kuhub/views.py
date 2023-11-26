@@ -640,9 +640,11 @@ def add_task(request, group_id):
         text = request.POST.get('task', '')
         status = request.POST.get('status', '')
         event_get = request.POST.get('assign_to_event', '')
-        event = get_object_or_404(GroupEvent, pk=event_get)
-        if event == 'not assign':
+        print(event_get)
+        if event_get == 'not assign':
             event = None
+        else:
+            event = get_object_or_404(GroupEvent, pk=event_get)
         Task.objects.create(group=group, task_text=text, status=status, assign_user=user, event=event)
         messages.success(request, 'create task successful')
         previous_path = request.META.get('HTTP_REFERER', None)
