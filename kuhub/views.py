@@ -53,10 +53,23 @@ def separate_folder_firebase(folder: str):
 
 def navbar_setting_profile(request):
     try:
-        request.user.profile.display_photo = (
-            separate_folder_firebase('profile/'))\
-            [request.user.profile.display_photo]
-    except AttributeError:
+        display_photo_key = request.user.profile.display_photo
+        if display_photo_key is not None:
+            photo_dict = separate_folder_firebase('profile/')
+            if display_photo_key in photo_dict:
+                request.user.profile.display_photo = photo_dict[
+                    display_photo_key]
+            else:
+                # Handle the case where the key doesn't exist
+                Profile.objects.filter(user=request.user).update(
+                    display_photo='default_profile_picture.png')
+
+    except (AttributeError, KeyError) as e:
+        # Log the error or handle it appropriately
+        LOGGER.error(
+            f'Error setting profile photo for user '
+            f'{request.user.username}: {e}'
+        )
         return None
       
 
