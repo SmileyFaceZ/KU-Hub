@@ -23,7 +23,7 @@
         <div class="d-flex align-items-center">
             <div class="float-start profile-photo-container">
                 {% if profile.display_photo %}
-                    <img src="{{ profile.display_photo.url }}" alt="{{ profile.user.username }}'s Profile Photo" class="float-start me-2 rounded-circle" width="100px" height="100px">
+                    <img src="{{ profile.display_photo }}" alt="{{ profile.user.username }}'s Profile Photo" class="float-start me-2 rounded-circle" width="100px" height="100px">
                 {% else %}
                     <img src="{% static 'images\default_profile.jpg' %}" alt="Default Profile Photo" class="float-start me-2 rounded-circle" width="100px" height="100px">
                 {% endif %}
@@ -81,9 +81,9 @@
                         {% endif %}
                     </ul>
                 </div>
-                {% with profile=post.username.profile %}
+                {% with profile=post.username.profile.display_photo %}
                     <div class="d-flex align-items-center"> <!-- Use a flex container for alignment -->
-                        <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                        <img class="me-2 rounded-circle" src="{{ profile }}" width="45" height="45" alt="{{ post.username }}'s Profile">
                         <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ post.username }}</h4>
                     </div>
                 {% endwith %}

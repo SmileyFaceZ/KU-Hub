@@ -564,7 +564,10 @@ def profile_view(request, username):
 
     file_store_profile = separate_folder_firebase('profile/')
     for post in posts_list:
-        post.username.profile = file_store_profile[post.username.profile]
+        post.username.profile.display_photo = file_store_profile[post.username.profile.display_photo]
+
+    navbar_setting_profile(request)
+    profile.display_photo = file_store_profile[profile.display_photo]
 
     context = {
         'profile': profile,
@@ -574,8 +577,6 @@ def profile_view(request, username):
         'user': request.user,
         'posts_list': posts_list,
     }
-
-    navbar_setting_profile(request)
 
     return render(request, 'kuhub/profile.html', context)
 
