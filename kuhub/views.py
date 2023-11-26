@@ -231,6 +231,7 @@ class SubjectDetailView(generic.ListView):
     context_object_name = 'subject_detail'
 
     def get(self, request: HttpRequest, **kwargs):
+        navbar_setting_profile(request)
         try:
             key = kwargs["course_code"]
             subject = get_object_or_404(Subject, course_code=key)
