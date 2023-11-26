@@ -325,6 +325,13 @@ class GroupDetail(generic.DetailView):
     def get_queryset(self):
         return Group.objects.all()
 
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        is_user_in_group = obj.group_member.filter(pk=self.request.user.pk).exists()
+        if not is_user_in_group:
+            raise Http404("You don't have permission to view this group.")
+        return obj
+
     def get_filter_set(self):
         return TaskFilter(self.request.GET, queryset=self.object.task_set.all())
 
