@@ -20,12 +20,12 @@
     }
     .accordion-button {
         color: #000;
-        background-color: #ae8888;
+        background-color: #F9FCEE;
     }
 
     .accordion-button:not(.collapsed) {
         color: #000;
-        background-color: #ae8888;
+        background-color: #F9FCEE;
     }
 </style>
 
@@ -54,12 +54,12 @@
 </div>
 
 <!-- Container -->
-<div class="container mt-4" style="font-family: 'Poppins'">
+<div class="container mt-4" style="font-family: 'Poppins'; ">
     {% if type_list %}
-        <ul class="nav nav-tabs" role="tablist">
+        <ul class="nav nav-tabs" role="tablist" style="color: white;">
             {% for type in type_list %}
                 <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="tab" href="#{{ type|slugify }}">{{ type }}</a>
+                    <a class="nav-link {% if forloop.first %}active{% endif %}" data-bs-toggle="tab" href="#{{ type|slugify }}" style="color: black;">{{ type }}</a>
                 </li>
             {% endfor %}
         </ul>
