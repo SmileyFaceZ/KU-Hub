@@ -30,6 +30,17 @@
             <div>
             {{ form.end_time }}
             </div>
+        <h4>Generate google meets</h4>
+        {% if is_google %}
+            <div>
+            {{ form.is_meeting }}
+            </div>
+        {% else %}
+        <div style="color:red;">
+            Must login with Google to use this feature.
+            Go to <a href="/accounts/google/login/">login with google</a>
+        </div>
+        {% endif %}
         <input type="submit" value="Create" class="btn btn-success">
     </form>
 </div>

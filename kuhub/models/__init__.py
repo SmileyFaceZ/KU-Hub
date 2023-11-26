@@ -11,6 +11,6 @@ from .group_event import GroupEvent
 from .subject import Subject
 from .profile import Profile
 from .note import Note
-from .notification import Notification
+from .task import Task
 
 

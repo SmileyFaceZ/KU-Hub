@@ -1,6 +1,8 @@
 import django_filters
 from django import forms
-from django.db.models import Count, Case, When, Value, IntegerField, Q
+from django.db.models import Count, Q
+
+from kuhub.models import Task
 
 
 class PostFilter(django_filters.FilterSet):
@@ -39,21 +41,12 @@ class PostFilter(django_filters.FilterSet):
     def filter_by_liked_disliked(self, queryset, name, value):
         """Return queryset ordered by liked or disliked."""
         if value == 'asc':
-
-            return (
-                queryset
-                .annotate(like_count=Count('liked'))
-                .order_by('-like_count', '-id', '-disliked', '-post_date',
-                          Case(When(liked__isnull=False, then=Value(1)),
-                               default=Value(0),
-                               output_field=IntegerField()))
-            )
-
+            return queryset.annotate(like_count=Count('liked')).order_by(
+                '-like_count').distinct()
         elif value == 'desc':
-            return queryset.order_by('disliked')
-
+            return queryset.annotate(dislike_count=Count('disliked')).order_by(
+                '-dislike_count').distinct()
         return queryset
-
 
     def filter_by_post(self, queryset, name, value):
         """Return queryset ordered by post."""
@@ -78,7 +71,6 @@ class PostDownloadFilter(PostFilter):
         lookup_expr='icontains',
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
-
 
     order_by_download = django_filters.ChoiceFilter(
         label='Order by Download',
@@ -123,3 +115,11 @@ class GenedFilter(django_filters.FilterSet):
         return queryset.filter(
             Q(name_eng__icontains=value) | Q(course_code__icontains=value)
         )
+
+class TaskFilter(django_filters.FilterSet):
+    STATUS_CHOICES = [('', 'All')] + list(Task.STATUS_CHOICES)
+    status = django_filters.ChoiceFilter(choices=STATUS_CHOICES, label='')
+
+    class Meta:
+        model = Task
+        fields = ['status']

@@ -20,3 +20,4 @@ class PostReport(models.Model):
     def __str__(self):
         """Return reason of reporting post."""
         return self.report_reason
+
