@@ -18,10 +18,10 @@ from kuhub.forms import EventForm
 from .calendar import create_event
 from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
 from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostReport,
-                          Group, GroupTags, GroupPassword, Subject, PostComments, GroupEvent, Note)
+                          Group, GroupTags, GroupPassword, Subject, PostComments, GroupEvent, Note, Task)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
-from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter
+from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter, TaskFilter
 
 
 class HomePageView(generic.ListView):
@@ -257,9 +257,6 @@ def join(request, group_id):
     """
     user = request.user
     group = get_object_or_404(Group,pk=group_id)
-    # if not user.email:
-    #     messages.error(request, "Please add email in your profile")
-    #     return redirect(reverse('kuhub:groups'))
 
     if user in group.group_member.all():
         messages.error(request, "You already a member of this group")
@@ -325,12 +322,24 @@ class GroupDetail(generic.DetailView):
     def get_queryset(self):
         return Group.objects.all()
 
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        is_user_in_group = obj.group_member.filter(pk=self.request.user.pk).exists()
+        if not is_user_in_group:
+            raise Http404("You don't have permission to view this group.")
+        return obj
+
+    def get_filter_set(self):
+        return TaskFilter(self.request.GET, queryset=self.object.task_set.all())
+
     def get_context_data(self, **kwargs):
         """Return user'group data as contect data"""
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             context['events'] = self.object.groupevent_set.all()
             context['notes'] = self.object.note_set.all()
+            context['filter'] = self.get_filter_set()
+            context['tasks'] = self.get_filter_set().qs
         return context
 
 
@@ -573,7 +582,8 @@ def group_event_create(request, group_id):
                 description=data['description'],
                 start_time=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
                 end_time=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'),
-                show_time=f"{data['start_time'].strftime('%a. %d %b %Y %H:%M:%S')} - {data['end_time'].strftime('%a. %d %b %Y %H:%M:%S')}"
+                show_time=f"{data['start_time'].strftime('%a. %d %b %Y %H:%M:%S')} - "
+                          f"{data['end_time'].strftime('%a. %d %b %Y %H:%M:%S')}"
             )
             if data['is_meeting']:
                 try:
@@ -622,6 +632,50 @@ def delete_note(request, note_id):
     note.delete()
     messages.success(request, 'delete note successful')
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
+def add_task(request, group_id):
+    user = request.user
+    group = get_object_or_404(Group, pk=group_id)
+    if request.method == 'POST':
+        text = request.POST.get('task', '')
+        status = request.POST.get('status', '')
+        event_get = request.POST.get('assign_to_event', '')
+        print(event_get)
+        if event_get == 'not assign':
+            event = None
+        else:
+            event = get_object_or_404(GroupEvent, pk=event_get)
+        Task.objects.create(group=group, task_text=text, status=status, assign_user=user, event=event)
+        messages.success(request, 'create task successful')
+        previous_path = request.META.get('HTTP_REFERER', None)
+        if 'event' in str(previous_path):
+            return redirect(reverse('kuhub:event_detail', args=(event.id,)))
+        return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
+def change_task_status(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    group_id = task.group.id
+    if request.method == 'POST':
+        status = request.POST.get('status', '')
+        task.status = status
+        task.save()
+        messages.success(request, 'Change status successful')
+    previous_path = request.META.get('HTTP_REFERER', None)
+    if 'event' in str(previous_path):
+        return redirect(reverse('kuhub:event_detail', args=(task.event.id,)))
+    return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
+def delete_task(request, note_id):
+    task = get_object_or_404(Task, pk=note_id)
+    group_id = task.group.id
+    event_id = task.event.id
+    task.delete()
+    messages.success(request, 'delete task successful')
+    previous_path = request.META.get('HTTP_REFERER', None)
+    if 'event' in str(previous_path):
+        return redirect(reverse('kuhub:event_detail', args=(event_id,)))
+    return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
 
 
 # views.py
@@ -743,3 +797,52 @@ def report_post(request, pk):
         form = ReportForm()
 
     return render(request, 'kuhub/report_post.html', {'form': form, 'post': post})
+
+def assign_task_in_event(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    group_id = task.group.id
+    if request.method == 'POST':
+        event_id = request.POST.get('assign_to_event', '')
+        print(event_id)
+        event = get_object_or_404(GroupEvent, pk=event_id)
+        task.event = event
+        task.save()
+        messages.success(request, 'assign to event successfully!')
+    return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
+def unassign_task(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    group_id = task.group.id
+    event_id = task.event.id
+    task.event = None
+    task.save()
+    messages.success(request, 'assign to event successfully!')
+    previous_path = request.META.get('HTTP_REFERER', None)
+    if 'event' in str(previous_path):
+        return redirect(reverse('kuhub:event_detail', args=(event_id,)))
+    return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
+@method_decorator(login_required, name='dispatch')
+class EventDetail(generic.DetailView):
+    """Group manage and detail page"""
+    model = GroupEvent
+    template_name = 'kuhub/event_detail.html'
+
+    def get_queryset(self):
+        return GroupEvent.objects.all()
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        is_user_in_group = obj.group.group_member.filter(pk=self.request.user.pk).exists()
+        if not is_user_in_group:
+            raise Http404("You don't have permission to view this group.")
+        return obj
+
+    def get_context_data(self, **kwargs):
+        """Return user'group data as contect data"""
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            context['todo'] = self.object.task_set.filter(status='todo')
+            context['done'] = self.object.task_set.filter(status='done')
+            context['inprogress'] = self.object.task_set.filter(status='in progress')
+        return context
