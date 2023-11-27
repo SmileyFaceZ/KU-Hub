@@ -158,6 +158,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 # Static files (CSS, JavaScript, Images)
