@@ -42,417 +42,405 @@
         </div>
     {% endfor %}
 {% endif %}
-    <div class="container">
-        <div class="group_header" style="display: inline;">
-            <h3><span class="badge rounded-pill shadow p-3 d-flex justify-content-center" style="font-family: 'Poppins'; margin-top: 5%; margin-bottom: 3%;font-weight: normal; background-color: #36816C;">{{ group }}</span></h3>
-            <div class="dropdown d-flex justify-content-end" style="margin-bottom: 3%;">
-                <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 5px 30px;">
-                    group member
-                </button>
-                <ul class="dropdown-menu">
-                    {% for member in group.group_member.all %}
-                        <li style="margin-left: 20px; margin-right: 20px;"><a href="{% url 'kuhub:profile_view' member.username %}" style="text-decoration-line: none;">{{ member }}</a></li>
-                    {% endfor %}
-                </ul>
-              </div>
-        </div>
-
-<!-- Modal for note -->
-         <div class="modal" id="noteModal" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h3>Add note</h3>
-                        <button type="button" class="btn-close text-reset" data-dismiss="modal"></button>
-                    </div>
-                    <!-- Modal Body -->
-                    <div class="modal-body">
-                        <form action="{% url 'kuhub:group_note' group.id %}" method="post">
-                            {% csrf_token %}
-                            <input type="text" name="note" value="note">
-                            <input type="submit" class="btn btn-secondary btn-sm" value="Add">
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-<!-- Notes Container -->
-        <div class="row">
-            <div class="col-md-3">
-                <div class="row">
-                    <div class="card border border-1 rounded-4 m-2" style="min-height: 40vh; max-height: 40vh; overflow-y: auto;">
-                        <div class="card-header">
-                            Notes
-                            <button type="sumbit" class="round-create-note" data-toggle="modal" data-target="#noteModal">
-                                <i class="fa-solid fa-plus" style="color: #ffffff; font-size: 16px;"></i>
-        <!-- Task's Modal  -->
-        <div class="modal" id="taskModal" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h3>Add Task</h3>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <!-- Modal Body -->
-                    <div class="modal-body">
-                        <form action="{% url 'kuhub:group_task' group.id %}" method="post">
-                            {% csrf_token %}
-                            <input type="text" name="task" value="task">
-                            <label for="status">Status</label>
-                                <select name="status" id="status">
-                                    <option value="todo">Todo</option>
-                                    <option value="in progress">In progress</option>
-                                    <option value="done">Done</option>
-                                </select>
-                            <label for="assign_to_event">Event assign</label>
-                            <select name="assign_to_event" id="assign_to_event">
-                                <option value="none" selected disabled hidden>Assign event</option>
-                                <option value="not assign" selected >None</option>
-                                {% for event in events %}
-                                    <option value="{{event.id}}">{{event.summary}}</option>
-                                {% endfor %}
-                            </select>
-                            <input type="submit" value="Add">
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="row">
-            <div class="col-md-3">
-                <div class="row">
-                    <div class="card border border-dark border-3 m-2 rounded-3"
-                         style="min-height: 40vh; max-height: 40vh; overflow-y: auto;">
-                        <div class="card-header">
-                            Notes
-                            <button type="submit" class="btn btn-primary rounded-circle btn-floating btn-xs"
-                                data-toggle="modal" data-target="#noteModal">
-                                <i class="fas fa-circle-plus"></i>
-                            </button>
-                        </div>
-                        <div class="card-body" style="background-color: #EEF6CB;">
-                            {% for note in notes %}
-                            <div class="card border border-1 rounded-4 m-2">
-                                <div class="card-body">
-                                <span>
-                                    <form method="post" action="{% url 'kuhub:note_delete' note.id %}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn rounded-circle btn-floating btn-xs" style="position:absolute; left:80%; top:40%;">
-                                            <i class="fa-solid fa-trash" style="color: red"></i>
-                                        </button>
-                                    </form>
-                                    <p class="textid">{{note.note_text}}</p>
-                                </span>
-                                </div>
-                            </div>
-                        {% endfor %}
-                        </div>
-                 </div>
-                </div>
-<!-- Tasks Container -->
-                 <div class="row">
-                    <div class="card border border-1 rounded-4 m-2" style="min-height: 40vh; max-height: 40vh; overflow-y: auto;">
-                        <div class="card-header">
-                            <div class="row">
-                                <div class="col-7">
-                                    Tasks
-                                     <button type="submit" class="btn btn-primary rounded-circle btn-floating btn-xs"
-                                        data-toggle="modal" data-target="#taskModal">
-                                        <i class="fas fa-circle-plus"></i>
-                                     </button>
-                                </div>
-                                <div class="col-2">
-                                    <form method="get" id="statusForm" style="position:absolute; left:50%; top:15px;">
-                                        <div id="id_status">{{ filter.form.as_p }}</div>
-                                        <script>
-                                            // Attach a change event listener to the dropdown
-                                            $('#id_status').change(function() {
-                                                $('#statusForm').submit();
-                                            });
-                                        </script>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body" style="background-color: #EEF6CB;">
-                            {% for task in tasks %}
-                                <div class="card border border-dark border-1 m-2 rounded-3" style="line-height: 1; margin-top: 10px; ">
-                                    <form method="post" action="{% url 'kuhub:task_delete' task.id %}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-success rounded-circle btn-floating btn-xs"
-                                                style="display:flex; position:absolute; left:85%;
-                                                                     width:23px; height:23px; align-items: center;
-                                                                     justify-content: center;">
-                                            <i class="fas fa-circle-minus"></i>
-                                        </button>
-                                    </form>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-1 item-center">
-                                                {% if task.status == 'todo' %}
-                                                    <span id="todo" class="bi rounded-circle bi-xs" style=" color: transparent;
-                                                                                                                -webkit-text-stroke-color: rgb(32, 151, 72);
-                                                                                                                background-image: -webkit-linear-gradient(top, rgb(255, 41, 105), rgb(89, 39, 75));
-                                                                                                                width: 20px; height:20px; text-align:center; display: inline-block;">
-                                                        1
-                                                    </span>
-                                                {% elif task.status == 'done' %}
-                                                    <span id="done" class="bi rounded-circle bi-xs" style=" color: transparent;
-                                                                                                                -webkit-text-stroke-color: rgb(32, 151, 72);
-                                                                                                                background-image: -webkit-linear-gradient(top, rgb(41, 255, 159), rgb(39, 85, 89));
-                                                                                                                width: 20px; height:20px;
-                                                                                                                text-align:center; display: inline-block;">
-                                                        1
-                                                    </span>
-                                                {% elif task.status == 'in progress' %}
-                                                    <span id="progress" class="bi rounded-circle bi-xs" style=" color: transparent;
-                                                                                                                -webkit-text-stroke-color: rgb(32, 151, 72);
-                                                                                                                background-image: -webkit-linear-gradient(top, rgb(255, 252, 163), rgb(209, 153, 0));;
-                                                                                                                width: 20px; height:20px;
-                                                                                                                text-align:center; display: inline-block;">
-                                                        1
-                                                    </span>
-                                                {% endif %}
-                                            </div>
-                                            <div class="col-9" style="margin-left:10px;">
-                                                <p>{{task.task_text}}</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <button class="btn btn-link" data-toggle="collapse" data-target="#cardFooter{{ task.id }}" aria-expanded="true" aria-controls="cardFooter">
-                                                    menu
-                                                </button>
-                                            </div>
-                                            <div class="col-6">
-                                                by {{ task.assign_user }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="cardFooter{{ task.id }}" class="collapse">
-                                        <div class="card-footer">
-                                            <div class="dropdown">
-                                                <form id="statusForm{{task.id}}" action="{% url 'kuhub:change_task_status' task.id %}" method="post">
-                                                    {% csrf_token %}
-                                                    {% if task.status == 'todo' %}
-                                                        <select name="status" id="statusSelect{{task.id}}">
-                                                            <option value="none" selected disabled hidden style="background-color:rgb(255, 41, 105);">Todo</option>
-                                                            <option value="in progress" style="background-color:rgb(255, 252, 163);">In progress</option>
-                                                            <option value="done" style="background-color:rgb(41, 255, 159);">Done</option>
-                                                        </select>
-                                                    {% elif task.status == 'done' %}
-                                                        <select name="status" id="statusSelect{{task.id}}">
-                                                            <option value="todo" style="background-color:rgb(255, 41, 105);">Todo</option>
-                                                            <option value="in progress" style="background-color:rgb(255, 252, 163);">In progress</option>
-                                                            <option value="none"selected disabled hidden style="background-color:rgb(41, 255, 159);">Done</option>
-                                                        </select>
-                                                    {% elif task.status == 'in progress' %}
-                                                        <select name="status" id="statusSelect{{task.id}}">
-                                                            <option value="todo" style="background-color:rgb(255, 41, 105);">Todo</option>
-                                                            <option value="none" selected disabled hidden style="background-color:rgb(255, 252, 163);">In progress</option>
-                                                            <option value="done" style="background-color:rgb(41, 255, 159);">Done</option>
-                                                        </select>
-                                                    {% endif %}
-                                                    <script>
-                                                        // Attach a change event listener to the dropdown
-                                                        $('#statusSelect{{task.id}}').change(function() {
-                                                            // Submit the form when the dropdown value changes
-                                                            $('#statusForm{{task.id}}').submit();
-                                                        });
-                                                    </script>
-                                                </form>
-                                            </div>
-                                                <form id="eventForm{{task.id}}" action="{% url 'kuhub:assign_task_event' task.id %}" method="post">
-                                                    {% csrf_token %}
-                                                    <select name="assign_to_event" id="eventSelect{{task.id}}">
-                                                        {% if task.event %}
-                                                            <option value="none" selected disabled hidden>Event: {{task.event}}</option>
-                                                        {% else %}
-                                                            <option value="none" selected disabled hidden>Assign to event</option>
-                                                        {% endif %}
-                                                        {% for event in events %}
-                                                            <option value="{{event.id}}">{{event.summary}}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                    <script>
-                                                        // Attach a change event listener to the dropdown
-                                                        $('#eventSelect{{task.id}}').change(function() {
-                                                            // Submit the form when the dropdown value changes
-                                                            $('#eventForm{{task.id}}').submit();
-                                                        });
-                                                    </script>
-                                                </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-<!-- Meeting Event Container -->
-            <div class="col-md-4">
-                <div class="card border border-1 rounded-4 m-2" style="min-height: 82vh; max-height: 83vh; overflow-y: auto;">
-                    <div class="card-header">
-                        Meeting Event
-                    </div>
-                    <div class="card-body" style="background-color: #EEF6CB;">
-                        {% for event in events %}
-                            <div class="card border border-1 rounded-4" style="line-height: 1;">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <div style="font-weight: 600;"><span>Event: {{ event.summary }}</span></div>
-                                    <form method="post" action="{% url 'kuhub:event_delete' event.id %}">
-                                        {% csrf_token %}
-                                        <input type="submit" class="btn btn-danger" value="delete">
-                                    </form>
-                                </div>
-                                <div class="card-body">
-                                    <ul>Description: {{ event.description }}</ul>
-                                    <ul>Location: {{ event.location }}</ul>
-                                    <ul><i class="fa-regular fa-calendar" style="margin-right: 10px;"></i>{{ event.show_time }}</ul>
-                                    {% if event.link and event.link != None %}
-                                        <ul>Link: <a href="{{ event.link }}">{{ event.link }}</a></ul>
-                                    {% endif %}
-                                    <button class="btn btn-link center" data-toggle="collapse" data-target="#eventFooter{{ event.id }}" aria-expanded="true" aria-controls="cardFooter">
-                                        task
-                                    </button>
-                                </div>
-                                <div id="eventFooter{{ event.id }}" class="collapse">
-                                    <div class="card-footer">
-                                        {% for task in event.task_set.all %}
-                                        <ul>
-                                            <div class="row">
-                                                <div class="col-7">
-                                                    {% if task.status == 'todo' %}
-                                                            <span class="bi rounded-circle bi-xs" style=" color: transparent;
-                                                                                                                        -webkit-text-stroke-color: rgb(32, 151, 72);
-                                                                                                                        background-image: -webkit-linear-gradient(top, rgb(255, 41, 105), rgb(89, 39, 75));
-                                                                                                                        width: 20px; height:20px; text-align:center; display: inline-block;">
-                                                                1
-                                                            </span>
-                                                        {% elif task.status == 'done' %}
-                                                            <span class="bi rounded-circle bi-xs" style=" color: transparent;
-                                                                                                                        -webkit-text-stroke-color: rgb(32, 151, 72);
-                                                                                                                        background-image: -webkit-linear-gradient(top, rgb(41, 255, 159), rgb(39, 85, 89));
-                                                                                                                        width: 20px; height:20px;
-                                                                                                                        text-align:center; display: inline-block;">
-                                                                1
-                                                            </span>
-                                                        {% elif task.status == 'in progress' %}
-                                                            <span class="bi rounded-circle bi-xs" style=" color: transparent;
-                                                                                                                        -webkit-text-stroke-color: rgb(32, 151, 72);
-                                                                                                                        background-image: -webkit-linear-gradient(top, rgb(255, 252, 163), rgb(209, 153, 0));;
-                                                                                                                        width: 20px; height:20px;
-                                                                                                                        text-align:center; display: inline-block;">
-                                                                1
-                                                            </span>
-                                                        {% endif %}
-                                                        {{task.task_text}}
-                                                    </div>
-                                                    <div class="col-1">
-                                                        <form action="{% url 'kuhub:unassign_task_event' task.id %}" method="post">
-                                                            {% csrf_token %}
-                                                                <button type="submit" class="btn btn-link">
-                                                                    unassign
-                                                                </button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </ul>
-                                            {% empty %}
-                                            Don't have task.
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                 <button type="button" class="round-create" style="position: relative; bottom: 6%; left: 90%;"><a href="{% url 'kuhub:group_event' group.id %}" 
-                    style="text-decoration: none; color: white;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;">
-                    <i class="fa-solid fa-plus" style="color: #ffffff; font-size: 24px;"></i>
-                </a></button>
-            </div>
-            <div class="col-md-5">
-                 <head>
-    <script type='importmap'>
-      {
-        "imports": {
-          "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.9",
-          "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.9",
-          "@fullcalendar/timegrid": "https://cdn.skypack.dev/@fullcalendar/timegrid@6.1.9"
-
-        }
-      }
-    </script>
-    <script type='module'>
-      import { Calendar } from '@fullcalendar/core'
-      import dayGridPlugin from '@fullcalendar/daygrid'
-      import timeGridPlugin from '@fullcalendar/timegrid'
-
-      document.addEventListener('DOMContentLoaded', function() {
-        const colors = [];
-        colors.push("#F96E39", "#FFC300", "#900C3F", "#85D19B", "#498CAF");
-        const calendarEl = document.getElementById('calendar')
-        const calendar = new Calendar(calendarEl, {
-          plugins: [dayGridPlugin, timeGridPlugin],
-          headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-          },
-          events: [
-                {% for i in events %}
-                {
-                    title: "{{ i.summary}}",
-                    start: '{{ i.start_time }}',
-                    end: '{{ i.end_time }}',
-                    color: colors[{{i.id}}%5]
-                },
+<div class="container">
+    <div class="group_header" style="display: inline;">
+        <h3><span class="badge rounded-pill shadow p-3 d-flex justify-content-center" style="font-family: 'Poppins'; margin-top: 5%; margin-bottom: 3%;font-weight: normal; background-color: #36816C;">{{ group }}</span></h3>
+        <div class="dropdown d-flex justify-content-end" style="margin-bottom: 3%;">
+            <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 5px 30px;">
+                group member
+            </button>
+            <ul class="dropdown-menu">
+                {% for member in group.group_member.all %}
+                    <li style="margin-left: 20px; margin-right: 20px;"><a href="{% url 'kuhub:profile_view' member.username %}" style="text-decoration-line: none;">{{ member }}</a></li>
                 {% endfor %}
-
-            ]
-        })
-        calendar.render()
-      })
-
-    </script>
-  </head>
-  <body>
-    <div class='card border border-1 rounded-4' id='calendar' style="background-color: white;"></div>
-  </body>
+            </ul>
+          </div>
+ 
+    </div>
+<!-- Note's Modal   -->
+     <div class="modal" id="noteModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h3>Add note</h3>
+                    <button type="button" class="btn-close text-reset" data-dismiss="modal"></button>
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form action="{% url 'kuhub:group_note' group.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="note" value="note">
+                        <input type="submit" value="Add">
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-<style>
-        #create_post {
-            display: none;
-        }
-    </style>
-<script>
-    function replaceURLWithHTMLLinks() {
-        var textElements = document.getElementsByClassName("textid");
-        for (var i = 0; i < textElements.length; i++) {
-            var textid = textElements[i].innerHTML;
-            var exp = /(https?:\/\/\S+)/ig;  // Simplified regular expression for URLs
-            var replacedText = textid.replace(exp, function(match) {
-                console.log("Found URL:", match);
-                return "<a href='" + match + "' target='_blank'>" + match + "</a>";
-            });
-            textElements[i].innerHTML = replacedText;
-        }
+
+    <!-- Task's Modal  -->
+    <div class="modal" id="taskModal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h3>Add Task</h3>
+                    <button type="button" class="btn-close text-reset" data-dismiss="modal"></button>
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form action="{% url 'kuhub:group_task' group.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="task" value="task">
+                        <label for="status">Status</label>
+                            <select name="status" id="status">
+                                <option value="todo">Todo</option>
+                                <option value="in progress">In progress</option>
+                                <option value="done">Done</option>
+                            </select>
+                        <label for="assign_to_event">Event assign</label>
+                        <select name="assign_to_event" id="assign_to_event">
+                            <option value="none" selected disabled hidden>Assign event</option>
+                            <option value="not assign" selected >None</option>
+                            {% for event in events %}
+                                <option value="{{event.id}}">{{event.summary}}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" value="Add">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Notes Container -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="card border border-1 rounded-4 m-2" style="min-height: 40vh; max-height: 40vh; overflow-y: auto;">
+                    <div class="card-header">
+                        Notes
+                        <button type="sumbit" class="round-create-note" data-toggle="modal" data-target="#noteModal">
+                            <i class="fa-solid fa-plus" style="color: #ffffff; font-size: 16px;"></i>
+                        </button>
+                    </div>
+                    <div class="card-body" style="background-color: #EEF6CB;">                        {% for note in notes %}
+                        <div class="card border border-1 rounded-4 m-2">
+                            <div class="card-body">
+                            <span>
+                                <form method="post" action="{% url 'kuhub:note_delete' note.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn rounded-circle btn-floating btn-xs" style="position:absolute; left:80%; top:40%;">
+                                        <i class="fa-solid fa-trash" style="color: red"></i>
+                                    </button>
+                                </form>
+                                <p class="textid">{{note.note_text}}</p>
+                            </span>
+                        </div>
+                    {% endfor %}
+                    </div>
+             </div>
+            </div>
+            </div>
+<!-- Tasks Container -->
+            <div class="row">
+                <div class="card border border-1 rounded-4 m-2" style="min-height: 40vh; max-height: 40vh; overflow-y: auto;">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-7">
+                                Tasks
+                                <button type="sumbit" class="round-create-note" data-toggle="modal" data-target="#taskModal">
+                                    <i class="fa-solid fa-plus" style="color: #ffffff; font-size: 16px;"></i>
+                                </button>
+                            </div>
+                            <div class="col-2">
+                                <form method="get" id="statusForm" style="position:absolute; left:50%; top:15px;">
+                                    <div id="id_status">{{ filter.form.as_p }}</div>
+                                    <script>
+                                        // Attach a change event listener to the dropdown
+                                        $('#id_status').change(function() {
+                                            $('#statusForm').submit();
+                                        });
+                                    </script>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-body" style="background-color: #EEF6CB;">
+                        {% for task in tasks %}
+                            <div class="card border border-1 rounded-4 m-2" style="line-height: 1; margin-top: 10px; ">
+                                <form method="post" action="{% url 'kuhub:task_delete' task.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn rounded-circle btn-floating btn-xs" style="position:absolute; left:85%;">
+                                        <i class="fa-solid fa-trash" style="color: red"></i>
+                                    </button>
+                                </form>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-1 item-center">
+                                            {% if task.status == 'todo' %}
+                                                <span id="todo" class="bi rounded-circle bi-xs" style=" color: transparent;
+                                                                                                            -webkit-text-stroke-color: rgb(32, 151, 72);
+                                                                                                            background-image: -webkit-linear-gradient(top, rgb(255, 41, 105), rgb(89, 39, 75));
+                                                                                                            width: 20px; height:20px; text-align:center; display: inline-block;">
+                                                    1
+                                                </span>
+                                            {% elif task.status == 'done' %}
+                                                <span id="done" class="bi rounded-circle bi-xs" style=" color: transparent;
+                                                                                                            -webkit-text-stroke-color: rgb(32, 151, 72);
+                                                                                                            background-image: -webkit-linear-gradient(top, rgb(41, 255, 159), rgb(39, 85, 89));
+                                                                                                            width: 20px; height:20px;
+                                                                                                            text-align:center; display: inline-block;">
+                                                    1
+                                                </span>
+                                            {% elif task.status == 'in progress' %}
+                                                <span id="progress" class="bi rounded-circle bi-xs" style=" color: transparent;
+                                                                                                            -webkit-text-stroke-color: rgb(32, 151, 72);
+                                                                                                            background-image: -webkit-linear-gradient(top, rgb(255, 252, 163), rgb(209, 153, 0));;
+                                                                                                            width: 20px; height:20px;
+                                                                                                            text-align:center; display: inline-block;">
+                                                    1
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-9" style="margin-left:10px;">
+                                            <p>{{task.task_text}}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <button class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#cardFooter{{ task.id }}" aria-expanded="true" aria-controls="cardFooter">
+                                                menu
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            by {{ task.assign_user }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="cardFooter{{ task.id }}" class="collapse">
+                                    <div class="card-footer">
+                                        <div class="dropdown">
+                                            <form id="statusForm{{task.id}}" action="{% url 'kuhub:change_task_status' task.id %}" method="post">
+                                                {% csrf_token %}
+                                                {% if task.status == 'todo' %}
+                                                    <select name="status" id="statusSelect{{task.id}}">
+                                                        <option value="none" selected disabled hidden style="background-color:rgb(255, 41, 105);">Todo</option>
+                                                        <option value="in progress" style="background-color:rgb(255, 252, 163);">In progress</option>
+                                                        <option value="done" style="background-color:rgb(41, 255, 159);">Done</option>
+                                                    </select>
+                                                {% elif task.status == 'done' %}
+                                                    <select name="status" id="statusSelect{{task.id}}">
+                                                        <option value="todo" style="background-color:rgb(255, 41, 105);">Todo</option>
+                                                        <option value="in progress" style="background-color:rgb(255, 252, 163);">In progress</option>
+                                                        <option value="none"selected disabled hidden style="background-color:rgb(41, 255, 159);">Done</option>
+                                                    </select>
+                                                {% elif task.status == 'in progress' %}
+                                                    <select name="status" id="statusSelect{{task.id}}">
+                                                        <option value="todo" style="background-color:rgb(255, 41, 105);">Todo</option>
+                                                        <option value="none" selected disabled hidden style="background-color:rgb(255, 252, 163);">In progress</option>
+                                                        <option value="done" style="background-color:rgb(41, 255, 159);">Done</option>
+                                                    </select>
+                                                {% endif %}
+                                                <script>
+                                                    // Attach a change event listener to the dropdown
+                                                    $('#statusSelect{{task.id}}').change(function() {
+                                                        // Submit the form when the dropdown value changes
+                                                        $('#statusForm{{task.id}}').submit();
+                                                    });
+                                                </script>
+                                            </form>
+                                        </div>
+                                            <form id="eventForm{{task.id}}" action="{% url 'kuhub:assign_task_event' task.id %}" method="post">
+                                                {% csrf_token %}
+                                                <select name="assign_to_event" id="eventSelect{{task.id}}">
+                                                    {% if task.event %}
+                                                        <option value="none" selected disabled hidden>Event: {{task.event}}</option>
+                                                    {% else %}
+                                                        <option value="none" selected disabled hidden>Assign to event</option>
+                                                    {% endif %}
+                                                    {% for event in events %}
+                                                        <option value="{{event.id}}">{{event.summary}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <script>
+                                                    // Attach a change event listener to the dropdown
+                                                    $('#eventSelect{{task.id}}').change(function() {
+                                                        // Submit the form when the dropdown value changes
+                                                        $('#eventForm{{task.id}}').submit();
+                                                    });
+                                                </script>
+                                            </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+    </div>
+
+<!-- Meeting Detail Container -->
+        <div class="col-md-4">
+            <div class="card border border-1 rounded-4 m-2" style="min-height: 82vh; max-height: 83vh; overflow-y: auto;">
+                <div class="card-header">
+                    Meeting Event
+                </div>
+                <div class="card-body" style="background-color: #EEF6CB;">                    
+                    {% for event in events %}
+                        <div class="card border border-1 rounded-4 m-2" style="line-height: 1; margin-top: 10px;">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <a href="{% url 'kuhub:event_detail' event.id%}">{{ event.summary }}</a>
+                                <form method="post" action="{% url 'kuhub:event_delete' event.id %}">
+                                    {% csrf_token %}
+                                    <input type="submit" class="btn btn-danger" value="delete">
+                                </form>
+                            </div>
+                            <div class="card-body">
+                                <ul>Description: {{ event.description }}</ul>
+                                <ul>Location: {{ event.location }}</ul>
+                                <ul><i class="fa-regular fa-calendar" style="margin-right: 10px;"></i>{{ event.show_time }}</ul>
+                                {% if event.link and event.link != None %}
+                                    <ul>Link: <a href="{{ event.link }}">{{ event.link }}</a></ul>
+                                {% endif %}
+                                <button class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#eventFooter{{ event.id }}" aria-expanded="true" aria-controls="cardFooter">
+                                    task
+                                </button>
+                            </div>
+                            <div id="eventFooter{{ event.id }}" class="collapse">
+                                <div class="card-footer">
+                                    {% for task in event.task_set.all %}
+                                    <ul>
+                                        <div class="row">
+                                            <div class="col-7">
+                                                {% if task.status == 'todo' %}
+                                                        <span class="bi rounded-circle bi-xs" style=" color: transparent;
+                                                                                                                    -webkit-text-stroke-color: rgb(32, 151, 72);
+                                                                                                                    background-image: -webkit-linear-gradient(top, rgb(255, 41, 105), rgb(89, 39, 75));
+                                                                                                                    width: 20px; height:20px; text-align:center; display: inline-block;">
+                                                            1
+                                                        </span>
+                                                    {% elif task.status == 'done' %}
+                                                        <span class="bi rounded-circle bi-xs" style=" color: transparent;
+                                                                                                                    -webkit-text-stroke-color: rgb(32, 151, 72);
+                                                                                                                    background-image: -webkit-linear-gradient(top, rgb(41, 255, 159), rgb(39, 85, 89));
+                                                                                                                    width: 20px; height:20px;
+                                                                                                                    text-align:center; display: inline-block;">
+                                                            1
+                                                        </span>
+                                                    {% elif task.status == 'in progress' %}
+                                                        <span class="bi rounded-circle bi-xs" style=" color: transparent;
+                                                                                                                    -webkit-text-stroke-color: rgb(32, 151, 72);
+                                                                                                                    background-image: -webkit-linear-gradient(top, rgb(255, 252, 163), rgb(209, 153, 0));;
+                                                                                                                    width: 20px; height:20px;
+                                                                                                                    text-align:center; display: inline-block;">
+                                                            1
+                                                        </span>
+                                                    {% endif %}
+                                                    {{task.task_text}}
+                                                </div>
+                                                <div class="col-1">
+                                                    <form action="{% url 'kuhub:unassign_task_event' task.id %}" method="post">
+                                                        {% csrf_token %}
+                                                            <button type="submit" class="btn btn-link">
+                                                                unassign
+                                                            </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </ul>
+                                        {% empty %}
+                                        Don't have task.
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <button type="button" class="round-create" style="position: relative; bottom: 6%; left: 90%;"><a href="{% url 'kuhub:group_event' group.id %}" 
+                style="text-decoration: none; color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;">
+                <i class="fa-solid fa-plus" style="color: #ffffff; font-size: 24px;"></i>
+            </a></button>
+        </div>
+        <div class="col-md-5">
+             <head>
+<script type='importmap'>
+  {
+    "imports": {
+      "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.9",
+      "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.9",
+      "@fullcalendar/timegrid": "https://cdn.skypack.dev/@fullcalendar/timegrid@6.1.9"
+
     }
-    replaceURLWithHTMLLinks();
+  }
+</script>
+<script type='module'>
+  import { Calendar } from '@fullcalendar/core'
+  import dayGridPlugin from '@fullcalendar/daygrid'
+  import timeGridPlugin from '@fullcalendar/timegrid'
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const colors = [];
+    colors.push("#F96E39", "#FFC300", "#900C3F", "#85D19B", "#498CAF");
+    const calendarEl = document.getElementById('calendar')
+    const calendar = new Calendar(calendarEl, {
+      plugins: [dayGridPlugin, timeGridPlugin],
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      events: [
+            {% for i in events %}
+            {
+                title: "{{ i.summary}}",
+                start: '{{ i.start_time }}',
+                end: '{{ i.end_time }}',
+                color: colors[{{i.id}}%5]
+            },
+            {% endfor %}
+
+        ]
+    })
+    calendar.render()
+  })
+
+</script>
+</head>
+<body>
+    <div class='card border border-1 rounded-4' id='calendar' style="background-color: white;">
+        <div id='calendar'>
+        </div>
+    </div>
+</body>
+        </div>
+    </div>
+</div>
+<style>
+    #create_post {
+        display: none;
+    }
+</style>
+<script>
+function replaceURLWithHTMLLinks() {
+    var textElements = document.getElementsByClassName("textid");
+    for (var i = 0; i < textElements.length; i++) {
+        var textid = textElements[i].innerHTML;
+        var exp = /(https?:\/\/\S+)/ig;  // Simplified regular expression for URLs
+        var replacedText = textid.replace(exp, function(match) {
+            console.log("Found URL:", match);
+            return "<a href='" + match + "' target='_blank'>" + match + "</a>";
+        });
+        textElements[i].innerHTML = replacedText;
+    }
+}
+replaceURLWithHTMLLinks();
 </script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
