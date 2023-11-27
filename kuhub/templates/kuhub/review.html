@@ -12,13 +12,24 @@
 
 <style>
     body {
-        background-color: #D88C9A;
+        background-color: #61BDA3;
     }
     .custom-border {
         border-radius: 10px;
         padding: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        background-color: #e4b3bc;
+        background-color: #C5E7DD;
+    }
+    .username-section {
+        float: right;
+        text-align: right;
+    }
+
+    .follow-button-section {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 10px;
     }
 </style>
 
@@ -34,7 +45,7 @@
 </div>
 
 <!-- Search box -->
-<div class="container mt-4 custom-border shadow-lg" style="font-family: 'Poppins'; margin-bottom: 5%;">
+<div class="container mt-4 custom-border shadow-lg" style="font-family: 'Poppins';">
     <form method="get" action="{% url 'kuhub:review' %}">
         <div class="row">
             <div class="col-md-4">
@@ -59,8 +70,8 @@
             </div>
         </div>
 
-        <div class="col-md-12 mt-3">
-            <button type="submit" class="btn btn-success">
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-success" style="padding: 5px 30px;">
                 <i class="fa-solid fa-magnifying-glass fa-fade fa-xl"></i>
                 <span style="font-family: 'Poppins'">Search</span>
             </button>
@@ -88,13 +99,13 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="kebabMenu{{ post.pk }}" style="box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);">
                             {% if user.is_authenticated and post.username == user %}
-                                <li><a class="dropdown-item" href="#">Edit Post</a></li>
+                                <li><a class="dropdown-item" href="{% url 'kuhub:edit_post' post.pk %}">Edit Post</a></li>
                             {% else %}
-                                <li><a class="dropdown-item" href="{% url 'kuhub:report_post' post.id %}">Report</a></li>
+                                <li><a class="dropdown-item" href="{% url 'kuhub:report_post' pk=post.pk %}">Report</a></li>
                             {% endif %}
                         </ul>
                     </div>
-                    <a href="{% url 'kuhub:profile_view' username=post.username %}">
+                    <a href="{% url 'kuhub:profile_view' username=post.username %}" style="text-decoration-line: none;">
                         {% with profile=post.username.profile.display_photo %}
                             <div class="d-flex align-items-center">
                                 <img class="me-2 rounded-circle" src="{{ profile }}" width="45" height="45" alt="{{ post.username }}'s Profile">
@@ -133,7 +144,6 @@
                             </form>
                         {% endif %}
                         <a href="{% url 'kuhub:post_detail' pk=post.pk %}" class="btn btn-link">See comments</a>
-                        <a href="{% url 'kuhub:report_post' pk=post.pk %}" class="btn btn-link">Report</a>
                     </div>
                 </div>
             </div>
@@ -142,7 +152,9 @@
         <h1>No posts are available.</h1>
     {% endif %}
 </div>
-
+{% if user.is_authenticated %}
+    <button type="button" id=create_post class="round-create"><a href="{% url 'kuhub:create_post' %}" style="text-decoration: none; color: white;">&#9998;</a></button>
+{% endif %}
 <link rel="stylesheet" href="{% static 'kuhub/style.css' %}">
 
 <script>
@@ -200,19 +212,5 @@ function dislike_button_click(postId) {
 }
 
 </script>
-
-<style>
-    .username-section {
-        float: right;
-        text-align: right;
-    }
-
-    .follow-button-section {
-        position: absolute;
-        top: 0;
-        right: 0;
-        margin: 10px;
-    }
-</style>
 {% endblock %}
 

@@ -7,8 +7,16 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <form action="{% url 'kuhub:create_group' %}" method="post">
+<style>
+    body {
+        background-color: #BFE89C;
+        font-family: 'Poppins';
+    }
+</style>
+
+<div class="container mt-5" style="font-family: 'Poppins';">
+    <h4><span class="badge rounded-pill shadow p-3 d-flex justify-content-center" style="font-family: 'Poppins'; margin-top: 5%; margin-bottom: 3%;font-weight: normal; background-color: #36816C;">Create Group</span></h4>
+    <form action="{% url 'kuhub:create_group' %}" method="post" style="font-weight: 600;">
             {% csrf_token %}
            <div class="mb-3">
             <label class="form-label">Group Name:</label>
@@ -43,7 +51,7 @@
                    <p>{{ message }}</p>
                 {% endfor %}
             </div>
-        <input type="submit" value="Create" class="btn btn-success">
+        <input type="submit" value="Create Group" class="btn btn-success" style=" margin-bottom: 5%;">
     </form>
     </div>
 {% endblock %}

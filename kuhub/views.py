@@ -380,7 +380,7 @@ def create_group(request: HttpRequest):
             )
             group.group_tags.set([group_tag])
             group.group_member.set([user])
-            messages.success(request, f'Create group successful your group id is {group.id}')
+            messages.success(request, f'Create group successful!')
             return redirect(reverse('kuhub:groups'))
     return render(
         request,

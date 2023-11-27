@@ -23,7 +23,7 @@ class PostForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-select'})
     )
     review = forms.CharField(
-        widget=forms.Textarea(attrs={'cols': 100, 'rows': 3}),
+        widget=forms.Textarea(),
         label='Review',
         required=True
     )

@@ -6,22 +6,56 @@
 {% block title %}
     <title>Event: {{groupevent.summary}}</title>
 {% endblock %}
-<body>
+
 {% block content %}
+<style>
+    body {
+        background-color: #BFE89C;
+        font-family: 'Poppins';
+    }
+    .round-create-note {
+    text-decoration: none;
+    background-color: #184E77;
+    border: none;
+    height: 30px;
+    width: 30px;
+    bottom: 30px;
+    right: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    }
+    .round-create-note:hover {
+        background-color: rgb(164, 200, 195);
+    }
+    .round-create-note:active {
+        box-shadow: 0 0 2px darkslategray;
+        transform: translateY(2px);
+    }
+
+</style>
+
+<body>
 <div class="contianer">
-    <div class="row" style="margin-left:30%; margin-top:20px; line-height:0.75;">
-        <ul><b>Description:</b> {{ groupevent.description }}</ul>
-        <ul><b>Location:</b> {{ groupevent.location }}</ul>
-        <ul><b>Time:</b> {{ groupevent.show_time }}</ul>
-        {% if groupevent.link and groupevent.link != None %}
-            <ul><b>Link:</b> <a href="{{ groupevent.link }}">{{ groupevent.link }}</a></ul>
-        {% endif %}
+    <div class="row">
+        <div class="card border border-1 rounded-4 d-flex justify-content-center">
+            <div class="information" style="margin-top: 2%; margin-bottom: 1%; margin-left: 30%;">
+                <ul><b>Event Name:</b> {{ groupevent.summary }}</ul>
+                <ul><b>Description:</b> {{ groupevent.description }}</ul>
+                <ul><b>Location:</b> {{ groupevent.location }}</ul>
+                <ul><b>Time:</b> {{ groupevent.show_time }}</ul>
+                {% if groupevent.link and groupevent.link != None %}
+                    <ul><b>Link:</b> <a href="{{ groupevent.link }}">{{ groupevent.link }}</a></ul>
+                {% endif %}
+            </div>
+        </div>
     </div>
     <div class="row" style="margin-left: 20%;">
+<!-- TODO -->
         <div class="col-md-3">
-            <div class="card border border-dark border-3 m-2 rounded-3" style="min-height: 60vh; max-height: 60vh; overflow-y: auto;">
-                <div class="card-header">
-                        TODO
+            <div class="card border border-1 rounded-4" style="min-height: 60vh; max-height: 60vh; overflow-y: auto;">
+                <div class="card-header" style="background-color: #F08080;">
+                        <div style="color: white;">TODO</div>
                 </div>
                         <div class="card-body">
                             {% for task in todo %}
@@ -61,7 +95,7 @@
 
                                         <div class="row">
                                             <div class="col-6">
-                                                <button class="btn btn-link" data-toggle="collapse" data-target="#cardFooter{{ task.id }}" aria-expanded="true" aria-controls="cardFooter">
+                                                <button class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#cardFooter{{ task.id }}" aria-expanded="true" aria-controls="cardFooter">
                                                     menu
                                                 </button>
                                             </div>
@@ -122,9 +156,10 @@
                         </div>
             </div>
         </div>
+<!-- IN PROCESS -->
         <div class="col-md-3">
-            <div class="card border border-dark border-3 m-2 rounded-3" style="min-height: 60vh; max-height: 60vh; overflow-y: auto;">
-                <div class="card-header">
+            <div class="card border border-1 rounded-4" style="min-height: 60vh; max-height: 60vh; overflow-y: auto;">
+                <div class="card-header" style="background-color: #FFD97D;">
                         IN PROGRESS
                 </div>
                         <div class="card-body">
@@ -165,7 +200,7 @@
 
                                         <div class="row">
                                             <div class="col-6">
-                                                <button class="btn btn-link" data-toggle="collapse" data-target="#cardFooter{{ task.id }}" aria-expanded="true" aria-controls="cardFooter">
+                                                <button class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#cardFooter{{ task.id }}" aria-expanded="true" aria-controls="cardFooter">
                                                     menu
                                                 </button>
                                             </div>
@@ -226,10 +261,11 @@
                         </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card border border-dark border-3 m-2 rounded-3" style="min-height: 60vh; max-height: 60vh; overflow-y: auto;">
-                <div class="card-header">
-                        DONE
+<!-- DONE -->
+        <div class="col-md-3" style="margin-bottom: 3%;">
+            <div class="card border border-1 rounded-4" style="min-height: 60vh; max-height: 60vh; overflow-y: auto;">
+                <div class="card-header" style="background-color: #89D2A3;">
+                    <div style="color: white;">DONE</div>
                 </div>
                         <div class="card-body">
                             {% for task in done %}
@@ -269,7 +305,7 @@
 
                                         <div class="row">
                                             <div class="col-6">
-                                                <button class="btn btn-link" data-toggle="collapse" data-target="#cardFooter{{ task.id }}" aria-expanded="true" aria-controls="cardFooter">
+                                                <button class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#cardFooter{{ task.id }}" aria-expanded="true" aria-controls="cardFooter">
                                                     menu
                                                 </button>
                                             </div>
@@ -338,7 +374,7 @@
             display: none;
         }
     </style>
-<button type="submit" class="btn btn-primary btn-floating btn-xs"
+<button type="submit" class="btn btn-success btn-floating btn-xs"
     data-toggle="modal" data-target="#taskModal"
         style="
             position: fixed;
@@ -347,14 +383,14 @@
     add task
  </button>
 
+ <!-- Task Modal -->
 <div class="modal" id="taskModal" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <!-- Modal Header -->
                     <div class="modal-header">
                         <h3>Add Task</h3>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
+                        <button type="button" class="btn-close text-reset" data-dismiss="modal"></button>                    </div>
                     <!-- Modal Body -->
                     <div class="modal-body">
                         <form action="{% url 'kuhub:group_task' groupevent.group.id %}" method="post">
@@ -375,7 +411,23 @@
                 </div>
             </div>
         </div>
-<a href="{% url 'kuhub:group_detail' groupevent.group.id %}" >Go back to {{groupevent.group.summary}} page</a>
+<!-- <a href="{% url 'kuhub:group_detail' groupevent.group.id %}" >Go back to {{groupevent.group.summary}} page</a> -->
+<button type="submit" class="btn btn-primary btn-floating btn-xs"
+        style="
+            position: fixed;
+            bottom: 30px;
+            left: 30px;"><a href="{% url 'kuhub:group_detail' groupevent.group.id %}" style="color: white; text-decoration-line: none;">
+    Go Back to {{groupevent.summary}} page</a>
+</button>
+
+<button type="submit" class="btn btn-success btn-floating btn-xs"
+    data-toggle="modal" data-target="#taskModal"
+        style="
+            position: fixed;
+            bottom: 30px;
+            right: 30px;">
+    add task
+ </button>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>

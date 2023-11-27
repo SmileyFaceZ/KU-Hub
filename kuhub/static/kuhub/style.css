@@ -2,9 +2,8 @@
 .rounded-icon {
     border-radius: 50%;
 }
-.navbar .btn-secondary {
+.btn-secondary {
     font-size: 16px;
-    margin-left: 40%;
     background-color: rgb(255, 255, 255);
     border-color: rgb(255, 255, 255);
     color: black;
@@ -12,20 +11,12 @@
 .navbar {
     background-color: whitesmoke;
 }
-.navbar .toggler-menu {
-    border-radius: 0.5rem;
-    margin-right: 10px;
-    background-color: whitesmoke;
-    padding: 4px 8px;
-    border: 1px solid gray;
-}
 .navbar-nav .nav-link {
     color: rgb(0, 91, 65);
     font-weight: 500; 
 }
 .offcanvas.offcanvas-start {
-    /* background-color: rgb(15, 169, 149); */
-    background-color: rgb(139, 139, 139);
+    background-color: whitesmoke;
 }
 .offcanvas-body {
     margin-left: 20px;
@@ -40,8 +31,8 @@
 .navbar .btn-outline-success {
     font-size: 16px;
     padding: 5px 10px;
-    background-color: rgb(0, 129, 112);
-    border-color: rgb(0, 129, 112);
+    background-color: #184E77;
+    border-color: #184E77;
     color: aliceblue;
 }
 .navbar .rounded-circle {
@@ -52,13 +43,13 @@
 }
 .round-create {
     text-decoration: none;
-    background-color: rgb(0, 129, 112);
+    background-color: #184E77;
     border: none;
     padding: 5px;
     font-size: 20px;
     height: 50px;
     width: 50px;
-    box-shadow: 0 2px 4px darkslategray;
+    box-shadow: 0 2px 4px rgb(27, 50, 50);
     position: fixed;
     bottom: 30px;
     right: 30px;
@@ -86,6 +77,7 @@
 .card-title {
     margin-top: 13px;
     color: rgb(29, 29, 42);
+    text-decoration-line: none;
 }
 .card-subtitle {
     text-align: end;
