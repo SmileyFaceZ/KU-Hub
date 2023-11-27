@@ -43,10 +43,13 @@
             <div class="mb-3" id="file-upload-container" style="display: none;">
                 <label class="form-label">Upload File (.pdf) / Picture (.jpg, .jpeg, .png)</label>
                 <input type="file" name="file_upload" id="file-upload-input" class="form-control" accept=".jpg, .jpeg, .png, .pdf">
+                <input type="hidden" name="url" id="url">
             </div>
 
             <input type="submit" name="post" id="button_post" value="Post" class="btn btn-success" style="margin-bottom: 5%;">
         </form>
     </div>
+
     <script src="{% static 'kuhub/js/upload-file.js' %}"></script>
+    <script src="{% static 'kuhub/js/firebase-store.js' %}" type="module"></script>
 {% endblock %}
