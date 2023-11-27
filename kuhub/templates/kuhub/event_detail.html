@@ -262,7 +262,7 @@
             </div>
         </div>
 <!-- DONE -->
-        <div class="col-md-3">
+        <div class="col-md-3" style="margin-bottom: 3%;">
             <div class="card border border-1 rounded-4" style="min-height: 60vh; max-height: 60vh; overflow-y: auto;">
                 <div class="card-header" style="background-color: #89D2A3;">
                     <div style="color: white;">DONE</div>
@@ -411,7 +411,23 @@
                 </div>
             </div>
         </div>
-<a href="{% url 'kuhub:group_detail' groupevent.group.id %}" >Go back to {{groupevent.group.summary}} page</a>
+<!-- <a href="{% url 'kuhub:group_detail' groupevent.group.id %}" >Go back to {{groupevent.group.summary}} page</a> -->
+<button type="submit" class="btn btn-primary btn-floating btn-xs"
+        style="
+            position: fixed;
+            bottom: 30px;
+            left: 30px;"><a href="{% url 'kuhub:group_detail' groupevent.group.id %}" style="color: white; text-decoration-line: none;">
+    Go Back to {{groupevent.summary}} page</a>
+</button>
+
+<button type="submit" class="btn btn-success btn-floating btn-xs"
+    data-toggle="modal" data-target="#taskModal"
+        style="
+            position: fixed;
+            bottom: 30px;
+            right: 30px;">
+    add task
+ </button>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
