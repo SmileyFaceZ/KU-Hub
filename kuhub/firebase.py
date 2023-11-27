@@ -5,7 +5,7 @@ from decouple import config
 print("Initializing Firebase...")
 try:
     firebase_config = {
-        "type": config('FIREBASE_TYPE'),
+        "type": "service_account",
         "project_id": config('FIREBASE_PROJECT_ID'),
         "private_key_id": config('FIREBASE_PRIVATE_KEY_ID'),
         "private_key": config('FIREBASE_PRIVATE_KEY').replace('\\n', '\n'),
