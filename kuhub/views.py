@@ -81,6 +81,7 @@ class HomePageView(generic.ListView):
     context_object_name: str = 'followed_users_posts'
 
     def get_queryset(self):
+        navbar_setting_profile(self.request)
         if not self.request.user.is_authenticated:
             messages.info(self.request, "Please login first")
             return Post.objects.none()
@@ -125,6 +126,10 @@ class HomePageView(generic.ListView):
 
         # Include profiles list in the context
         context['profiles_list'] = [Profile.objects.filter(user=post.username).first() for post in context['followed_users_posts']]
+
+        # Display profile photo in each post
+        for post in context['followed_users_posts']:
+            post.username.profile.display_photo = separate_folder_firebase('profile/')[post.username.profile.display_photo]
 
         return context
 
