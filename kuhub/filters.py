@@ -72,12 +72,6 @@ class PostDownloadFilter(PostFilter):
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
 
-    order_by_download = django_filters.ChoiceFilter(
-        label='Order by Download',
-        choices=POST_DOWNLOAD_CHOICES,
-        method='filter_by_download',
-        widget=forms.Select(attrs={'class': 'form-select'})
-    )
 
     def filter_by_liked_disliked(self, queryset, name, value):
         """Return queryset ordered by liked or disliked."""
@@ -93,14 +87,6 @@ class PostDownloadFilter(PostFilter):
             return queryset.order_by('-post_id__post_date')
         elif value == 'desc':
             return queryset.order_by('post_id__post_date')
-        return queryset
-
-    def filter_by_download(self, queryset, name, value):
-        """Return queryset ordered by download."""
-        if value == 'asc':
-            return queryset.order_by('-download')
-        elif value == 'desc':
-            return queryset.order_by('download')
         return queryset
 
 
