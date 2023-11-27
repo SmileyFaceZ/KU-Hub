@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Review-Hub</title>
+    <title>SUbject Detail</title>
 {% endblock %}
 <script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
 
 {% block content %}
 {% load custom_filters %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'kuhub/style.css' %}">
 <style>
     body {
         background-color: #BFE89C;
@@ -26,18 +27,15 @@
 
 <div class="container mt-4" style="font-family: 'Poppins'">
     <h3><span class="badge rounded-pill shadow p-3 d-flex justify-content-center" style="font-family: 'Poppins'; margin-top: 5%; margin-bottom: 3%;font-weight: normal; background-color: #36816C;">{{ subject }}</span></h3>
-    <!-- Post Content -->
+<!-- Post Content -->
     {% for post in course_code_post %}
-    {% if post.tag_id.tag_text == 'Summary-Hub' %}
     <div class="card border border-1 rounded-4">
         <div class="card-header">
             <div class="tag-text">
                 {% if post.was_published_recently_post %}
                     <span class="badge rounded-pill text-bg-danger" style="text-align: center; margin-right: 5px;">New!</span>
                 {% endif %}
-                {{ post.post_id.tag_id.tag_text }} |
-                <a href="#">{{ post.post_id.subject.course_code }} {{ post.post_id.subject.name_eng }}</a> |
-                <a href="{% url 'kuhub:gen_ed_type_list' %}#{{ post.post_id.subject.type|slugify }}">{{ post.post_id.subject.type }}</a>
+                {{ post.tag_id.tag_text }}
             </div>
         </div>
         <div class="card-body position-relative">
@@ -53,35 +51,30 @@
                     {% endif %}
                 </ul>
             </div>
-            <a href="{% url 'kuhub:profile_view' username=post.post_id.username %}" style="text-decoration-line: none;">
-                {% with profile=post.post_id.username.profile %}
+            <a href="{% url 'kuhub:profile_view' username=post.username %}" style="text-decoration-line: none;">
+                {% with profile=post.username.profile %}
                     <div class="d-flex align-items-center"> <!-- Use a flex container for alignment -->
-                        <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'kuhub\static\images\default_profile.jpg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
-                        <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ post.post_id.username }}</h4>
+                        <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                        <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ post.username }}</h4>
                     </div>
                 {% endwith %}
             </a>
             <br>
-            <p class="card-text">{{ post.post_id.post_content }}</p>
-            <p class="card-text">
-                <a href="{{ post.file.url }}" class="btn btn-outline-primary" target="_blank">View File</a>
-                <a href="{{ post.file.url }}" class="btn btn-outline-warning" id="download_link" download>Download File</a>
-            </p>
-            <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 5px;"></i>{{ post.post_id.post_date }}</h6>
-
+            <p class="card-text">{{ post.post_content }}</p>
+            <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 5px;"></i>{{ post.post_date }}</h6>
         </div>
         <div class="card-footer custom-footer">
             <div class="button-group">
                 {% if user.is_authenticated %}
-                    <button type="button" class="btn btn-link" id="like-btn-{{ post.post_id.pk }}" data-content="{{ post.post_id.pk }}" onclick="like_button_click('{{ post.post_id.pk }}')">
+                    <button type="button" class="btn btn-link" id="like-btn-{{ post.pk }}" data-content="{{ post.pk }}" onclick="like_button_click('{{ post.pk }}')">
                         <i class="{{ like_icon_styles|index:forloop.counter0 }}"></i>
                     </button>
-                    <span id="likes-count-{{ post.post_id.pk }}">{{ post.total_likes }}</span>
+                    <span id="likes-count-{{ post.pk }}">{{ post.total_likes }}</span>
 
-                    <button type="button" class="btn btn-link" id="dislike-btn-{{post.post_id.pk}}" data-content="{{ post.post_id.pk }}" onclick="dislike_button_click('{{ post.post_id.pk }}')">
+                    <button type="button" class="btn btn-link" id="dislike-btn-{{post.pk}}" data-content="{{ post.pk }}" onclick="dislike_button_click('{{ post.pk }}')">
                         <i class="{{ dislike_icon_styles|index:forloop.counter0 }}"></i>
                     </button>
-                    <span id="dislikes-count-{{ post.post_id.pk }}">{{ post.total_dislikes }}</span>
+                    <span id="dislikes-count-{{ post.pk }}">{{ post.total_dislikes }}</span>
                 {% else %}
                     <form action="{% url 'account_login' %}">
                         <button type="submit" class="btn btn-link">
@@ -94,15 +87,66 @@
                         <span>{{ post.total_dislikes }}</span>
                     </form>
                 {% endif %}
-                <a href="{% url 'kuhub:post_detail' pk=post.post_id.pk %}" class="btn btn-link">See comments</a>
+                <a href="{% url 'kuhub:post_detail' pk=post.pk %}" class="btn btn-link">See comments</a>
             </div>
         </div>
     </div>
-    <!-- {% elif post.tag_id.tag_text == 'Review-Hub'}
-    {% elif post.tag_id.tag_text == 'Tricks-Hub'} -->
-    {% endif %}
     {% endfor %}
 </div>
 
+<script>
+    function click_button(postId, response) {
+        console.log('Server response:', response);
+        let like_count = response.data.likes;
+        let dislike_count = response.data.dislikes;
+        console.log('Like Count:', like_count);
+        console.log('Dislike Count:', dislike_count);
+        document.getElementById('likes-count-' + postId).innerText = like_count;
+        document.getElementById('dislikes-count-' + postId).innerText = dislike_count;
+        document.getElementById('like-btn-' + postId).innerHTML = '<i class="' + response.data.like_style + '"></i>';
+        document.getElementById('dislike-btn-' + postId).innerHTML = '<i class="' + response.data.dislike_style + '"></i>';
+    }
+    
+    
+    function like_button_click(postId) {
+        axios({
+            url: '{% url "kuhub:like_post" %}',
+            method: 'POST',
+            data: {
+                'post_id': postId,
+            },
+            headers: {'X-Requested-With': 'XMLHttpRequest', 'cookie': document.cookie},
+            xsrfCookieName: 'csrftoken',
+            xsrfHeaderName: 'X-CSRFToken',
+            withCredentials: true,
+        })
+        .then(function (response) {
+            click_button(postId, response);
+        })
+        .catch(function (error) {
+            console.log('Error:', error);
+        });
+    }
+    
+    function dislike_button_click(postId) {
+        axios({
+            url: '{% url "kuhub:dislike_post" %}',
+            method: 'POST',
+            data: {
+                'post_id': postId,
+            },
+            headers: {'X-Requested-With': 'XMLHttpRequest', 'cookie': document.cookie},
+            xsrfCookieName: 'csrftoken',
+            xsrfHeaderName: 'X-CSRFToken',
+            withCredentials: true,
+        })
+        .then(function (response) {
+            click_button(postId, response);
+        })
+        .catch(function (error) {
+            console.log('Error:', error);
+        });
+    }
+    </script>
 
 {% endblock %}
