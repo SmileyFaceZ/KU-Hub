@@ -37,16 +37,19 @@ LOGGER = logging.getLogger('kuhub')
 
 
 def separate_folder_firebase(folder: str):
-    bucket = storage.bucket()
-    blobs = bucket.list_blobs(prefix=folder)
-    file_store = {}
-    for blob in blobs:
-        # Generate a signed URL for each file
-        if not blob.name.endswith('/'):
-            signed_url = blob.generate_signed_url(
-                expiration=timedelta(seconds=300))
-            delete_folder = blob.name.replace(folder, '')
-            file_store[delete_folder] = signed_url
+    try:
+        bucket = storage.bucket()
+        blobs = bucket.list_blobs(prefix=folder)
+        file_store = {}
+        for blob in blobs:
+            # Generate a signed URL for each file
+            if not blob.name.endswith('/'):
+                signed_url = blob.generate_signed_url(
+                    expiration=timedelta(seconds=300))
+                delete_folder = blob.name.replace(folder, '')
+                file_store[delete_folder] = signed_url
+    except ValueError:
+        return {}
 
     return file_store
 
@@ -156,8 +159,10 @@ class ReviewHubView(generic.ListView):
         navbar_setting_profile(self.request)
 
         for post in context['posts_list']:
-            post.username.profile.display_photo = separate_folder_firebase('profile/')[post.username.profile.display_photo]
-
+            try:
+                post.username.profile.display_photo = separate_folder_firebase('profile/')[post.username.profile.display_photo]
+            except TypeError:
+                post.username.profile.display_photo = {}
         return context
 
 
