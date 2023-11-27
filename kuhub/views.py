@@ -12,8 +12,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import QuerySet, Count
 from django.http import HttpRequest, JsonResponse
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from django.views import generic
+from itertools import zip_longest
+from isp_project import settings
 from kuhub.forms import EventForm
 from .calendar import create_event
 from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
@@ -22,7 +24,57 @@ from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostR
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter, TaskFilter
+from firebase_admin import storage
+from datetime import timedelta
+from django.utils import timezone
+import logging
+from django.db.utils import DataError
+import os
+import re
 
+
+LOGGER = logging.getLogger('kuhub')
+
+
+def separate_folder_firebase(folder: str):
+    try:
+        bucket = storage.bucket()
+        blobs = bucket.list_blobs(prefix=folder)
+        file_store = {}
+        for blob in blobs:
+            # Generate a signed URL for each file
+            if not blob.name.endswith('/'):
+                signed_url = blob.generate_signed_url(
+                    expiration=timedelta(seconds=300))
+                delete_folder = blob.name.replace(folder, '')
+                file_store[delete_folder] = signed_url
+    except ValueError:
+        return {}
+
+    return file_store
+
+
+def navbar_setting_profile(request):
+    try:
+        display_photo_key = request.user.profile.display_photo
+        if display_photo_key is not None:
+            photo_dict = separate_folder_firebase('profile/')
+            if display_photo_key in photo_dict:
+                request.user.profile.display_photo = photo_dict[
+                    display_photo_key]
+            else:
+                # Handle the case where the key doesn't exist
+                Profile.objects.filter(user=request.user).update(
+                    display_photo='default_profile_picture.png')
+
+    except (AttributeError, KeyError) as e:
+        # Log the error or handle it appropriately
+        LOGGER.error(
+            f'Error setting profile photo for user '
+            f'{request.user.username}: {e}'
+        )
+        return None
+      
 
 class HomePageView(generic.ListView):
     template_name = 'kuhub/home_page.html'
@@ -101,8 +153,16 @@ class ReviewHubView(generic.ListView):
             post.dislike_icon_style(self.request.user) for post in
             context['posts_list']]
         context['profiles_list'] = profiles_list
+
         context['form'] = self.filterset.form
 
+        navbar_setting_profile(self.request)
+
+        for post in context['posts_list']:
+            try:
+                post.username.profile.display_photo = separate_folder_firebase('profile/')[post.username.profile.display_photo]
+            except TypeError:
+                post.username.profile.display_photo = {}
         return context
 
 
@@ -125,16 +185,25 @@ class SummaryHubView(generic.ListView):
         """Add like and dislike icon styles to context."""
         context = super().get_context_data(**kwargs)
 
-        profiles_list = [Profile.objects.filter(user=post.post_id.username).first()
-                         for post in context['summary_post_list']]
+        file_store_summary = separate_folder_firebase('summary-file/')
+        file_store_profile = separate_folder_firebase('profile/')
 
+        # Contain Profile Name
         context['like_icon_styles'] = [post.like_icon_style(self.request.user)
                                        for post in context['summary_post_list']]
         context['dislike_icon_styles'] = [
             post.dislike_icon_style(self.request.user) for post in
-            context['summary_post_list']]
-        context['profiles_list'] = profiles_list
+            context['summary_post_list']
+        ]
+
         context['form'] = self.filterset.form
+
+        # Change file name into url
+        for i in context['summary_post_list']:
+            i.post_id.username.profile.display_photo = file_store_profile[i.post_id.username.profile.display_photo]
+            i.file = file_store_summary[i.file.name]
+
+        navbar_setting_profile(self.request)
 
         return context
 
@@ -167,6 +236,11 @@ class TricksHubView(generic.ListView):
         context['profiles_list'] = profiles_list
         context['form'] = self.filterset.form
 
+        for post in context['tricks_list']:
+            post.username.profile.display_photo = separate_folder_firebase('profile/')[post.username.profile.display_photo]
+
+        navbar_setting_profile(self.request)
+
         return context
 
 
@@ -186,6 +260,8 @@ class GroupView(generic.ListView):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             context['user_groups'] = self.request.user.group_set.all()
+
+        navbar_setting_profile(self.request)
         return context
 
 
@@ -213,10 +289,9 @@ class GenEdTypeListView(generic.ListView):
             subject.type = subject.type.replace("_", " ")
 
         context['subject_list'] = subject_filter.qs
-        for i in subject_filter.qs:
-            print(i.type)
         context['form'] = subject_filter.form
 
+        navbar_setting_profile(self.request)
         return context
 
 
@@ -226,6 +301,7 @@ class SubjectDetailView(generic.ListView):
     context_object_name = 'subject_detail'
 
     def get(self, request: HttpRequest, **kwargs):
+        navbar_setting_profile(request)
         try:
             key = kwargs["course_code"]
             subject = get_object_or_404(Subject, course_code=key)
@@ -412,16 +488,16 @@ def dislike_post(request: HttpRequest) -> JsonResponse:
 @login_required
 def create_post(request: HttpRequest):
     """Create post of each tag type and redirect to each tag page."""
+    navbar_setting_profile(request)
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            print('data', data)
 
             post = Post.objects.create(
                 username=request.user,
                 post_content=data['review'],
-                post_date=dt.datetime.now(),
+                post_date=timezone.now(),
                 subject=Subject.objects.get(course_code=data['subject']),
                 tag_id=Tags.objects.get(tag_text=data['tag_name'])
             )
@@ -432,12 +508,22 @@ def create_post(request: HttpRequest):
                 return redirect('kuhub:review')
 
             if data['tag_name'] == 'Summary-Hub':
+                uploaded_file = request.FILES.get('file_upload')
                 PostDownload.objects.create(
                     post_id=post,
-                    file=request.FILES.get('file_upload'),
-                    download_date=dt.datetime.now(),
+                    file=uploaded_file,
+                    download_date=timezone.now(),
                     download_count=0,
                 )
+                # Remove file if it already exists
+                if uploaded_file:
+                    clean_file_name = re.sub(r'\s+', '_', uploaded_file.name)
+                    clean_file_name = re.sub(r'[()]', '', clean_file_name)
+                    clean_file_path = os.path.join(settings.MEDIA_ROOT,
+                                                   clean_file_name)
+                    if os.path.exists(clean_file_path):
+                        os.remove(clean_file_path)
+
                 return redirect('kuhub:summary')
 
             if data['tag_name'] == 'Tricks-Hub':
@@ -468,10 +554,30 @@ def profile_settings(request):
     profile = user.profile
 
     if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES, instance=user.profile)
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Changed successfully!')
+            try:
+                form.save()
+                display_photo_url = request.POST.get('display_photo_url')
+
+                if display_photo_url:
+                    profile.display_photo = display_photo_url
+                    profile.save()
+
+                    clean_file_name = re.sub(r'\s+', '_', display_photo_url)
+                    clean_file_name = re.sub(r'[()]', '', clean_file_name)
+                    clean_file_path = os.path.join(settings.MEDIA_ROOT,
+                                                   clean_file_name)
+
+                    if os.path.exists(clean_file_path):
+                        os.remove(clean_file_path)
+
+                messages.success(request, 'Profile updated successfully!')
+            except DataError as e:
+                LOGGER.error(
+                    f'Error updating profile for user {user.username}: {e}')
+                messages.warning(request,
+                               'Error updating profile. The file name might be too long. Please try a shorter file name.')
             return redirect('kuhub:profile_settings')
 
     else:
@@ -480,6 +586,26 @@ def profile_settings(request):
     following = UserFollower.objects.filter(user_followed=user)
     followers = UserFollower.objects.filter(follower=user)
     biography = Profile.objects.filter(biography=profile.biography)
+
+    bucket = storage.bucket()
+    blobs = bucket.list_blobs(prefix='profile/')
+    file_store = {}
+
+    for blob in blobs:
+        # Generate a signed URL for each file
+        if not blob.name.endswith('/'):
+            signed_url = blob.generate_signed_url(
+                expiration=timedelta(seconds=300))
+            delete_folder = blob.name.replace('profile/', '')
+            file_store[delete_folder] = signed_url
+
+    # Change file name into url
+    try:
+        profile.display_photo = file_store[profile.display_photo]
+    except KeyError:
+        Profile.objects.filter(user=user).update(display_photo='default_profile_picture.png')
+        update_profile = Profile.objects.get(user=user)
+        profile.display_photo = file_store[update_profile.display_photo]
 
     return render(request,
                   template_name='kuhub/profile_settings.html',
@@ -510,10 +636,12 @@ def profile_view(request, username):
     if request.user.is_authenticated:
         is_following = request.user.follower.filter(user_followed=user).exists()
 
-    like_icon_styles = [post.like_icon_style(request.user)
-                        for post in posts_list]
-    dislike_icon_styles = [post.dislike_icon_style(request.user)
-                           for post in posts_list]
+    file_store_profile = separate_folder_firebase('profile/')
+    for post in posts_list:
+        post.username.profile.display_photo = file_store_profile[post.username.profile.display_photo]
+
+    navbar_setting_profile(request)
+    profile.display_photo = file_store_profile[profile.display_photo]
 
     context = {
         'profile': profile,
@@ -522,8 +650,6 @@ def profile_view(request, username):
         'is_following': is_following,
         'user': request.user,
         'posts_list': posts_list,
-        'like_icon_styles': like_icon_styles,
-        'dislike_icon_styles': dislike_icon_styles
     }
 
     return render(request, 'kuhub/profile.html', context)
@@ -677,15 +803,10 @@ def delete_task(request, note_id):
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
 
-
-# views.py
-from django.shortcuts import render
-from itertools import zip_longest  # Import zip_longest for handling different lengths
-
-
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comments_list = PostComments.objects.filter(post_id=post)
+    navbar_setting_profile(request)
 
     if request.method == "POST":
         if request.user.is_authenticated:
@@ -710,19 +831,20 @@ def post_detail(request, pk):
     owner_profile = Profile.objects.filter(user=post.username)
     comments_profiles = [Profile.objects.filter(user=comment.username).first()
                          for comment in comments_list]
-    like_icon_styles = post.like_icon_style(request.user)
-    dislike_icon_styles = post.dislike_icon_style(request.user)
 
     # Use zip_longest to handle different lengths
     comments_and_profiles = zip_longest(comments_list, comments_profiles)
+
+    post = Post.objects.get(pk=pk)
+    file_name = post.username.profile.display_photo
+    file = separate_folder_firebase('profile/')[file_name]
+    post.username.profile.display_photo = file
 
     context = {
         'post': post,
         'comments_and_profiles': comments_and_profiles,
         'form': form,
         'owner_profile': owner_profile,
-        'like_icon_styles': like_icon_styles,
-        'dislike_icon_styles': dislike_icon_styles
     }
 
     return render(request, 'kuhub/post_detail.html', context)
@@ -731,6 +853,7 @@ def post_detail(request, pk):
 @login_required
 def edit_post(request, pk):
     """User can edit their own post content, tag and subject."""
+    navbar_setting_profile(request)
     try:
         post = get_object_or_404(Post, pk=pk)
     except Http404:
@@ -741,7 +864,6 @@ def edit_post(request, pk):
         return redirect("kuhub:review")
 
     if request.user != post.username:
-        print('do this')
         messages.warning(
             request,
             f"You are not the owner of this post.❗️"
@@ -750,7 +872,6 @@ def edit_post(request, pk):
         return redirect('kuhub:post_detail', pk=post.pk)
 
     if request.method == "POST":
-        print('xxxxxxx')
         form = PostForm(request.POST)
         if form.is_valid():
             tag_name = form.cleaned_data['tag_name']
@@ -780,7 +901,7 @@ def edit_post(request, pk):
 
 def report_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
-
+    navbar_setting_profile(request)
     if request.method == 'POST':
         form = ReportForm(request.POST)
         if form.is_valid():
