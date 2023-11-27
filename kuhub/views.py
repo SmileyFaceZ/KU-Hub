@@ -14,6 +14,7 @@ from django.db.models import QuerySet, Count
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.views import generic
+from google.api_core.exceptions import PermissionDenied
 from kuhub.forms import EventForm
 from .calendar import create_event
 from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
@@ -326,7 +327,7 @@ class GroupDetail(generic.DetailView):
         obj = super().get_object(queryset)
         is_user_in_group = obj.group_member.filter(pk=self.request.user.pk).exists()
         if not is_user_in_group:
-            raise Http404("You don't have permission to view this group.")
+            raise PermissionDenied("You don't have permission to view this group.")
         return obj
 
     def get_filter_set(self):
@@ -846,3 +847,20 @@ class EventDetail(generic.DetailView):
             context['done'] = self.object.task_set.filter(status='done')
             context['inprogress'] = self.object.task_set.filter(status='in progress')
         return context
+
+def leave_group(request, group_id):
+    """
+        User leaving group.
+    """
+    user = request.user
+    group = get_object_or_404(Group, pk=group_id)
+
+    try:
+        group.group_member.remove(user)
+        group.save()
+        messages.success(request, "leave group success!")
+        return redirect(reverse('kuhub:groups'))
+    except:
+        raise Http404("You didn't in this group.")
+
+

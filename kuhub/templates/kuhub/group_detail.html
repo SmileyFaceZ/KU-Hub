@@ -398,6 +398,17 @@
             display: none;
         }
     </style>
+<form action="{% url 'kuhub:leave' group.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary btn-floating btn-xs"
+            style="
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                background-color: red;">
+        Leave Group
+     </button>
+</form>
 <script>
     function replaceURLWithHTMLLinks() {
         var textElements = document.getElementsByClassName("textid");
