@@ -2,6 +2,8 @@ import django_filters
 from django import forms
 from django.db.models import Count, Q
 
+from kuhub.models import Task
+
 
 class PostFilter(django_filters.FilterSet):
 
@@ -113,3 +115,11 @@ class GenedFilter(django_filters.FilterSet):
         return queryset.filter(
             Q(name_eng__icontains=value) | Q(course_code__icontains=value)
         )
+
+class TaskFilter(django_filters.FilterSet):
+    STATUS_CHOICES = [('', 'All')] + list(Task.STATUS_CHOICES)
+    status = django_filters.ChoiceFilter(choices=STATUS_CHOICES, label='')
+
+    class Meta:
+        model = Task
+        fields = ['status']
