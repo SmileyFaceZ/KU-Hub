@@ -102,7 +102,7 @@ source venv/bin/activate
 ## Step 2: Clone the repository
 Clone the repository and using this command on terminal:
 ```commandline
-git clone https://github.com/SmileyFaceZ/ku-polls.git
+git clone https://github.com/SmileyFaceZ/KU-Hub.git
 ```
 ---
 
