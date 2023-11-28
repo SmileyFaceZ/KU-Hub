@@ -1,8 +1,11 @@
+"""Import django forms and models"""
 from django import forms
 from kuhub.models import Tags, Subject, Profile, PostComments
 
 
 class PostForm(forms.Form):
+    """Create post form"""
+
     TAG_CHOICES = [
         (tag.tag_text, tag.tag_text) for tag in Tags.objects.all()
     ]
@@ -30,12 +33,17 @@ class PostForm(forms.Form):
 
 
 class ProfileForm(forms.ModelForm):
+    """Manage profile form"""
+
     class Meta:
+        """Return fields"""
         model = Profile
         fields = ['biography', 'display_photo']
 
 
 class GroupForm(forms.Form):
+    """Form for creating group"""
+
     name = forms.CharField(
         widget=forms.Textarea(attrs={'cols': 50, 'rows': 1}),
         label='Group name:',
@@ -64,6 +72,8 @@ class GroupForm(forms.Form):
 
 
 class EventForm(forms.Form):
+    """Form for creating event"""
+
     start_time = forms.DateTimeField(
         widget=forms.TextInput(attrs={'type': 'datetime-local'}),
         label='Start Time',
@@ -97,11 +107,15 @@ class EventForm(forms.Form):
 
 
 class CommentForm(forms.ModelForm):
+    """Form for commenting in posts"""
+
     class Meta:
+        """Return field"""
         model = PostComments
         fields = ['comment']
 
 
 class ReportForm(forms.Form):
+    """Form for report posts"""
     reason = forms.CharField(widget=forms.Textarea)
 

@@ -1,10 +1,9 @@
+"""Import django models"""
 from django.db import models
-import random
-import string
-import uuid
+
 
 class GroupEvent(models.Model):
-    group = models.ForeignKey('Group',on_delete=models.CASCADE)
+    group = models.ForeignKey('Group', on_delete=models.CASCADE)
     start_time = models.CharField(max_length=255)
     end_time = models.CharField(max_length=255)
     show_time = models.CharField(max_length=255, blank=True, null=True)

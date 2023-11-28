@@ -18,10 +18,8 @@ from kuhub import firebase
 
 firebase.initialize_firebase()
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -60,8 +58,10 @@ INSTALLED_APPS = [
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': config('GOOGLE_OAUTH_CLIENT_ID', default='google-oauth-client-id'),
-            'secret': config('GOOGLE_OAUTH_SECRET_KEY', default='google-oauth-secret-key'),
+            'client_id': config('GOOGLE_OAUTH_CLIENT_ID',
+                                default='google-oauth-client-id'),
+            'secret': config('GOOGLE_OAUTH_SECRET_KEY',
+                             default='google-oauth-secret-key'),
             'key': ''
         },
         'SCOPE': ['profile', 'email',
@@ -98,7 +98,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [os.path.join(BASE_DIR, 'templates'),
-    ],
+                 ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -114,15 +114,10 @@ TEMPLATES = [
 WSGI_APPLICATION = "isp_project.wsgi.application"
 
 
-
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-# To use Neon with Django, you have to create a Project on Neon and specify the project connection settings in your settings.py in the same way as for standalone Postgres.
-
 DATABASES = {
     'default': dj_database_url.config(
-        default=config("DATABASE_URL", default="postgres://postgres:postgres@localhost:5432/postgres"),
+        default=config("DATABASE_URL",
+                       default="postgres://postgres:postgres@localhost:5432/postgres"),
         conn_max_age=500,
         conn_health_checks=True
     )
@@ -135,9 +130,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", },
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator", },
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator", },
 ]
 
 PASSWORD_HASHERS = [
@@ -145,7 +140,6 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
     'django.contrib.auth.hashers.Argon2PasswordHasher',
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -158,10 +152,10 @@ USE_I18N = True
 
 USE_TZ = True
 
-SECURE_SSL_REDIRECT = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+# SECURE_SSL_REDIRECT = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#
+# SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

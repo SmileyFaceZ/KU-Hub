@@ -6,7 +6,6 @@ from kuhub.models import Task
 
 
 class PostFilter(django_filters.FilterSet):
-
     LIKED_DISLIKED_CHOICE = [
         ('asc', 'Most Liked'),
         ('desc', 'Most Disliked'),
@@ -72,7 +71,6 @@ class PostDownloadFilter(PostFilter):
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
 
-
     def filter_by_liked_disliked(self, queryset, name, value):
         """Return queryset ordered by liked or disliked."""
         if value == 'desc':
@@ -98,14 +96,17 @@ class GenedFilter(django_filters.FilterSet):
     )
 
     def filter_search(self, queryset, name, value):
+        """Used for searching content."""
         return queryset.filter(
             Q(name_eng__icontains=value) | Q(course_code__icontains=value)
         )
+
 
 class TaskFilter(django_filters.FilterSet):
     STATUS_CHOICES = [('', 'All')] + list(Task.STATUS_CHOICES)
     status = django_filters.ChoiceFilter(choices=STATUS_CHOICES, label='')
 
     class Meta:
+        """Return filter"""
         model = Task
         fields = ['status']

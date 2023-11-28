@@ -1,7 +1,9 @@
 """
+
 Contains view functions for handling requests.
 related to Review-Hub, Summary-Hub and Tricks-Hub
 in the kuhub web application.
+
 """
 from django.utils.decorators import method_decorator
 from django.http import Http404
@@ -19,8 +21,9 @@ from isp_project import settings
 from kuhub.forms import EventForm
 from .calendar import create_event
 from kuhub.forms import PostForm, ProfileForm, GroupForm, CommentForm, ReportForm
-from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower, PostReport,
-                          Group, GroupTags, GroupPassword, Subject, PostComments, GroupEvent, Note, Task)
+from kuhub.models import (Post, PostDownload, Tags, Profile, UserFollower,
+                          PostReport, Group, GroupTags, GroupPassword,
+                          Subject, PostComments, GroupEvent, Note, Task)
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from kuhub.filters import PostFilter, PostDownloadFilter, GenedFilter, TaskFilter
@@ -32,11 +35,11 @@ from django.db.utils import DataError
 import os
 import re
 
-
 LOGGER = logging.getLogger('kuhub')
 
 
 def separate_folder_firebase(folder: str):
+    """Separating folder for collecting files in firebase"""
     try:
         bucket = storage.bucket()
         blobs = bucket.list_blobs(prefix=folder)
@@ -55,6 +58,7 @@ def separate_folder_firebase(folder: str):
 
 
 def navbar_setting_profile(request):
+    """Navigate bar settings for profile"""
     try:
         display_photo_key = request.user.profile.display_photo
         if display_photo_key is not None:
@@ -74,9 +78,10 @@ def navbar_setting_profile(request):
             f'{request.user.username}: {e}'
         )
         return None
-      
+
 
 class HomePageView(generic.ListView):
+    """Class for redirect to home page view"""
     template_name = 'kuhub/home_page.html'
     context_object_name: str = 'followed_users_posts'
 
@@ -101,7 +106,8 @@ class HomePageView(generic.ListView):
 
         # Check if the user is authenticated
         if self.request.user.is_authenticated:
-            followed_users = UserFollower.objects.filter(follower=self.request.user).values_list('user_followed', flat=True)
+            followed_users = UserFollower.objects.filter(follower=self.request.user).values_list('user_followed',
+                                                                                                 flat=True)
             followed_users_posts = Post.objects.filter(username__in=followed_users).order_by('-post_date')
 
             # Check if the user is following anyone
@@ -111,8 +117,10 @@ class HomePageView(generic.ListView):
             queryset = followed_users_posts
             self.filterset = PostFilter(self.request.GET, queryset=queryset)
             context['followed_users_posts'] = self.filterset.qs
-            context['like_icon_styles'] = [post.like_icon_style(self.request.user) for post in context['followed_users_posts']]
-            context['dislike_icon_styles'] = [post.dislike_icon_style(self.request.user) for post in context['followed_users_posts']]
+            context['like_icon_styles'] = [post.like_icon_style(self.request.user) for post in
+                                           context['followed_users_posts']]
+            context['dislike_icon_styles'] = [post.dislike_icon_style(self.request.user) for post in
+                                              context['followed_users_posts']]
 
         else:
             # User is not authenticated, display a message
@@ -125,11 +133,13 @@ class HomePageView(generic.ListView):
         context['form'] = getattr(self, 'filterset', None) and getattr(self.filterset, 'form', None)
 
         # Include profiles list in the context
-        context['profiles_list'] = [Profile.objects.filter(user=post.username).first() for post in context['followed_users_posts']]
+        context['profiles_list'] = [Profile.objects.filter(user=post.username).first() for post in
+                                    context['followed_users_posts']]
 
         # Display profile photo in each post
         for post in context['followed_users_posts']:
-            post.username.profile.display_photo = separate_folder_firebase('profile/')[post.username.profile.display_photo]
+            post.username.profile.display_photo = separate_folder_firebase('profile/')[
+                post.username.profile.display_photo]
 
         return context
 
@@ -165,7 +175,8 @@ class ReviewHubView(generic.ListView):
 
         for post in context['posts_list']:
             try:
-                post.username.profile.display_photo = separate_folder_firebase('profile/')[post.username.profile.display_photo]
+                post.username.profile.display_photo = separate_folder_firebase('profile/')[
+                    post.username.profile.display_photo]
             except TypeError:
                 post.username.profile.display_photo = {}
         return context
@@ -242,7 +253,8 @@ class TricksHubView(generic.ListView):
         context['form'] = self.filterset.form
 
         for post in context['tricks_list']:
-            post.username.profile.display_photo = separate_folder_firebase('profile/')[post.username.profile.display_photo]
+            post.username.profile.display_photo = separate_folder_firebase('profile/')[
+                post.username.profile.display_photo]
 
         navbar_setting_profile(self.request)
 
@@ -250,9 +262,7 @@ class TricksHubView(generic.ListView):
 
 
 class GroupView(generic.ListView):
-    """
-    Redirect to Group-Hub page.
-    """
+    """Redirect to Group-Hub page."""
     template_name = 'kuhub/group.html'
     context_object_name = 'group_list'
 
@@ -337,7 +347,7 @@ def join(request, group_id):
     Join Group button
     """
     user = request.user
-    group = get_object_or_404(Group,pk=group_id)
+    group = get_object_or_404(Group, pk=group_id)
 
     if user in group.group_member.all():
         messages.error(request, "You already a member of this group")
@@ -555,6 +565,7 @@ def create_post(request: HttpRequest):
 
 @login_required
 def profile_settings(request):
+    """Function for profile settings form"""
     user = request.user
     profile = user.profile
 
@@ -582,7 +593,7 @@ def profile_settings(request):
                 LOGGER.error(
                     f'Error updating profile for user {user.username}: {e}')
                 messages.warning(request,
-                               'Error updating profile. The file name might be too long. Please try a shorter file name.')
+                                 'Error updating profile. The file name might be too long. Please try a shorter file name.')
             return redirect('kuhub:profile_settings')
 
     else:
@@ -625,6 +636,7 @@ def profile_settings(request):
 
 
 def profile_view(request, username):
+    """Retrieve profile for each user."""
     # Retrieve the user based on the username
     user = get_object_or_404(User, username=username)
 
@@ -663,6 +675,7 @@ def profile_view(request, username):
 @login_required
 @require_POST
 def toggle_follow(request, user_id):
+    """For follow users"""
     user_to_follow = User.objects.get(pk=user_id)
     follower = request.user
 
@@ -683,6 +696,7 @@ def toggle_follow(request, user_id):
 
 @login_required
 def followers_page(request):
+    """Redirect to followers page."""
     user = request.user
     followers = UserFollower.objects.filter(user_followed=user)
 
@@ -691,6 +705,7 @@ def followers_page(request):
 
 @login_required
 def following_page(request):
+    """Redirect to following page."""
     user = request.user
     following = UserFollower.objects.filter(follower=user)
 
@@ -698,6 +713,7 @@ def following_page(request):
 
 
 def group_event_create(request, group_id):
+    """Create events for group."""
     user = request.user
     is_google_user = user.socialaccount_set.filter(provider='google').exists()
     group = get_object_or_404(Group, pk=group_id)
@@ -719,11 +735,11 @@ def group_event_create(request, group_id):
             if data['is_meeting']:
                 try:
                     event, meet_link = create_event(request=request,
-                                         summary=data['summary'],
-                                         description=data['description'],
-                                         location=data['location'],
-                                         start_datetime=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
-                                         end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'))
+                                                    summary=data['summary'],
+                                                    description=data['description'],
+                                                    location=data['location'],
+                                                    start_datetime=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
+                                                    end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'))
                 except:
                     messages.error(request, "You have to login with google before using this feature")
                     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
@@ -734,21 +750,23 @@ def group_event_create(request, group_id):
     return render(
         request,
         template_name='kuhub/group_event.html',
-        context={'form': EventForm, 'group': group, 'user':user, 'is_google':is_google_user}
+        context={'form': EventForm, 'group': group, 'user': user, 'is_google': is_google_user}
     )
 
 
 def group_event_delete(request, event_id):
+    """Delete event for group"""
     user = request.user
     event = get_object_or_404(GroupEvent, pk=event_id)
     group_id = event.group.id
-    #delete GroupEvent object
+    # delete GroupEvent object
     event.delete()
     messages.success(request, 'delete event successful')
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
 
 def add_note(request, group_id):
+    """Add notes in group"""
     group = get_object_or_404(Group, pk=group_id)
     if request.method == 'POST':
         text = request.POST.get('note', '')
@@ -758,13 +776,16 @@ def add_note(request, group_id):
 
 
 def delete_note(request, note_id):
+    """Delete notes in group"""
     note = get_object_or_404(Note, pk=note_id)
     group_id = note.group.id
     note.delete()
     messages.success(request, 'delete note successful')
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
+
 def add_task(request, group_id):
+    """Add tasks for groups"""
     user = request.user
     group = get_object_or_404(Group, pk=group_id)
     if request.method == 'POST':
@@ -783,7 +804,9 @@ def add_task(request, group_id):
             return redirect(reverse('kuhub:event_detail', args=(event.id,)))
         return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
+
 def change_task_status(request, task_id):
+    """Change status for each task in the group."""
     task = get_object_or_404(Task, pk=task_id)
     group_id = task.group.id
     if request.method == 'POST':
@@ -796,7 +819,9 @@ def change_task_status(request, task_id):
         return redirect(reverse('kuhub:event_detail', args=(task.event.id,)))
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
+
 def delete_task(request, note_id):
+    """Delete tasks in each group."""
     task = get_object_or_404(Task, pk=note_id)
     group_id = task.group.id
     event_id = None
@@ -811,6 +836,7 @@ def delete_task(request, note_id):
 
 
 def post_detail(request, pk):
+    """Shows post detail and comments."""
     post = get_object_or_404(Post, pk=pk)
     comments_list = PostComments.objects.filter(post_id=post)
     navbar_setting_profile(request)
@@ -840,7 +866,8 @@ def post_detail(request, pk):
                          for comment in comments_list]
 
     # Use zip_longest to handle different lengths
-    comments_and_profiles = zip_longest(comments_list, comments_profiles)
+    comments_and_profiles = zip_longest(comments_list,
+                                        comments_profiles)
 
     post = Post.objects.get(pk=pk)
     file_name = post.username.profile.display_photo
@@ -876,18 +903,21 @@ def edit_post(request, pk):
             f"You are not the owner of this post.❗️"
         )
 
-        return redirect('kuhub:post_detail', pk=post.pk)
+        return redirect('kuhub:post_detail',
+                        pk=post.pk)
 
     if request.method == "POST":
         form = PostForm(request.POST)
         if form.is_valid():
             tag_name = form.cleaned_data['tag_name']
 
-            tag = get_object_or_404(Tags, tag_text=tag_name)
+            tag = get_object_or_404(Tags,
+                                    tag_text=tag_name)
             post.tag_id = tag
 
             subject_code = form.cleaned_data['subject']
-            subject = get_object_or_404(Subject, course_code=subject_code)
+            subject = get_object_or_404(Subject,
+                                        course_code=subject_code)
             post.subject = subject
 
             post.post_content = form.cleaned_data['review']
@@ -907,13 +937,15 @@ def edit_post(request, pk):
 
 
 def report_post(request, pk):
+    """Report post form"""
     post = get_object_or_404(Post, pk=pk)
     navbar_setting_profile(request)
     if request.method == 'POST':
         form = ReportForm(request.POST)
         if form.is_valid():
             reason = form.cleaned_data['reason']
-            report_count = PostReport.objects.filter(post_id=post).aggregate(Count('id'))['id__count']
+            report_count = PostReport.objects.filter(post_id=post).aggregate(
+                Count('id'))['id__count']
             PostReport.objects.create(post_id=post,
                                       report_reason=reason,
                                       report_date=dt.datetime.now(),
@@ -924,9 +956,12 @@ def report_post(request, pk):
     else:
         form = ReportForm()
 
-    return render(request, 'kuhub/report_post.html', {'form': form, 'post': post})
+    return render(request, 'kuhub/report_post.html',
+                  {'form': form, 'post': post})
+
 
 def assign_task_in_event(request, task_id):
+    """Assign task in event"""
     task = get_object_or_404(Task, pk=task_id)
     group_id = task.group.id
     if request.method == 'POST':
@@ -938,7 +973,9 @@ def assign_task_in_event(request, task_id):
         messages.success(request, 'assign to event successfully!')
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
+
 def unassign_task(request, task_id):
+    """Unassign tasks in event"""
     task = get_object_or_404(Task, pk=task_id)
     group_id = task.group.id
     event_id = task.event.id
@@ -949,6 +986,7 @@ def unassign_task(request, task_id):
     if 'event' in str(previous_path):
         return redirect(reverse('kuhub:event_detail', args=(event_id,)))
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
+
 
 @method_decorator(login_required, name='dispatch')
 class EventDetail(generic.DetailView):
@@ -961,7 +999,8 @@ class EventDetail(generic.DetailView):
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        is_user_in_group = obj.group.group_member.filter(pk=self.request.user.pk).exists()
+        is_user_in_group = obj.group.group_member.filter(
+            pk=self.request.user.pk).exists()
         if not is_user_in_group:
             raise Http404("You don't have permission to view this group.")
         return obj
@@ -972,5 +1011,6 @@ class EventDetail(generic.DetailView):
         if self.request.user.is_authenticated:
             context['todo'] = self.object.task_set.filter(status='todo')
             context['done'] = self.object.task_set.filter(status='done')
-            context['inprogress'] = self.object.task_set.filter(status='in progress')
+            context['inprogress'] = self.object.task_set.filter(
+                status='in progress')
         return context
