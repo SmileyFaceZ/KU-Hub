@@ -655,6 +655,8 @@ def profile_view(request, username):
         'is_following': is_following,
         'user': request.user,
         'posts_list': posts_list,
+        'like_icon_styles': [post.like_icon_style(request.user) for post in posts_list],
+        'dislike_icon_styles': [post.dislike_icon_style(request.user) for post in posts_list],
     }
 
     return render(request, 'kuhub/profile.html', context)

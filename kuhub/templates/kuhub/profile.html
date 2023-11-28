@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% load static %}
-<script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
+{% load custom_filters %}
 
 {% block content %}
 
@@ -95,12 +95,12 @@
                 <div class="button-group">
                     {% if user.is_authenticated %}
                         <button type="button" class="btn btn-link" id="like-btn-{{ post.pk }}" data-content="{{ post.pk }}" onclick="like_button_click('{{ post.pk }}')">
-                            <i class="{{ like_icon_styles.forloop.counter0 }}"></i>
+                            <i class="{{ like_icon_styles|index:forloop.counter0 }}"></i>
                         </button>
                         <span id="likes-count-{{ post.pk }}">{{ post.total_likes }}</span>
 
                         <button type="button" class="btn btn-link" id="dislike-btn-{{post.pk}}" data-content="{{ post.pk }}" onclick="dislike_button_click('{{ post.pk }}')">
-                            <i class="{{ dislike_icon_styles.forloop.counter0 }}"></i>
+                            <i class="{{ dislike_icon_styles|index:forloop.counter0 }}"></i>
                         </button>
                         <span id="dislikes-count-{{ post.pk }}">{{ post.total_dislikes }}</span>
 
