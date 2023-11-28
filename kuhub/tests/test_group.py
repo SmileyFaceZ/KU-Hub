@@ -63,11 +63,22 @@ class GroupTest(TestCase):
 
     def test_join_but_already_be_a_member(self):
         """
-        User who already in group
+        User who already in group will return error message when join group
         """
         url = reverse('kuhub:join', args=[self.group1.id])
         self.group1.group_member.add(self.user1)
         self.login(self.user1)
-        response = self.client.post(url)
-        # Check if redirect to login page
-        self.assertRedirects(response, reverse('kuhub:'))
+        response = self.client.post(url, follow=True)
+        # Check for a redirect to group page
+        self.assertRedirects(response, expected_url=reverse('kuhub:groups'), status_code=302)
+        # Check if return the error message
+        self.assertContains(response, "You already a member of this group")
+
+
+    def test_view_other_group_detail_page(self):
+        """
+        Go to Group detail page of the group that user is not a member should return 405 page
+        """
+        self.login(self.user1)
+        response = self.client.post(reverse('kuhub:group_detail', args=[self.group1.id]), follow=True)
+        self.assertEqual(response.status_code, 405)
