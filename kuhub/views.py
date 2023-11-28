@@ -794,7 +794,9 @@ def change_task_status(request, task_id):
 def delete_task(request, note_id):
     task = get_object_or_404(Task, pk=note_id)
     group_id = task.group.id
-    event_id = task.event.id
+    event_id = None
+    if task.event:
+        event_id = task.event.id
     task.delete()
     messages.success(request, 'delete task successful')
     previous_path = request.META.get('HTTP_REFERER', None)
