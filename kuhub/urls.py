@@ -43,6 +43,6 @@ urlpatterns = [
     path('post/<int:pk>/', views.post_detail, name='post_detail'),
     path('post/<int:pk>/edit/', views.edit_post, name='edit_post'),
     path('report/<int:pk>/', views.report_post, name='report_post'),
-    re_path(r'^.*/$', RedirectView.as_view(url='/kuhub/review-hub/', permanent=True), name='redirect_to_review_hub'),
+    re_path(r'^.*/$', RedirectView.as_view(url='/kuhub/review-hub/'), name='redirect_to_review_hub'),
 ]
 

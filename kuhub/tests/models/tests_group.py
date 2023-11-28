@@ -4,6 +4,7 @@ from kuhub.models import Group, GroupTags, GroupPassword
 import datetime
 from django.utils import timezone
 
+
 class GroupModelTest(TestCase):
 
     def setUp(self):
@@ -44,11 +45,11 @@ class GroupModelTest(TestCase):
         group = Group.objects.create(
             group_name='Test Group',
             group_description='This is a test group',
-            create_date=datetime.date.today(),
+            create_date=timezone.now().date(),
         )
 
         # Check if the was_published_recently_post method works
-        self.assertTrue(group.was_published_recently_post())
+        self.assertEqual(group.was_published_recently_post(), True)
 
     def test_group_str_method(self):
         # Create a Group instance
