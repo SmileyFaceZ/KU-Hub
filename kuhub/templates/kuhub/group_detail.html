@@ -124,23 +124,24 @@
                             <i class="fa-solid fa-plus" style="color: #ffffff; font-size: 16px;"></i>
                         </button>
                     </div>
-                    <div class="card-body" style="background-color: #EEF6CB;">                        {% for note in notes %}
+                    <div class="card-body" style="background-color: #EEF6CB;">
+                        {% for note in notes %}
                         <div class="card border border-1 rounded-4 m-2">
                             <div class="card-body">
-                            <span>
-                                <form method="post" action="{% url 'kuhub:note_delete' note.id %}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn rounded-circle btn-floating btn-xs" style="position:absolute; left:80%; top:40%;">
-                                        <i class="fa-solid fa-trash" style="color: red"></i>
-                                    </button>
-                                </form>
-                                <p class="textid">{{note.note_text}}</p>
-                            </span>
+                                <span>
+                                    <form method="post" action="{% url 'kuhub:note_delete' note.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn rounded-circle btn-floating btn-xs" style="position:absolute; left:80%; top:40%;">
+                                            <i class="fa-solid fa-trash" style="color: red"></i>
+                                        </button>
+                                    </form>
+                                    <p class="textid">{{note.note_text}}</p>
+                                </span>
                         </div>
-                    {% endfor %}
                     </div>
-             </div>
-            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 <!-- Tasks Container -->
             <div class="row">
