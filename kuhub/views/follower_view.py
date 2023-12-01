@@ -10,6 +10,7 @@ from kuhub.views.firebase_view import navbar_setting_profile, separate_folder_fi
 @login_required
 @require_POST
 def toggle_follow(request, user_id):
+    """Toggle the follow status for a user."""
     user_to_follow = User.objects.get(pk=user_id)
     follower = request.user
 
@@ -30,6 +31,7 @@ def toggle_follow(request, user_id):
 
 @login_required
 def followers_page(request):
+    """Display a page showing the followers of the current user."""
     user = request.user
     followers = UserFollower.objects.filter(user_followed=user)
 
@@ -38,6 +40,7 @@ def followers_page(request):
 
 @login_required
 def following_page(request):
+    """Display a page showing the users that the current user is following."""
     user = request.user
     following = UserFollower.objects.filter(follower=user)
 

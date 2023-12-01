@@ -16,6 +16,7 @@ import logging
 LOGGER = logging.getLogger('kuhub')
 
 def profile_view(request, username):
+    """Display the profile of a user, including their posts, followers, and following counts."""
     # Retrieve the user based on the username
     user = get_object_or_404(User, username=username)
 
@@ -54,6 +55,7 @@ def profile_view(request, username):
 
 @login_required
 def profile_settings(request):
+    """Display and handle the form for updating the user's profile settings."""
     user = request.user
     profile = user.profile
 

@@ -196,6 +196,7 @@ def edit_post(request, pk):
         return render(request, 'kuhub/edit_post.html', context)
 
 def post_detail(request, pk):
+    """Display the details of a post along with comments."""
     post = get_object_or_404(Post, pk=pk)
     comments_list = PostComments.objects.filter(post_id=post)
     navbar_setting_profile(request)
@@ -242,6 +243,7 @@ def post_detail(request, pk):
     return render(request, 'kuhub/post_detail.html', context)
 
 def report_post(request, pk):
+    """Allow users to report a post."""
     post = get_object_or_404(Post, pk=pk)
     navbar_setting_profile(request)
     if request.method == 'POST':

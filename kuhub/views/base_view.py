@@ -7,6 +7,7 @@ from kuhub.views.firebase_view import navbar_setting_profile, separate_folder_fi
 
 
 class HomePageView(generic.ListView):
+    """View for the home page displaying posts from followed users."""
     template_name = 'kuhub/home_page.html'
     context_object_name: str = 'followed_users_posts'
 

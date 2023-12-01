@@ -7,6 +7,7 @@ from kuhub.models import Profile
 LOGGER = logging.getLogger('kuhub')
 
 def separate_folder_firebase(folder: str):
+    """Retrieve signed URLs for files in a specified Firebase Storage folder."""
     try:
         bucket = storage.bucket()
         blobs = bucket.list_blobs(prefix=folder)
@@ -25,6 +26,7 @@ def separate_folder_firebase(folder: str):
 
 
 def navbar_setting_profile(request):
+    """ Set the user's profile photo based on a signed URL from Firebase Storage."""
     try:
         display_photo_key = request.user.profile.display_photo
         if display_photo_key is not None:

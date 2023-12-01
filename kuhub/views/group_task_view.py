@@ -5,6 +5,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 
 
 def add_task(request, group_id):
+    """Add a task to a group or event."""
     user = request.user
     group = get_object_or_404(Group, pk=group_id)
     if request.method == 'POST':
@@ -24,6 +25,7 @@ def add_task(request, group_id):
         return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
 def change_task_status(request, task_id):
+    """Change the status of a task."""
     task = get_object_or_404(Task, pk=task_id)
     group_id = task.group.id
     if request.method == 'POST':
@@ -37,6 +39,7 @@ def change_task_status(request, task_id):
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
 def delete_task(request, note_id):
+    """Delete a task."""
     task = get_object_or_404(Task, pk=note_id)
     group_id = task.group.id
     event_id = None
@@ -50,6 +53,7 @@ def delete_task(request, note_id):
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
 def assign_task_in_event(request, task_id):
+    """Assign a task to an event."""
     task = get_object_or_404(Task, pk=task_id)
     group_id = task.group.id
     if request.method == 'POST':
@@ -62,6 +66,7 @@ def assign_task_in_event(request, task_id):
     return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
 def unassign_task(request, task_id):
+    """Unassign a task from an event."""
     task = get_object_or_404(Task, pk=task_id)
     group_id = task.group.id
     event_id = task.event.id

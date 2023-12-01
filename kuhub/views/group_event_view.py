@@ -12,14 +12,16 @@ from kuhub.calendar import create_event
 
 @method_decorator(login_required, name='dispatch')
 class EventDetail(generic.DetailView):
-    """Group manage and detail page"""
+    """Event manage task page view."""
     model = GroupEvent
     template_name = 'kuhub/event_detail.html'
 
     def get_queryset(self):
+        """Get the queryset of all group events."""
         return GroupEvent.objects.all()
 
     def get_object(self, queryset=None):
+        """Get the group event object and check if the current user is a member."""
         obj = super().get_object(queryset)
         is_user_in_group = obj.group.group_member.filter(pk=self.request.user.pk).exists()
         if not is_user_in_group:
@@ -27,7 +29,7 @@ class EventDetail(generic.DetailView):
         return obj
 
     def get_context_data(self, **kwargs):
-        """Return user'group data as contect data"""
+        """Get context data for rendering the group event detail page."""
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             context['todo'] = self.object.task_set.filter(status='todo')
@@ -37,6 +39,7 @@ class EventDetail(generic.DetailView):
 
 
 def group_event_create(request, group_id):
+    """Create a new group event."""
     user = request.user
     is_google_user = user.socialaccount_set.filter(provider='google').exists()
     group = get_object_or_404(Group, pk=group_id)
@@ -78,6 +81,7 @@ def group_event_create(request, group_id):
 
 
 def group_event_delete(request, event_id):
+    """Delete a group event."""
     user = request.user
     event = get_object_or_404(GroupEvent, pk=event_id)
     group_id = event.group.id
