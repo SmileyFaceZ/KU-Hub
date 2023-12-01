@@ -7,10 +7,10 @@ class PostDownload(models.Model):
     A class representing downloads of content on the application.
 
     Attributes:
-        post_id(ForeignKey): ID of the post.
+        post_id(Post): ID of the post.
         file(FileField): PDF file(s) attached to the post.
-        download_data(DateTimeField): Date when the user download file.
-        download_count(IntegerField): Counts of downloads for each post.
+        download_data(DateTime): Date when the user download file.
+        download_count(int): Counts of downloads for each post.
 
     """
     post_id = models.ForeignKey(

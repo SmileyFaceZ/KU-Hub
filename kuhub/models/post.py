@@ -10,16 +10,13 @@ class Post(models.Model):
     A class representing a user's post.
 
     Attributes:
-        username (ForeignKey): The user who created the post.
-        post_content (CharField): The content of the post.
-        post_date (DateTimeField): The date and time when the post was created.
-        liked (ManyToManyField): The number of likes the post.
-        disliked (ManyToManyField): The number of dislikes the post.
-        tag_id (ForeignKey): The tag associated with the post.
-        subject_id (ForeignKey): The subject associated with the post.
-
-    Methods:
-        was_published_recently(): Checks if the post was published recently.
+        username (auth.User): The user who created the post.
+        post_content (str): The content of the post.
+        post_date (DateTime): The date and time when the post was created.
+        liked (QuerySet): The number of likes the post.
+        disliked (QuerySet): The number of dislikes the post.
+        tag_id (Tags): The tag associated with the post.
+        subject_id (Subject): The subject associated with the post.
         """
     username = models.ForeignKey(
         'auth.User',

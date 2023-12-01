@@ -3,5 +3,11 @@ from django.db import models
 
 
 class Tags(models.Model):
-    """Class Tags table."""
+    """
+    Model representing tags for categorizing items.
+
+    Attributes:
+        tag_text (str): The text content of the tag.
+
+    """
     tag_text = models.CharField(max_length=200)

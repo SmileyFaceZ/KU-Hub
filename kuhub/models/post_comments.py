@@ -7,9 +7,9 @@ class PostComments(models.Model):
     A class representing the post's comments
 
     Attributes:
-        post_id(ForeignKey): Represent id of the post.
-        comment(CharField): Content of each comment.
-        comment_date(DateTimeField): Date that the comment is published.
+        post_id(Post): Represent id of the post.
+        comment(str): Content of each comment.
+        comment_date(DateTime): Date that the comment is published.
     """
     username = models.ForeignKey(
         'auth.User',
