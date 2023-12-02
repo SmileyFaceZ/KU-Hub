@@ -1,13 +1,20 @@
 {% extends "base.html" %}
 {% load static %}
-
+<link rel="stylesheet" href="{% static 'kuhub/style.css' %}">
 
 {% block title %}
     <title>Create group's event</title>
 {% endblock %}
 
 {% block content %}
+<style>
+    body {
+        background-color: #BFE89C;
+        font-family: 'Poppins';
+    }
+</style>
 <div class="container">
+    <h4><span class="badge rounded-pill shadow p-3 d-flex justify-content-center" style="font-family: 'Poppins'; margin-top: 5%; margin-bottom: 3%;font-weight: normal; background-color: #36816C;">Create Event</span></h4>
     <form action="{% url 'kuhub:group_event' group.id %}" method="post">
         {% csrf_token %}
         <label class="form-label">Event name:</label>
@@ -30,7 +37,18 @@
             <div>
             {{ form.end_time }}
             </div>
-        <input type="submit" value="Create" class="btn btn-success">
+        <h5 style="margin-top: 3%;">Generate google meets</h5>
+        {% if is_google %}
+            <div>
+            {{ form.is_meeting }}
+            </div>
+        {% else %}
+        <div style="color:red; font-weight: 600;">
+            Must login with Google to use this feature.
+            Go to <a href="/accounts/google/login/">login with google</a>
+        </div>
+        {% endif %}
+        <input type="submit" value="Create Event" class="btn btn-success" style="margin-top: 3%; margin-bottom: 5%;">
     </form>
 </div>
 {% endblock %}

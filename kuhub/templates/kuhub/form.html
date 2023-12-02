@@ -7,11 +7,19 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container mt-4">
+
+<style>
+    body {
+        background-color: #BFE89C;
+    }
+</style>
+
+    <div class="container mt-4" style="font-family: 'Poppins'; ">
+        <h4><span class="badge rounded-pill shadow p-3 d-flex justify-content-center" style="font-family: 'Poppins'; margin-top: 5%; margin-bottom: 3%;font-weight: normal; background-color: #36816C;">Create Post</span></h4>
         <form action="{% url 'kuhub:create_post' %}" id="file-upload-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
-            <div class="mb-3">
+            <div class="mb-3" style="margin-top: 2%;">
                 <label class="form-label">Tags</label>
                 <div style="width: 300px;">
                     {{ form.tag_name }}
@@ -26,18 +34,22 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Review</label>
-                <br>
-                {{ form.review }}
+                <label class="form-label">Content</label>
+                <div style="width: 600px;">
+                    {{ form.review }}
+                </div>
             </div>
 
             <div class="mb-3" id="file-upload-container" style="display: none;">
                 <label class="form-label">Upload File (.pdf) / Picture (.jpg, .jpeg, .png)</label>
                 <input type="file" name="file_upload" id="file-upload-input" class="form-control" accept=".jpg, .jpeg, .png, .pdf">
+                <input type="hidden" name="url" id="url">
             </div>
 
-            <input type="submit" name="post" id="button_post" value="Post" class="btn btn-success">
+            <input type="submit" name="post" id="button_post" value="Post" class="btn btn-success" style="margin-bottom: 5%;">
         </form>
     </div>
+
     <script src="{% static 'kuhub/js/upload-file.js' %}"></script>
+    <script src="{% static 'kuhub/js/firebase-store.js' %}" type="module"></script>
 {% endblock %}

@@ -14,6 +14,10 @@ from pathlib import Path
 import os
 from decouple import config, Csv
 import dj_database_url
+from kuhub import firebase
+
+firebase.initialize_firebase()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +33,9 @@ SECRET_KEY = config("SECRET_KEY", default="secret-key-value-without-quotes")
 DEBUG = config("DEBUG", cast=bool, default=False)
 
 ALLOWED_HOSTS = config(
-    "ALLOWED_HOSTS", cast=Csv(), default="127.0.0.1,localhost"
+    "ALLOWED_HOSTS",
+    cast=Csv(),
+    default="127.0.0.1,localhost,ku-hub.onrender.com",
 )
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
@@ -116,7 +122,7 @@ WSGI_APPLICATION = "isp_project.wsgi.application"
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=config("DATABASE_URL", default="postgres://postgres:postgres@localhost:5432/postgres"),
+        default=config("DATABASE_URL", default="postgresql://KU-Hub:yBGEtbDmR35Q@ep-little-art-19973040.ap-southeast-1.aws.neon.tech/kuhubdb?sslmode=require"),
         conn_max_age=500,
         conn_health_checks=True
     )
@@ -152,6 +158,10 @@ USE_I18N = True
 
 USE_TZ = True
 
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -166,3 +176,24 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# settings.py
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'kuhub.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

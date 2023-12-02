@@ -7,6 +7,14 @@
     
 <script src="https://kit.fontawesome.com/69adf0a164.js" crossorigin="anonymous"></script>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.2.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.2.0/firebase-storage.js"></script>
+
+<!-- File Handling Scripts -->
+<script src="{% static 'kuhub/js/firebase-store.js' %}" type="module"></script>
+
+
 {% block content %}
 
 {% load custom_filters %}
@@ -14,13 +22,13 @@
 
 <style>
     body {
-        background-color: #EDB87C;
+        background-color: #8AD0A3;
     }
     .custom-border {
         border-radius: 10px;
         padding: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        background-color: #eacdac;
+        background-color: #C5E8D1;
     }
 </style>
 
@@ -57,17 +65,10 @@
                     {{ form.order_by_post }}
                 </div>
             </div>
-
-            <div class="col-md-5">
-                <label class="form-label"><strong>{{ form.order_by_download.label }}:</strong></label>
-                <div class="input-group" style="max-width: 200px;">
-                    {{ form.order_by_download }}
-                </div>
-            </div>
         </div>
 
-        <div class="col-md-12 mt-3">
-            <button type="submit" class="btn btn-success">
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-success" style="padding: 5px 30px;">
                 <i class="fa-solid fa-magnifying-glass fa-fade fa-xl"></i>
                 <span style="font-family: 'Poppins'">Search</span>
             </button>
@@ -97,16 +98,16 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="kebabMenu{{ post.pk }}" style="box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);">
                             {% if user.is_authenticated and post.username == user %}
-                                <li><a class="dropdown-item" href="#">Edit Post</a></li>
+                                <li><a class="dropdown-item" href="{% url 'kuhub:edit_post' post.pk %}">Edit Post</a></li>
                             {% else %}
-                                <li><a class="dropdown-item" href="#">Report</a></li>
+                                <li><a class="dropdown-item" href="{% url 'kuhub:report_post' pk=post.pk %}">Report</a></li>
                             {% endif %}
                         </ul>
                     </div>
-                    <a href="{% url 'kuhub:profile_view' username=post.post_id.username %}">
+                    <a href="{% url 'kuhub:profile_view' username=post.post_id.username %}" style="text-decoration-line: none;">
                         {% with profile=post.post_id.username.profile %}
                             <div class="d-flex align-items-center"> <!-- Use a flex container for alignment -->
-                                <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'media/media/store/profile_photos/IMG_7374.jpeg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                                <img class="me-2 rounded-circle" src="{{ profile.display_photo }}" width="45" height="45" alt="{{ post.username }}'s Profile">
                                 <h4 class="card-title" style="font-weight: 550; margin-bottom: 0;">{{ post.post_id.username }}</h4>
                             </div>
                         {% endwith %}
@@ -114,24 +115,12 @@
                     <br>
                     <p class="card-text">{{ post.post_id.post_content }}</p>
                     <p class="card-text">
-                        <a href="{{ post.file.url }}" class="btn btn-outline-primary" target="_blank">View File</a>
-                        <a href="{{ post.file.url }}" class="btn btn-outline-warning" id="download_link" download>Download File</a>
+                        <a href="{{ post.file }}" class="btn btn-outline-primary" target="_blank">View File</a>
                     </p>
                     <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 5px;"></i>{{ post.post_id.post_date }}</h6>
 
                 </div>
                 <div class="card-footer custom-footer">
-                    <div class="follow-button-section">
-                        {% if user.is_authenticated and user != profile.user %}
-                            <button type="button" id="followBtn" class="btn btn-primary" onclick="toggleFollow({{ profile.user.id }}, {{ is_following|yesno:"true,false" }}, event)">
-                                {% if is_following %}
-                                    Unfollow
-                                {% else %}
-                                    Follow
-                                {% endif %}
-                            </button>
-                        {% endif %}
-                    </div>
                     <div class="button-group">
                         {% if user.is_authenticated %}
                             <button type="button" class="btn btn-link" id="like-btn-{{ post.post_id.pk }}" data-content="{{ post.post_id.pk }}" onclick="like_button_click('{{ post.post_id.pk }}')">
@@ -155,8 +144,7 @@
                                 <span>{{ post.total_dislikes }}</span>
                             </form>
                         {% endif %}
-                        <a href="{% url 'kuhub:post_detail' pk=post.pk %}" class="btn btn-link">See comments</a>
-                        <a href="{% url 'kuhub:report_post' pk=post.pk %}" class="btn btn-link">Report</a>
+                        <a href="{% url 'kuhub:post_detail' pk=post.post_id.pk %}" class="btn btn-link">See comments</a>
                     </div>
                 </div>
             </div>
@@ -166,6 +154,9 @@
     {% endif %}
 
 </div>
+{% if user.is_authenticated %}
+    <button type="button" id=create_post class="round-create"><a href="{% url 'kuhub:create_post' %}" style="text-decoration: none; color: white;">&#9998;</a></button>
+{% endif %}
 
 <link rel="stylesheet" href="{% static 'kuhub/style.css' %}">
 
@@ -222,5 +213,21 @@ function dislike_button_click(postId) {
         console.log('Error:', error);
     });
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    var downloadButtons = document.querySelectorAll('.download-button');
+    downloadButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            var filePath = this.getAttribute('data-filepath');
+            if(filePath) {
+                window.open(filePath, '_blank'); // Open in new tab
+            } else {
+                alert('File path is missing!');
+            }
+        });
+    });
+});
+
 </script>
+
 {% endblock %}

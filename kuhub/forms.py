@@ -23,7 +23,7 @@ class PostForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-select'})
     )
     review = forms.CharField(
-        widget=forms.Textarea(attrs={'cols': 100, 'rows': 3}),
+        widget=forms.Textarea(),
         label='Review',
         required=True
     )
@@ -89,10 +89,15 @@ class EventForm(forms.Form):
         label='Location:',
         required=True
     )
+    is_meeting = forms.BooleanField(
+        required=False,
+        widget=forms.RadioSelect(choices=[(True, 'Generate meet')]),
+        initial=False,
+    )
+
 
 
 class CommentForm(forms.ModelForm):
-
     class Meta:
         model = PostComments
         fields = ['comment']

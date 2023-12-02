@@ -1,11 +1,61 @@
-<!-- report_post.html -->
 {% extends 'base.html' %}
-
+{% load static %}
+  <link rel="stylesheet" href="{% static 'kuhub/style.css' %}">
 {% block content %}
-  <h2>Report Post: {{ post.id }}</h2>
+<style>
+  body {
+      background-color: #BFE89C;
+      font-family: 'Poppins';
+  }
+</style>
+<div class="container mt-4" style="font-family: 'Poppins';">
+  <h4><span class="badge rounded-pill shadow p-3 d-flex justify-content-center" style="font-family: 'Poppins'; margin-top: 5%; margin-bottom: 3%;font-weight: normal; background-color: #36816C;">Report Post</span></h4>
+      {% if messages %}
+      {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="font-family: 'Poppins'">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+      {% endfor %}
+  {% endif %}
+</div>
+
+<div class="container mt-4" style="font-family: 'Poppins';">
+  <div class="card border border-1 rounded-4">
+      <!-- Post Content -->
+      <div class="card-header">
+          {{ post.tag_id.tag_text }} |
+          <a href="{% url 'kuhub:subject_detail' post.subject.course_code %}">{{ post.subject.course_code }} {{ post.subject.name_eng }}</a> |
+          <a href="{% url 'kuhub:gen_ed_type_list' %}#{{ post.subject.type|slugify }}">{{ post.subject.type }}</a>
+      </div>
+      <div class="card-body position-relative">
+          <div class="dropdown position-absolute top-0 end-0">
+              <!-- Dropdown Menu -->
+          </div>
+          <a href="{% url 'kuhub:profile_view' username=post.username %}">
+              {% with profile=post.username.profile %}
+                  <div class="d-flex align-items-center">
+                      <img class="me-2 rounded-circle" src="{% if profile.display_photo %}{{ profile.display_photo.url }}{% else %}{% static 'kuhub\static\images\default_profile.jpg' %}{% endif %}" width="45" height="45" alt="{{ post.username }}'s Profile">
+                      <h4 class="card-title" style="font-weight: 600; margin-bottom: 0;">{{ post.username }}</h4>
+                  </div>
+              {% endwith %}
+          </a>
+          <br>
+          <p class="card-text">{{ post.post_content }}</p>
+          <h6 class="card-subtitle mb-2 text-muted"><i class="fa-regular fa-clock" style="margin-right: 10px;"></i>{{ post.post_date }}</h6>
+      </div>
+  </div>
+
+  <!-- Edit form -->
   <form method="post" action="{% url 'kuhub:report_post' pk=post.pk %}">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit Report</button>
+    <div class="label" style="font-family: 'Poppins'; margin-top: 3%;">{{ form.reason.label_tag }}
+    <br>
+    {{ form.reason }}
+    <div class="submit-btn" style="margin-bottom: 5%; margin-top: 3%;">
+      <input type="submit" name="post" id="button_post" value="Submit Report" class="btn btn-success">
+    </div>
   </form>
+</div>
+
 {% endblock %}

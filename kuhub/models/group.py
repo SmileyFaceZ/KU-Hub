@@ -9,7 +9,6 @@ class Group(models.Model):
     group_description = models.CharField(max_length=255)
     create_date = models.DateField(default=datetime.date.today)
     group_password = models.OneToOneField('GroupPassword', on_delete=models.CASCADE, null=True, blank=True)
-    group_calendar = models.CharField(max_length=255, blank=True, null=True)
 
     def was_published_recently_post(self):
             """
