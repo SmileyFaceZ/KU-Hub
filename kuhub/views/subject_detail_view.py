@@ -4,6 +4,8 @@ from django.views import generic
 from django.http import HttpRequest, Http404
 from django.contrib import messages
 from kuhub.models import Subject, Post
+from kuhub.views.profile.profile_setting import ProfileSetting
+from kuhub.views.firebase_folder import FirebaseFolder
 
 
 class SubjectDetailView(generic.ListView):
@@ -14,7 +16,13 @@ class SubjectDetailView(generic.ListView):
 
     def get(self, request: HttpRequest, **kwargs):
         """Get a type of gen-ed and display all subject in that type."""
-        global key
+        # Display Profile in Navbar
+        ProfileSetting.update_display_photo(
+            profile=request.user.profile,
+            firebase_folder='profile/',
+            user=request.user
+        )
+
         try:
             key = kwargs["course_code"]
             subject = get_object_or_404(
@@ -32,6 +40,12 @@ class SubjectDetailView(generic.ListView):
             if key == post.subject.course_code
         ]
 
+        file_store_profile = FirebaseFolder.separate_folder_firebase('profile/')
+
+        # Change file name into url
+        for post in course_code_post:
+            post.username.profile.display_photo = file_store_profile[post.username.profile.display_photo]
+
         return render(
             request,
             'kuhub/subject_detail.html',
@@ -40,3 +54,4 @@ class SubjectDetailView(generic.ListView):
                 "subject": subject.course_code + " " + subject.name_eng,
             }
         )
+

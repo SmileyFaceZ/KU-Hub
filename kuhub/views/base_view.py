@@ -1,7 +1,9 @@
 from django.db.models import QuerySet
 from django.views import generic
-from kuhub.filters import PostFilter, PostDownloadFilter
-from kuhub.models import Post, Profile, PostDownload
+from kuhub.filters import PostFilter
+from kuhub.models import Post, Profile
+from kuhub.views.firebase_folder import FirebaseFolder
+from kuhub.views import ProfileSetting
 
 
 class BaseHubView(generic.ListView):
@@ -39,6 +41,19 @@ class BaseHubView(generic.ListView):
             context[self.context_object_name]]
         context['profiles_list'] = profiles_list
         context['form'] = self.filterset.form
+
+        file_store_profile = FirebaseFolder.separate_folder_firebase(
+            'profile/')
+
+        # Display Profile in Navbar
+        ProfileSetting.update_display_photo(
+            profile=self.request.user.profile,
+            firebase_folder='profile/',
+            user=self.request.user
+        )
+
+        for post in context[self.context_object_name]:
+            post.username.profile.display_photo = file_store_profile[post.username.profile.display_photo]
 
         return context
 

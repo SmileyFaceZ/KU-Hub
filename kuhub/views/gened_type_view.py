@@ -2,6 +2,7 @@
 from django.views import generic
 from kuhub.models import Subject
 from kuhub.filters import GenedFilter
+from kuhub.views.profile.profile_setting import ProfileSetting
 
 
 class GenEdTypeListView(generic.ListView):
@@ -29,8 +30,12 @@ class GenEdTypeListView(generic.ListView):
             subject.type = subject.type.replace("_", " ")
 
         context['subject_list'] = subject_filter.qs
-        for i in subject_filter.qs:
-            print(i.type)
         context['form'] = subject_filter.form
 
+        # Display Profile in Navbar
+        ProfileSetting.update_display_photo(
+            profile=self.request.user.profile,
+            firebase_folder='profile/',
+            user=self.request.user
+        )
         return context
