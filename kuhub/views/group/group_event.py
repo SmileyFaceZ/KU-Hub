@@ -7,11 +7,8 @@ from kuhub.forms import EventForm
 from kuhub.models import Group, GroupEvent, Note, Task
 from kuhub.calendar import create_event
 from django.http import HttpRequest, Http404
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 
 
-@method_decorator(login_required, name='dispatch')
 class GroupEventController:
     """Creating and managing group events, adding, deleting notes and tasks."""
 
