@@ -1,3 +1,4 @@
+"""This module define views for Review and Tricks Hub pages in application."""
 from django.db.models import QuerySet
 from django.views import generic
 from kuhub.filters import PostFilter
@@ -18,7 +19,8 @@ class BaseHubView(generic.ListView):
         super().__init__()
         self.filterset = None
         self.queryset = (Post.objects.all()
-        .filter(tag_id=self.tag_id).order_by('-post_date'))
+                         .filter(tag_id=self.tag_id)
+                         .order_by('-post_date'))
 
     def get_queryset(self) -> QuerySet[Post]:
         """Return Post objects with tag_id and order by post_date."""
@@ -53,7 +55,8 @@ class BaseHubView(generic.ListView):
         )
 
         for post in context[self.context_object_name]:
-            post.username.profile.display_photo = file_store_profile[post.username.profile.display_photo]
+            post.username.profile.display_photo = file_store_profile[
+                post.username.profile.display_photo]
 
         return context
 

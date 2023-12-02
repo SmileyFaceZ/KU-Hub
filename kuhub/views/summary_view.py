@@ -48,8 +48,10 @@ class SummaryHubView(generic.ListView):
         context['profiles_list'] = profiles_list
         context['form'] = self.filterset.form
 
-        file_store_summary = FirebaseFolder.separate_folder_firebase('summary-file/')
-        file_store_profile = FirebaseFolder.separate_folder_firebase('profile/')
+        file_store_summary = (
+            FirebaseFolder.separate_folder_firebase('summary-file/'))
+        file_store_profile = (
+            FirebaseFolder.separate_folder_firebase('profile/'))
 
         # Display Profile in Navbar
         ProfileSetting.update_display_photo(
@@ -60,7 +62,9 @@ class SummaryHubView(generic.ListView):
 
         # Change file name into url
         for post_sheet in context['summary_post_list']:
-            post_sheet.post_id.username.profile.display_photo = file_store_profile[post_sheet.post_id.username.profile.display_photo]
+            post_sheet.post_id.username.profile.display_photo = (
+                file_store_profile)[
+                post_sheet.post_id.username.profile.display_photo]
             post_sheet.file = file_store_summary[post_sheet.file.name]
 
         return context

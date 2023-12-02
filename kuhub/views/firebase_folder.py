@@ -1,11 +1,9 @@
-import logging
+"""This module provides functionality for interacting with Firebase storage."""
 from firebase_admin import storage
 from datetime import timedelta
 import re
 import os
 from isp_project import settings
-
-LOGGER = logging.getLogger('kuhub')
 
 
 class FirebaseFolder:
@@ -15,8 +13,9 @@ class FirebaseFolder:
     def separate_folder_firebase(folder: str) -> dict:
         """Separate folder from firebase and return a dictionary of files.
 
-        Format of Dictionary:
-        {file_name: signed_url}
+        :param: folder (str): The folder path in Firebase storage.
+        :return: A dictionary where keys are file names
+        and values are signed URLs for these files.
         """
         try:
             bucket = storage.bucket()
@@ -40,6 +39,10 @@ class FirebaseFolder:
 
     @staticmethod
     def file_handling(photo: str):
+        """To handles the deletion of a file from the media directory.
+
+        :param: photo: The file name of the photo to be handled.
+        """
         clean_file_name = re.sub(r'\s+', '_', photo)
         clean_file_name = re.sub(r'[()]', '', clean_file_name)
         clean_file_path = os.path.join(

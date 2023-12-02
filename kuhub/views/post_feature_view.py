@@ -1,3 +1,4 @@
+"""Module defines functionalities related to post features in application."""
 from django.http import Http404
 import json
 import datetime as dt
@@ -15,10 +16,14 @@ from kuhub.views import FirebaseFolder, ProfileSetting
 
 
 class PostFeature:
+    """Provides functional for creating, editing, handling and actions."""
 
     @staticmethod
     def create_post(request: HttpRequest):
-        """Create post of each tag type and redirect to each tag page."""
+        """Create post of each tag type and redirect to each tag page.
+
+        :param request: The HttpRequest object containing post data.
+        """
         ProfileSetting.update_display_photo(
             profile=request.user.profile,
             firebase_folder='profile/',
@@ -59,6 +64,13 @@ class PostFeature:
 
     @staticmethod
     def separate_view(data: dict, post: Post, request: HttpRequest):
+        """Redirects to the specific view based on the tag name of the post.
+
+        :param data: A dictionary containing post data.
+        :param post: The Post object that has been created.
+        :param request: The HttpRequest object.
+        :return: A redirect response to the appropriate hub view.
+        """
         if data['tag_name'] == 'Review-Hub':
             return redirect('kuhub:review')
 
@@ -84,7 +96,13 @@ class PostFeature:
 
     @staticmethod
     def edit_post(request: HttpRequest, pk: int):
-        """User can edit their own post content, tag and subject."""
+        """User can edit their own post content, tag and subject.
+
+        :param request: The HttpRequest object containing edited post data.
+        :param pk: The primary key of the post to be edited.
+        :return: A rendered response with the edit form or
+        redirection after editing.
+        """
         # Display Profile in Navbar
         ProfileSetting.update_display_photo(
             profile=request.user.profile,
@@ -103,7 +121,7 @@ class PostFeature:
         if request.user != post.username:
             messages.warning(
                 request,
-                f"You are not the owner of this post.❗️"
+                "You are not the owner of this post.❗️"
             )
 
             return redirect('kuhub:post_detail', pk=post.pk)
@@ -137,6 +155,12 @@ class PostFeature:
 
     @staticmethod
     def post_detail(request: HttpRequest, pk: int):
+        """Represent the details of a specific post, including comments.
+
+        :param request: The HttpRequest object.
+        :param pk: The primary key of the post to be detailed.
+        :return: A rendered response with the detailed view of the post.
+        """
         # Display Profile in Navbar
         ProfileSetting.update_display_photo(
             profile=request.user.profile,
@@ -197,7 +221,12 @@ class PostFeature:
 
 @login_required
 def like_post(request: HttpRequest) -> JsonResponse:
-    """Increase number of likes for a post when the user clicks the like."""
+    """Increase number of likes for a post when the user clicks the like.
+
+    :param request: The HttpRequest object with AJAX data for the like action.
+    :return: A JsonResponse with the updated like and dislike counts
+    and styles.
+    """
     user = request.user
     if user.is_authenticated:
         if (request.method == 'POST'
@@ -227,9 +256,16 @@ def like_post(request: HttpRequest) -> JsonResponse:
 
     return redirect('account_login')
 
+
 @login_required
 def dislike_post(request: HttpRequest) -> JsonResponse:
-    """Decrease number of likes for a post when the user clicks the dislike."""
+    """Decrease number of likes for a post when the user clicks the dislike.
+
+    :param request: The HttpRequest object with AJAX data for
+    the dislike action.
+    :return: A JsonResponse with the updated like and dislike counts
+    and styles.
+    """
     user = request.user
     if user.is_authenticated:
         if (request.method == 'POST'
@@ -261,8 +297,16 @@ def dislike_post(request: HttpRequest) -> JsonResponse:
 
     return redirect('account_login')
 
+
 @login_required
 def report_post(request: HttpRequest, pk: int):
+    """Users report a post, specifying a reason for the report.
+
+    :param request: The HttpRequest object containing the report form data.
+    :param pk: The primary key of the post to be reported.
+    :return: A rendered response with the report form
+    or a success message after reporting.
+    """
     # Display Profile in Navbar
     ProfileSetting.update_display_photo(
         profile=request.user.profile,
@@ -275,8 +319,9 @@ def report_post(request: HttpRequest, pk: int):
         if form.is_valid():
             reason = form.cleaned_data['reason']
             report_count = \
-            PostReport.objects.filter(post_id=post).aggregate(Count('id'))[
-                'id__count']
+                PostReport.objects.filter(
+                    post_id=post
+                ).aggregate(Count('id'))['id__count']
             PostReport.objects.create(post_id=post,
                                       report_reason=reason,
                                       report_date=dt.datetime.now(),

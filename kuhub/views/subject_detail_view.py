@@ -40,11 +40,13 @@ class SubjectDetailView(generic.ListView):
             if key == post.subject.course_code
         ]
 
-        file_store_profile = FirebaseFolder.separate_folder_firebase('profile/')
+        file_store_profile = (
+            FirebaseFolder.separate_folder_firebase('profile/'))
 
         # Change file name into url
         for post in course_code_post:
-            post.username.profile.display_photo = file_store_profile[post.username.profile.display_photo]
+            post.username.profile.display_photo = (
+                file_store_profile)[post.username.profile.display_photo]
 
         return render(
             request,
@@ -54,4 +56,3 @@ class SubjectDetailView(generic.ListView):
                 "subject": subject.course_code + " " + subject.name_eng,
             }
         )
-

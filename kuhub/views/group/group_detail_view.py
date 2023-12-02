@@ -1,3 +1,4 @@
+"""This module for manage and displaying detail information group."""
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import generic
@@ -10,14 +11,17 @@ import logging
 
 @method_decorator(login_required, name='dispatch')
 class GroupDetail(generic.DetailView):
-    """Group manage and detail page"""
+    """Group manage and detail page."""
+
     model = Group
     template_name = 'kuhub/group_detail.html'
 
     def get_queryset(self):
+        """Return Query set ob Group model."""
         return Group.objects.all()
 
     def get_object(self, queryset=None):
+        """Retrieve group object, ensure the user is a member of the group."""
         obj = super().get_object(queryset)
         try:
             obj.group_member.filter(pk=self.request.user.pk).exists()
@@ -28,6 +32,7 @@ class GroupDetail(generic.DetailView):
         return obj
 
     def get_filter_set(self):
+        """Generate a TaskFilter based on the current request."""
         return TaskFilter(
             self.request.GET,
             queryset=self.object.task_set.all()

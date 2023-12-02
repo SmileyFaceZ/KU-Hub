@@ -1,3 +1,4 @@
+"""Controller for managing group events, tasks, and notes in application."""
 import logging
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -6,68 +7,23 @@ from kuhub.forms import EventForm
 from kuhub.models import Group, GroupEvent, Note, Task
 from kuhub.calendar import create_event
 from django.http import HttpRequest, Http404
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
-def has_meeting(request: HttpRequest, group_id: int, data: dict) -> str:
-    try:
-        event, meet_link = create_event(
-            request=request,
-            summary=data['summary'],
-            description=data['description'],
-            location=data['location'],
-            start_datetime=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
-            end_datetime=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S')
-        )
-        return meet_link
-    except Exception as error_message:
-        messages.error(
-            request,
-            "You have to login with Google "
-            "before using this feature"
-        )
-        logging.getLogger("kuhub").error(f"Error when creating meeting for group "
-                     f"{group_id}: {error_message}")
-        return ''
-
-
-def handle_valid_form(request: HttpRequest, form: EventForm, group: Group, group_id: int):
-    data = form.cleaned_data
-    group_event = GroupEvent.objects.create(
-        group=group,
-        summary=data['summary'],
-        location=data['location'],
-        description=data['description'],
-        start_time=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
-        end_time=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'),
-        show_time=f"{data['start_time'].strftime('%a. %d %b %Y %H:%M:%S')} - "
-                  f"{data['end_time'].strftime('%a. %d %b %Y %H:%M:%S')}"
-    )
-
-    if data['is_meeting']:
-        meet_link = has_meeting(request, group_id, data)
-        if meet_link:
-            group_event.link = meet_link
-            group_event.save()
-            messages.success(request, 'Event created successfully')
-            return redirect(reverse(
-                'kuhub:group_detail',
-                args=(group_id,)))
-        else:
-            return redirect(reverse(
-                'kuhub:group_detail',
-                args=(group_id,)))
-
-    messages.success(
-        request,
-        'Event created successfully')
-    return redirect(reverse(
-        'kuhub:group_detail',
-        args=(group_id,)))
-
+@method_decorator(login_required, name='dispatch')
 class GroupEventController:
+    """Creating and managing group events, adding, deleting notes and tasks."""
 
     @staticmethod
     def group_event_create(request: HttpRequest, group_id: int):
+        """To creates a group event based on user input.
+
+        :param request: HttpRequest object.
+        :param group_id: Integer representing the group's ID.
+        :return: Redirects to the group event creation page
+        or the group detail page.
+        """
         user = request.user
         is_google_user = user.socialaccount_set.filter(
             provider='google').exists()
@@ -80,7 +36,11 @@ class GroupEventController:
         if request.method == 'POST':
             form = EventForm(request.POST)
             if form.is_valid():
-                return handle_valid_form(request, form, group, group_id)
+                return GroupEventController.handle_valid_form(
+                    request=request,
+                    form=form,
+                    group=group,
+                    group_id=group_id)
 
         return render(
             request,
@@ -96,6 +56,14 @@ class GroupEventController:
     @staticmethod
     def handle_valid_form(request: HttpRequest, form: EventForm, group: Group,
                           group_id: int):
+        """To handles a valid form submission for a group event.
+
+        :param request: HttpRequest object.
+        :param form: EventForm instance with submitted data.
+        :param group: Group instance where the event is being created.
+        :param group_id: Integer representing the group's ID.
+        :return: Redirects to the group detail page.
+        """
         data = form.cleaned_data
         group_event = GroupEvent.objects.create(
             group=group,
@@ -104,8 +72,9 @@ class GroupEventController:
             description=data['description'],
             start_time=data['start_time'].strftime('%Y-%m-%dT%H:%M:%S'),
             end_time=data['end_time'].strftime('%Y-%m-%dT%H:%M:%S'),
-            show_time=f"{data['start_time'].strftime('%a. %d %b %Y %H:%M:%S')} "
-                      f"- {data['end_time'].strftime('%a. %d %b %Y %H:%M:%S')}"
+            show_time=f"{data['start_time'].strftime('%a. %d %b %Y %H:%M:%S')}"
+                      f" - "
+                      f"{data['end_time'].strftime('%a. %d %b %Y %H:%M:%S')}"
         )
 
         if data['is_meeting']:
@@ -127,6 +96,13 @@ class GroupEventController:
 
     @staticmethod
     def has_meeting(request: HttpRequest, group_id: int, data: dict) -> str:
+        """To creates a meeting link for a group event.
+
+        :param request: HttpRequest object.
+        :param group_id: Integer representing the group's ID.
+        :param data: Dictionary containing event details.
+        :return: String URL of the meeting link.
+        """
         try:
             event, meet_link = create_event(
                 request=request,
@@ -150,6 +126,12 @@ class GroupEventController:
 
     @staticmethod
     def add_note(request: HttpRequest, group_id: int):
+        """To adds a note to a specified group.
+
+        :param request: The HttpRequest object.
+        :param group_id: The ID of the group to which the note will be added.
+        :return: A redirect to the group detail page or groups list.
+        """
         try:
             group = get_object_or_404(Group, pk=group_id)
         except Http404:
@@ -166,6 +148,12 @@ class GroupEventController:
 
     @staticmethod
     def delete_note(request: HttpRequest, note_id: int):
+        """To deletes a note based on the provided note ID.
+
+        :param request: The HttpRequest object.
+        :param note_id: The ID of the note to be deleted.
+        :return: A redirect to the group detail page.
+        """
         note = get_object_or_404(Note, pk=note_id)
         group_id = note.group.id
         note.delete()
@@ -176,6 +164,12 @@ class GroupEventController:
 
     @staticmethod
     def add_task(request: HttpRequest, group_id: int):
+        """To adds a task to a specified group.
+
+        :param request: The HttpRequest object.
+        :param group_id: The ID of the group to which the task will be added.
+        :return: A redirect to the group detail or event detail page.
+        """
         user = request.user
         try:
             group = get_object_or_404(Group, pk=group_id)
@@ -203,6 +197,12 @@ class GroupEventController:
 
     @staticmethod
     def delete_task(request: HttpRequest, note_id: int):
+        """To deletes a task based on the provided task ID.
+
+        :param request: The HttpRequest object.
+        :param note_id: The ID of the task to be deleted.
+        :return: A redirect to either the group detail or event detail page.
+        """
         task = get_object_or_404(Task, pk=note_id)
         group_id = task.group.id
         event_id = None
@@ -217,6 +217,12 @@ class GroupEventController:
 
     @staticmethod
     def change_task_status(request: HttpRequest, task_id: int):
+        """To changes the status of a task and redirects to the appropriate page.
+
+        :param request: The HttpRequest object.
+        :param task_id: The ID of the task whose status will be changed.
+        :return: A redirect to either the group detail or event detail page.
+        """
         task = get_object_or_404(Task, pk=task_id)
         group_id = task.group.id
         if request.method == 'POST':
@@ -232,6 +238,12 @@ class GroupEventController:
 
     @staticmethod
     def assign_task_in_event(request: HttpRequest, task_id: int):
+        """To assigns a task to an event and redirects to the group detail page.
+
+        :param request: The HttpRequest object.
+        :param task_id: The ID of the task to be assigned to an event.
+        :return: A redirect to the group detail page.
+        """
         task = get_object_or_404(Task, pk=task_id)
         group_id = task.group.id
         if request.method == 'POST':
@@ -244,6 +256,12 @@ class GroupEventController:
 
     @staticmethod
     def group_event_delete(request: HttpRequest, event_id: int):
+        """To deletes a group event based on the provided event ID.
+
+        :param request: The HttpRequest object.
+        :param event_id: The ID of the event to be deleted.
+        :return: A redirect to the group detail page.
+        """
         event = get_object_or_404(GroupEvent, pk=event_id)
         group_id = event.group.id
         # delete GroupEvent object
@@ -253,6 +271,12 @@ class GroupEventController:
 
     @staticmethod
     def unassign_task(request: HttpRequest, task_id: int):
+        """Unassigns a task from an event.
+
+        :param request: The HttpRequest object.
+        :param task_id: The ID of the task to be unassigned.
+        :return: A redirect to either the group detail or event detail page.
+        """
         task = get_object_or_404(Task, pk=task_id)
         group_id = task.group.id
         event_id = task.event.id
