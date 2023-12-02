@@ -263,6 +263,12 @@ def dislike_post(request: HttpRequest) -> JsonResponse:
 
 @login_required
 def report_post(request: HttpRequest, pk: int):
+    # Display Profile in Navbar
+    ProfileSetting.update_display_photo(
+        profile=request.user.profile,
+        firebase_folder='profile/',
+        user=request.user
+    )
     post = get_object_or_404(Post, pk=pk)
     if request.method == 'POST':
         form = ReportForm(request.POST)
