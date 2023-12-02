@@ -1,12 +1,11 @@
-from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.contrib import messages
 from kuhub.models import Group, GroupTags, GroupPassword
 from kuhub.forms import GroupForm
-from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
+from kuhub.views.profile.profile_setting import ProfileSetting
 import logging
 
 LOGGER = logging.getLogger("kuhub")
@@ -39,7 +38,6 @@ class GroupFeature:
         return False
 
     @staticmethod
-    # @method_decorator(login_required(login_url='/accounts/login/'))
     def join(request: HttpRequest, group_id: int):
         user = request.user
         group = get_object_or_404(Group, pk=group_id)
@@ -54,27 +52,13 @@ class GroupFeature:
         messages.success(request, "You have successfully joined the group!")
         return redirect(reverse('kuhub:groups'))
 
-    @method_decorator(login_required)
-    def create_group(self):
-        if self.request.method == 'POST':
-            form = GroupForm(self.request.POST)
-            if form.is_valid():
-                return self._process_group_form(form)
-            else:
-                messages.error(self.request, "Form data is not valid.")
-
-        return render(
-            self.request,
-            'kuhub/group_create.html',
-            {'form': GroupForm()}
-        )
-
-    def _process_group_form(self, form):
+    @staticmethod
+    def process_group_form(request: HttpRequest, form: GroupForm):
         data = form.cleaned_data
         if data['password'] != data['password_2']:
-            messages.error(self.request, "Passwords do not match.")
+            messages.error(request, "Passwords do not match.")
             return render(
-                self.request,
+                request,
                 'kuhub/group_create.html',
                 {'form': form}
             )
@@ -95,7 +79,29 @@ class GroupFeature:
             group_password=password,
         )
         group.group_tags.set([group_tag])
-        group.group_member.add(self.request.user)
+        group.group_member.add(request.user)
 
-        messages.success(self.request, f'Group created successfully. Your group ID is {group.id}.')
+        messages.success(request,
+                         f'Group created successfully. Your group ID is {group.id}.')
         return redirect(reverse('kuhub:groups'))
+
+    @staticmethod
+    def create_group(request: HttpRequest):
+        # Display Profile in Navbar
+        ProfileSetting.update_display_photo(
+            profile=request.user.profile,
+            firebase_folder='profile/',
+            user=request.user
+        )
+        if request.method == 'POST':
+            form = GroupForm(request.POST)
+            if form.is_valid():
+                return GroupFeature.process_group_form(request, form)
+            else:
+                messages.error(request, "Form data is not valid.")
+
+        return render(
+            request,
+            'kuhub/group_create.html',
+            {'form': GroupForm()}
+        )
