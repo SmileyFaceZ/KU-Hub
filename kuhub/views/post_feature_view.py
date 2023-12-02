@@ -131,6 +131,13 @@ class PostFeature:
 
     @staticmethod
     def post_detail(request: HttpRequest, pk: int):
+        # Display Profile in Navbar
+        ProfileSetting.update_display_photo(
+            profile=request.user.profile,
+            firebase_folder='profile/',
+            user=request.user
+        )
+
         try:
             post = get_object_or_404(Post, pk=pk)
         except Http404:
