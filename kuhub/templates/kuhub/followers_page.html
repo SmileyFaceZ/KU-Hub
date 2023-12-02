@@ -22,7 +22,7 @@
                 <a href="{% url 'kuhub:profile_view' username=follow.follower.username %}" class="text-decoration-none">
                     <div class="card border border-1 rounded-4 p-3 d-flex align-items-center">
                         {% if follow.follower.profile.display_photo %}
-                            <img class="me-3 rounded-circle" src="{{ follow.follower.profile.display_photo.url }}" width="45" height="45" alt="{{ follow.follower.username }}'s Profile">
+                            <img class="me-3 rounded-circle" src="{{ follow.follower.profile.display_photo }}" width="45" height="45" alt="{{ follow.follower.username }}'s Profile">
                         {% else %}
                             <img class="me-3 rounded-circle" src="{% static 'images/default_profile.jpg' %}" width="45" height="45" alt="{{ follow.follower.username }}'s Profile">
                         {% endif %}

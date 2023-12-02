@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from kuhub.models import UserFollower
-from kuhub.views import FirebaseFolder
+from kuhub.views import FirebaseFolder, ProfileSetting
 from django.http import HttpRequest
 
 class FollowView:
@@ -20,9 +20,19 @@ class FollowView:
                 user_profile.display_photo
             )
 
+    @staticmethod
+    def profile_setting(request: HttpRequest):
+        # Display Profile in Navbar
+        ProfileSetting.update_display_photo(
+            profile=request.user.profile,
+            firebase_folder='profile/',
+            user=request.user
+        )
+
     @classmethod
     @method_decorator(login_required)
     def followers_page(cls, request: HttpRequest):
+        FollowView.profile_setting(request)
         followers = UserFollower.objects.filter(user_followed=request.user)
         cls.update_display_photo(followers, 'follower')
         return render(
@@ -33,6 +43,7 @@ class FollowView:
     @classmethod
     @method_decorator(login_required)
     def following_page(cls, request: HttpRequest):
+        FollowView.profile_setting(request)
         following = UserFollower.objects.filter(follower=request.user)
         cls.update_display_photo(following, 'following')
         return render(
