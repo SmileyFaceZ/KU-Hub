@@ -1,4 +1,3 @@
-from django.utils.decorators import method_decorator
 from django.http import Http404
 import json
 import datetime as dt
@@ -12,21 +11,26 @@ from kuhub.forms import PostForm, CommentForm, ReportForm
 from kuhub.models import (Post, PostDownload, Tags, Profile, PostReport,
                           Subject, PostComments)
 from django.utils import timezone
-from kuhub.views import FirebaseFolder
+from kuhub.views import FirebaseFolder, ProfileSetting
 
 
 class PostFeature:
 
-    @method_decorator(login_required)
-    def create_post(self):
+    @staticmethod
+    def create_post(request: HttpRequest):
         """Create post of each tag type and redirect to each tag page."""
-        if self.request.method == 'POST':
-            form = PostForm(self.request.POST)
+        ProfileSetting.update_display_photo(
+            profile=request.user.profile,
+            firebase_folder='profile/',
+            user=request.user
+        )
+        if request.method == 'POST':
+            form = PostForm(request.POST)
             if form.is_valid():
                 data = form.cleaned_data
 
                 post = Post.objects.create(
-                    username=self.request.user,
+                    username=request.user,
                     post_content=data['review'],
                     post_date=timezone.now(),
                     subject=Subject.objects.get(
@@ -34,18 +38,18 @@ class PostFeature:
                     tag_id=Tags.objects.get(tag_text=data['tag_name'])
                 )
 
-                messages.success(self.request, 'Create Post Successfully!')
+                messages.success(request, 'Create Post Successfully!')
 
-                self.separate_view(data, post)
+                return PostFeature.separate_view(data, post, request)
 
             return render(
-                self.request,
+                request,
                 template_name='kuhub/form.html',
                 context={'form': form}
             )
 
         return render(
-            self.request,
+            request,
             template_name='kuhub/form.html',
             context={
                 "tags_list": Tags.objects.all(),
@@ -53,12 +57,13 @@ class PostFeature:
             }
         )
 
-    def separate_view(self, data: dict, post: Post):
+    @staticmethod
+    def separate_view(data: dict, post: Post, request: HttpRequest):
         if data['tag_name'] == 'Review-Hub':
             return redirect('kuhub:review')
 
         if data['tag_name'] == 'Summary-Hub':
-            uploaded_file = self.request.FILES.get('file_upload')
+            uploaded_file = request.FILES.get('file_upload')
             PostDownload.objects.create(
                 post_id=post,
                 file=uploaded_file,

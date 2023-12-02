@@ -15,36 +15,16 @@ LOGGER = logging.getLogger('kuhub')
 
 class ProfileSetting:
 
-    # @staticmethod
-    # def update_display_photo(profile: Profile, firebase_folder: str, user: User) -> Profile:
-    #     try:
-    #         firestore = FirebaseFolder.separate_folder_firebase(firebase_folder)
-    #         print('display photo', profile.display_photo)
-    #         profile.display_photo = firestore[profile.display_photo]
-    #     except (KeyError, DataError, AttributeError) as error_message:
-    #         print('do err')
-    #         LOGGER.error(f'Error updating display photo: {error_message}')
-    #         user_profile = Profile.objects.filter(user=user).update(
-    #             display_photo='default_profile_picture.png')
-    #         print('user profile', user_profile.display_photo)
-    #         profile.display_photo = firestore[user_profile.display_photo]
-    #         print('user profile 2', user_profile.display_photo)
     @staticmethod
-    def update_display_photo(profile: Profile, firebase_folder: str,
-                             user: User) -> None:
+    def update_display_photo(profile: Profile, firebase_folder: str, user: User) -> Profile:
         try:
-            firestore = FirebaseFolder.separate_folder_firebase(
-                firebase_folder)
-            print('display photo', profile.display_photo)
-            new_photo = firestore.get(profile.display_photo,
-                                      'default_profile_picture.png')
-            profile.display_photo = new_photo
-            profile.save()  # Save the updated profile
+            firestore = FirebaseFolder.separate_folder_firebase(firebase_folder)
+            profile.display_photo = firestore[profile.display_photo]
         except (KeyError, DataError, AttributeError) as error_message:
             LOGGER.error(f'Error updating display photo: {error_message}')
-            # In case of error, set to default photo
-            profile.display_photo = 'default_profile_picture.png'
-            profile.save()
+            user_profile = Profile.objects.filter(user=user).update(
+                display_photo='default_profile_picture.png')
+            profile.display_photo = firestore[user_profile.display_photo]
 
     def build_profile_context(self, user: User, form: ProfileForm,
                               profile: Profile) -> Dict[str, any]:
