@@ -122,7 +122,7 @@ WSGI_APPLICATION = "isp_project.wsgi.application"
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=config("DATABASE_URL", default="postgres://postgres:postgres@localhost:5432/postgres"),
+        default=config("DATABASE_URL", default="postgresql://KU-Hub:yBGEtbDmR35Q@ep-little-art-19973040.ap-southeast-1.aws.neon.tech/kuhubdb?sslmode=require"),
         conn_max_age=500,
         conn_health_checks=True
     )
