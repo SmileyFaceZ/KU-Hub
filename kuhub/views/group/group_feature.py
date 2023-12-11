@@ -7,6 +7,7 @@ from kuhub.models import Group, GroupTags, GroupPassword
 from kuhub.forms import GroupForm
 from django.contrib.auth.models import User
 from kuhub.views.profile.profile_setting import ProfileSetting
+from django.contrib.auth.decorators import login_required
 
 
 class GroupFeature:
@@ -45,6 +46,7 @@ class GroupFeature:
         return False
 
     @staticmethod
+    @login_required
     def join(request: HttpRequest, group_id: int):
         """Handle the process of a user joining a group.
 
@@ -55,7 +57,7 @@ class GroupFeature:
         user = request.user
         group = get_object_or_404(Group, pk=group_id)
 
-        if GroupFeature.is_user_a_member(request, group):
+        if GroupFeature.is_user_a_member(request, group, user):
             return redirect(reverse('kuhub:groups'))
 
         if GroupFeature.is_password_protected(request, group):
@@ -108,6 +110,7 @@ class GroupFeature:
         return redirect(reverse('kuhub:groups'))
 
     @staticmethod
+    @login_required
     def create_group(request: HttpRequest):
         """Display the group creation form and process it upon submission.
 

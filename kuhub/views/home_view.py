@@ -1,5 +1,4 @@
 """This module defines the view for the home page of the application."""
-
 from django.contrib import messages
 from django.views import generic
 from kuhub.models import Post, Profile, UserFollower

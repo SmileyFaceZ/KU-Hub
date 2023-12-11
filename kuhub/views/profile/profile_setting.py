@@ -4,7 +4,7 @@ from typing import Dict
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from kuhub.forms import ProfileForm
 from kuhub.models import Profile, UserFollower
@@ -30,7 +30,7 @@ class ProfileSetting:
             firestore = (
                 FirebaseFolder.separate_folder_firebase(firebase_folder))
             profile.display_photo = firestore[profile.display_photo]
-        except (KeyError, DataError, AttributeError) as error_message:
+        except (KeyError, DataError, AttributeError, TypeError) as error_message:
             logging.getLogger('kuhub').error(
                 f'Error updating display photo: {error_message}')
             user_profile = Profile.objects.filter(user=user).update(
@@ -62,26 +62,29 @@ class ProfileSetting:
         :param request: HttpRequest object.
         :return: Rendered profile settings page.
         """
+        if not request.user.is_authenticated:
+            # Redirect to login page or handle accordingly
+            return redirect(
+                'login_url')  # Replace 'login_url' with your login route
+
         user = request.user
-        profile = user.profile
+        try:
+            profile = user.profile
+        except AttributeError:
+            return redirect(
+                'some_other_url')  # Replace with appropriate handling
 
         if request.method == 'POST':
-            form = ProfileForm(
-                request.POST,
-                request.FILES,
-                instance=profile)
+            form = ProfileForm(request.POST, request.FILES, instance=profile)
             if form.is_valid():
                 try:
                     form.save()
-                    messages.success(
-                        request,
-                        'Profile updated successfully!')
+                    messages.success(request, 'Profile updated successfully!')
                 except DataError as e:
-                    (logging.getLogger('kuhub')
-                     .error(f'Error saving profile: {e}'))
-                    messages.error(
-                        request,
-                        'Failed to save profile. Data too long.')
+                    logging.getLogger('kuhub').error(
+                        f'Error saving profile: {e}')
+                    messages.error(request,
+                                   'Failed to save profile. Data too long.')
             else:
                 messages.error(request, "Form data is not valid.")
         else:
@@ -89,12 +92,6 @@ class ProfileSetting:
 
         cls.update_display_photo(profile, 'profile/', user)
 
-        context = cls.build_profile_context(
-            cls,
-            user=user,
-            form=form,
-            profile=profile)
-        return render(
-            request,
-            'kuhub/profile_settings.html',
-            context)
+        context = cls.build_profile_context(cls, user=user, form=form,
+                                            profile=profile)
+        return render(request, 'kuhub/profile_settings.html', context)

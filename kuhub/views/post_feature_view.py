@@ -19,6 +19,7 @@ class PostFeature:
     """Provides functional for creating, editing, handling and actions."""
 
     @staticmethod
+    @login_required
     def create_post(request: HttpRequest):
         """Create post of each tag type and redirect to each tag page.
 
@@ -95,6 +96,7 @@ class PostFeature:
             return redirect('kuhub:encourage')
 
     @staticmethod
+    @login_required
     def edit_post(request: HttpRequest, pk: int):
         """User can edit their own post content, tag and subject.
 
@@ -154,6 +156,7 @@ class PostFeature:
         return render(request, 'kuhub/edit_post.html', context)
 
     @staticmethod
+    @login_required
     def post_detail(request: HttpRequest, pk: int):
         """Represent the details of a specific post, including comments.
 

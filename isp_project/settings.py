@@ -75,6 +75,7 @@ AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 )
+
 SITE_ID = 1
 LOGIN_REDIRECT_URL = 'kuhub:review'
 LOGOUT_REDIRECT_URL = 'account_login'
@@ -120,13 +121,21 @@ WSGI_APPLICATION = "isp_project.wsgi.application"
 
 # To use Neon with Django, you have to create a Project on Neon and specify the project connection settings in your settings.py in the same way as for standalone Postgres.
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=config("DATABASE_URL", default="postgresql://KU-Hub:yBGEtbDmR35Q@ep-little-art-19973040.ap-southeast-1.aws.neon.tech/kuhubdb?sslmode=require"),
-        conn_max_age=500,
-        conn_health_checks=True
-    )
-}
+if os.environ.get('GITHUB_ACTIONS'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=config("DATABASE_URL", default="postgresql://neon.tech"),
+            conn_max_age=500,
+            conn_health_checks=True
+        )
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

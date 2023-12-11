@@ -7,12 +7,14 @@ from kuhub.forms import EventForm
 from kuhub.models import Group, GroupEvent, Note, Task
 from kuhub.calendar import create_event
 from django.http import HttpRequest, Http404
+from django.contrib.auth.decorators import login_required
 
 
 class GroupEventController:
     """Creating and managing group events, adding, deleting notes and tasks."""
 
     @staticmethod
+    @login_required
     def group_event_create(request: HttpRequest, group_id: int):
         """To creates a group event based on user input.
 
@@ -122,6 +124,7 @@ class GroupEventController:
             return ''
 
     @staticmethod
+    @login_required
     def add_note(request: HttpRequest, group_id: int):
         """To adds a note to a specified group.
 
@@ -144,6 +147,7 @@ class GroupEventController:
                 args=(group_id,)))
 
     @staticmethod
+    @login_required
     def delete_note(request: HttpRequest, note_id: int):
         """To deletes a note based on the provided note ID.
 
@@ -160,6 +164,7 @@ class GroupEventController:
             args=(group_id,)))
 
     @staticmethod
+    @login_required
     def add_task(request: HttpRequest, group_id: int):
         """To adds a task to a specified group.
 
@@ -193,6 +198,7 @@ class GroupEventController:
             return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
     @staticmethod
+    @login_required
     def delete_task(request: HttpRequest, note_id: int):
         """To deletes a task based on the provided task ID.
 
@@ -213,6 +219,7 @@ class GroupEventController:
         return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
     @staticmethod
+    @login_required
     def change_task_status(request: HttpRequest, task_id: int):
         """To changes the status of a task and redirects to the appropriate page.
 
@@ -234,6 +241,7 @@ class GroupEventController:
         return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
     @staticmethod
+    @login_required
     def assign_task_in_event(request: HttpRequest, task_id: int):
         """To assigns a task to an event and redirects to the group detail page.
 
@@ -252,6 +260,7 @@ class GroupEventController:
         return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
     @staticmethod
+    @login_required
     def group_event_delete(request: HttpRequest, event_id: int):
         """To deletes a group event based on the provided event ID.
 
@@ -267,6 +276,7 @@ class GroupEventController:
         return redirect(reverse('kuhub:group_detail', args=(group_id,)))
 
     @staticmethod
+    @login_required
     def unassign_task(request: HttpRequest, task_id: int):
         """Unassigns a task from an event.
 

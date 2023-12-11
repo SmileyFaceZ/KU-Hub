@@ -11,9 +11,10 @@ from kuhub.models import Post, Profile, UserFollower
 from django.contrib.auth.models import User
 from kuhub.views.firebase_folder import FirebaseFolder
 from kuhub.views.profile.profile_setting import ProfileSetting
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class ProfileView:
+class ProfileView(LoginRequiredMixin):
     """View for managing user profiles."""
 
     def __init__(self, request: HttpRequest):
@@ -27,6 +28,7 @@ class ProfileView:
         self.profile = self.user.profile
 
     @staticmethod
+    @login_required
     def profile_view(request: HttpRequest, username: str):
         """Display the profile page for a given user.
 

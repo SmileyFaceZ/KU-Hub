@@ -35,28 +35,33 @@ class BaseHubView(generic.ListView):
         profiles_list = [Profile.objects.filter(user=post.username).first()
                          for post in context[self.context_object_name]]
 
-        context['like_icon_styles'] = [post.like_icon_style(self.request.user)
-                                       for post in
-                                       context[self.context_object_name]]
+        context['like_icon_styles'] = [
+            post.like_icon_style(self.request.user)
+            for post in context[self.context_object_name]]
         context['dislike_icon_styles'] = [
-            post.dislike_icon_style(self.request.user) for post in
-            context[self.context_object_name]]
+            post.dislike_icon_style(self.request.user)
+            for post in context[self.context_object_name]]
         context['profiles_list'] = profiles_list
         context['form'] = self.filterset.form
 
         file_store_profile = FirebaseFolder.separate_folder_firebase(
             'profile/')
 
-        # Display Profile in Navbar
-        ProfileSetting.update_display_photo(
-            profile=self.request.user.profile,
-            firebase_folder='profile/',
-            user=self.request.user
-        )
+        if self.request.user.is_authenticated:
+            ProfileSetting.update_display_photo(
+                profile=self.request.user.profile,
+                firebase_folder='profile/',
+                user=self.request.user
+            )
 
-        for post in context[self.context_object_name]:
-            post.username.profile.display_photo = file_store_profile[
-                post.username.profile.display_photo]
+            for post in context[self.context_object_name]:
+                post.username.profile.display_photo = file_store_profile.get(
+                    post.username.profile.display_photo, 'default_image.jpg')
+
+        else:
+            for post in context[self.context_object_name]:
+                post.username.profile.display_photo = file_store_profile[
+                    post.username.profile.display_photo]
 
         return context
 

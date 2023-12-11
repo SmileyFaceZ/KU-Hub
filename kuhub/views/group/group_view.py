@@ -2,9 +2,10 @@
 from django.views import generic
 from kuhub.models import Group
 from kuhub.views.profile.profile_setting import ProfileSetting
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class GroupView(generic.ListView):
+class GroupView(LoginRequiredMixin, generic.ListView):
     """Redirect to Group-Hub page."""
 
     template_name = 'kuhub/group.html'

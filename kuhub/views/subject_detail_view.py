@@ -6,9 +6,10 @@ from django.contrib import messages
 from kuhub.models import Subject, Post
 from kuhub.views.profile.profile_setting import ProfileSetting
 from kuhub.views.firebase_folder import FirebaseFolder
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class SubjectDetailView(generic.ListView):
+class SubjectDetailView(LoginRequiredMixin, generic.ListView):
     """Display to review and summary detail of each subject page."""
 
     template_name = 'kuhub/subject_detail.html'

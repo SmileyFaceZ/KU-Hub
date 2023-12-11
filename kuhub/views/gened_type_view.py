@@ -32,10 +32,12 @@ class GenEdTypeListView(generic.ListView):
         context['subject_list'] = subject_filter.qs
         context['form'] = subject_filter.form
 
-        # Display Profile in Navbar
-        ProfileSetting.update_display_photo(
-            profile=self.request.user.profile,
-            firebase_folder='profile/',
-            user=self.request.user
-        )
+        # Display Profile in Navbar only if user is authenticated
+        if self.request.user.is_authenticated:
+            ProfileSetting.update_display_photo(
+                profile=self.request.user.profile,
+                firebase_folder='profile/',
+                user=self.request.user
+            )
+
         return context

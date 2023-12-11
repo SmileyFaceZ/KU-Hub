@@ -40,31 +40,43 @@ class SummaryHubView(generic.ListView):
         context['like_icon_styles'] = [
             post.like_icon_style(self.request.user)
             for post in context['summary_post_list']
-        ]
+        ] if self.request.user.is_authenticated \
+            else (['default_like_icon_style']
+                  * len(context['summary_post_list']))
         context['dislike_icon_styles'] = [
             post.dislike_icon_style(self.request.user)
             for post in context['summary_post_list']
-        ]
+        ] if self.request.user.is_authenticated \
+            else (['default_dislike_icon_style']
+                  * len(context['summary_post_list']))
         context['profiles_list'] = profiles_list
         context['form'] = self.filterset.form
 
-        file_store_summary = (
-            FirebaseFolder.separate_folder_firebase('summary-file/'))
-        file_store_profile = (
-            FirebaseFolder.separate_folder_firebase('profile/'))
+        file_store_summary = FirebaseFolder.separate_folder_firebase(
+            'summary-file/')
+        file_store_profile = FirebaseFolder.separate_folder_firebase(
+            'profile/')
 
-        # Display Profile in Navbar
-        ProfileSetting.update_display_photo(
-            profile=self.request.user.profile,
-            firebase_folder='profile/',
-            user=self.request.user
-        )
+        if self.request.user.is_authenticated:
+            ProfileSetting.update_display_photo(
+                profile=self.request.user.profile,
+                firebase_folder='profile/',
+                user=self.request.user
+            )
 
-        # Change file name into url
-        for post_sheet in context['summary_post_list']:
-            post_sheet.post_id.username.profile.display_photo = (
-                file_store_profile)[
-                post_sheet.post_id.username.profile.display_photo]
-            post_sheet.file = file_store_summary[post_sheet.file.name]
+            for post_sheet in context['summary_post_list']:
+                post_sheet.post_id.username.profile.display_photo = (
+                    file_store_profile.get(
+                        post_sheet.post_id.username.profile.display_photo,
+                        'default_profile_photo.jpg'
+                    ))
+                post_sheet.file = file_store_summary.get(post_sheet.file.name,
+                                                         'default_file.jpg')
+        else:
+            for post_sheet in context['summary_post_list']:
+                post_sheet.post_id.username.profile.display_photo = (
+                    file_store_profile)[
+                    post_sheet.post_id.username.profile.display_photo]
+                post_sheet.file = file_store_summary[post_sheet.file.name]
 
         return context
