@@ -17,6 +17,7 @@ const storage = getStorage(app);
 const fileUploadForm = document.getElementById("file-upload-form");
 const fileInput = document.getElementById("file-upload-input");
 const submitButton = document.getElementById("button_post");
+const tagDropdown = document.getElementById("id_tag_name");
 
 function cleanFileName(filename) {
     // Replace spaces with underscores and remove parentheses
@@ -26,29 +27,34 @@ function cleanFileName(filename) {
 fileUploadForm.addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const file = fileInput.files[0];
-    if (file) {
-        console.log(file);
+    var selected_tag = tagDropdown.value;
+    if (selected_tag === "Summary-Hub") {
+        const file = fileInput.files[0];
+        if (file) {
+            console.log(file);
 
-        // Clean the file name
-        const cleanedFileName = cleanFileName(file.name);
-        console.log(cleanedFileName);
+            // Clean the file name
+            const cleanedFileName = cleanFileName(file.name);
+            console.log(cleanedFileName);
 
-        // Use the cleaned file name for the Firebase storage reference
-        const fileref = ref(storage, 'summary-file/' + cleanedFileName);
+            // Use the cleaned file name for the Firebase storage reference
+            const fileref = ref(storage, 'summary-file/' + cleanedFileName);
 
-        submitButton.disabled = true;
-        submitButton.value = 'Uploading...';
+            submitButton.disabled = true;
+            submitButton.value = 'Uploading...';
 
-        uploadBytes(fileref, file).then((result) => {
-            alert("File uploaded successfully!");
-            fileUploadForm.submit();
-        }).catch((error) => {
-            alert("Error during file upload: " + error.message);
-            submitButton.disabled = false;
-            submitButton.value = 'Post';
-        });
+            uploadBytes(fileref, file).then((result) => {
+                alert("File uploaded successfully!");
+                fileUploadForm.submit();
+            }).catch((error) => {
+                alert("Error during file upload: " + error.message);
+                submitButton.disabled = false;
+                submitButton.value = 'Post';
+            });
+        } else {
+            alert("No file selected!");
+        }
     } else {
-        alert("No file selected!");
+        fileUploadForm.submit();
     }
 });

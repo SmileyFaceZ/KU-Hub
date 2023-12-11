@@ -3,9 +3,6 @@ from django.contrib import admin
 from kuhub.models import UserFollower, Post, PostComments, Tags, PostDownload, PostReport, Subject, Profile, Group, GroupPassword, GroupTags, GroupEvent, Task
 
 
-
-# Register your models here.
-
 admin.site.register(UserFollower)
 admin.site.register(Post)
 admin.site.register(PostComments)
@@ -19,4 +16,3 @@ admin.site.register(Subject)
 admin.site.register(Profile)
 admin.site.register(GroupEvent)
 admin.site.register(Task)
-
