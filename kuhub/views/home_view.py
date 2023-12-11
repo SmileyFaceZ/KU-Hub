@@ -45,12 +45,6 @@ class HomePageView(generic.ListView):
         file_store_profile = (FirebaseFolder
                               .separate_folder_firebase('profile/'))
 
-        for post in context[self.context_object_name]:
-            post.username.profile.display_photo = file_store_profile.get(
-                post.username.profile.display_photo,
-                post.username.profile.display_photo
-            )
-
         if self.request.user.is_authenticated:
             followed_users = UserFollower.objects.filter(
                 follower=self.request.user).values_list(
@@ -83,5 +77,11 @@ class HomePageView(generic.ListView):
         context['profiles_list'] = [
             Profile.objects.filter(user=post.username).first()
             for post in context['followed_users_posts']]
+
+        for post in context[self.context_object_name]:
+            post.username.profile.display_photo = file_store_profile.get(
+                post.username.profile.display_photo,
+                post.username.profile.display_photo
+            )
 
         return context
