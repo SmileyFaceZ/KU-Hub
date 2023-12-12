@@ -87,7 +87,7 @@
                             <span class="badge rounded-pill text-bg-danger" style="text-align: center; margin-right: 5px;">New!</span>
                         {% endif %}
                         {{ post.post_id.tag_id.tag_text }} |
-                        <a href="{% url 'kuhub:subject_detail' post.subject.course_code %}">{{ post.post_id.subject.course_code }} {{ post.post_id.subject.name_eng }}</a> |
+                        <a href="{% url 'kuhub:subject_detail' post.post_id.subject.course_code %}">{{ post.post_id.subject.course_code }} {{ post.post_id.subject.name_eng }}</a> |
                         <a href="{% url 'kuhub:gen_ed_type_list' %}#{{ post.post_id.subject.type|slugify }}">{{ post.post_id.subject.type }}</a>
                     </div>
                 </div>
