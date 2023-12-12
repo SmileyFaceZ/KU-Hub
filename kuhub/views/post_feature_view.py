@@ -5,7 +5,8 @@ import datetime as dt
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
-from django.http import HttpRequest, JsonResponse
+from django.http import (
+    HttpRequest, JsonResponse, HttpResponse, HttpResponseRedirect)
 from django.shortcuts import redirect, get_object_or_404, render
 from itertools import zip_longest
 from kuhub.forms import PostForm, CommentForm, ReportForm
@@ -13,6 +14,7 @@ from kuhub.models import (Post, PostDownload, Tags, Profile, PostReport,
                           Subject, PostComments)
 from django.utils import timezone
 from kuhub.views import FirebaseFolder, ProfileSetting
+from typing import Union
 
 
 class PostFeature:
@@ -20,7 +22,7 @@ class PostFeature:
 
     @staticmethod
     @login_required
-    def create_post(request: HttpRequest):
+    def create_post(request: HttpRequest) -> Union[HttpResponse, HttpResponseRedirect]:
         """Create post of each tag type and redirect to each tag page.
 
         :param request: The HttpRequest object containing post data.
@@ -97,7 +99,8 @@ class PostFeature:
 
     @staticmethod
     @login_required
-    def edit_post(request: HttpRequest, pk: int):
+    def edit_post(request: HttpRequest, pk: int) \
+            -> Union[HttpResponse, HttpResponseRedirect]:
         """User can edit their own post content, tag and subject.
 
         :param request: The HttpRequest object containing edited post data.
@@ -157,7 +160,7 @@ class PostFeature:
 
     @staticmethod
     @login_required
-    def post_detail(request: HttpRequest, pk: int):
+    def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
         """Represent the details of a specific post, including comments.
 
         :param request: The HttpRequest object.
@@ -302,7 +305,7 @@ def dislike_post(request: HttpRequest) -> JsonResponse:
 
 
 @login_required
-def report_post(request: HttpRequest, pk: int):
+def report_post(request: HttpRequest, pk: int) -> HttpResponse:
     """Users report a post, specifying a reason for the report.
 
     :param request: The HttpRequest object containing the report form data.

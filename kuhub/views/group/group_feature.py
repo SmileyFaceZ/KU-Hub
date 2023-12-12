@@ -1,5 +1,5 @@
 """Module for managing group features in application."""
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.contrib import messages
@@ -8,6 +8,7 @@ from kuhub.forms import GroupForm
 from django.contrib.auth.models import User
 from kuhub.views.profile.profile_setting import ProfileSetting
 from django.contrib.auth.decorators import login_required
+from typing import Union
 
 
 class GroupFeature:
@@ -47,7 +48,7 @@ class GroupFeature:
 
     @staticmethod
     @login_required
-    def join(request: HttpRequest, group_id: int):
+    def join(request: HttpRequest, group_id: int) -> HttpResponseRedirect:
         """Handle the process of a user joining a group.
 
         :param request: The HTTP request object.
@@ -70,7 +71,8 @@ class GroupFeature:
         return redirect(reverse('kuhub:groups'))
 
     @staticmethod
-    def process_group_form(request: HttpRequest, form: GroupForm):
+    def process_group_form(request: HttpRequest, form: GroupForm)\
+            -> Union[HttpResponse, HttpResponseRedirect]:
         """Process the group creation form and create a new group if valid.
 
         :param request: The HTTP request object.
@@ -111,7 +113,7 @@ class GroupFeature:
 
     @staticmethod
     @login_required
-    def create_group(request: HttpRequest):
+    def create_group(request: HttpRequest) -> HttpResponse:
         """Display the group creation form and process it upon submission.
 
         :param request: The HTTP request object.

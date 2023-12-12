@@ -3,6 +3,7 @@ from django.views import generic
 from kuhub.models import Subject
 from kuhub.filters import GenedFilter
 from kuhub.views.profile.profile_setting import ProfileSetting
+from typing import Any, Dict, List
 
 
 class GenEdTypeListView(generic.ListView):
@@ -11,13 +12,13 @@ class GenEdTypeListView(generic.ListView):
     template_name = 'kuhub/gened_list.html'
     context_object_name = 'type_list'
 
-    def get_queryset(self):
+    def get_queryset(self) -> List[str]:
         """Return QuerySet of all subjects ordered by course_code."""
         tag_list = (Subject.objects.values_list("type", flat=True)
                     .distinct().order_by('type'))
         return [tag.replace("_", " ") for tag in tag_list]
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict[str, Any]:
         """Return user'group data as contect data."""
         context = super().get_context_data(**kwargs)
         subject_list = Subject.objects.all().order_by('course_code')

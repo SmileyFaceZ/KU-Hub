@@ -7,6 +7,7 @@ from kuhub.models import Subject, Post
 from kuhub.views.profile.profile_setting import ProfileSetting
 from kuhub.views.firebase_folder import FirebaseFolder
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpRequest, HttpResponse
 
 
 class SubjectDetailView(LoginRequiredMixin, generic.ListView):
@@ -15,7 +16,7 @@ class SubjectDetailView(LoginRequiredMixin, generic.ListView):
     template_name = 'kuhub/subject_detail.html'
     context_object_name = 'subject_detail'
 
-    def get(self, request: HttpRequest, **kwargs):
+    def get(self, request: HttpRequest, **kwargs) -> HttpResponse:
         """Get a type of gen-ed and display all subject in that type."""
         # Display Profile in Navbar
         ProfileSetting.update_display_photo(

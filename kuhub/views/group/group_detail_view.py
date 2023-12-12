@@ -6,6 +6,8 @@ from kuhub.models import Group
 from kuhub.filters import TaskFilter
 from django.shortcuts import redirect
 from kuhub.views.profile.profile_setting import ProfileSetting
+from typing import Any, Dict
+from django.db.models.query import QuerySet
 import logging
 
 
@@ -16,11 +18,11 @@ class GroupDetail(generic.DetailView):
     model = Group
     template_name = 'kuhub/group_detail.html'
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Group]:
         """Return Query set ob Group model."""
         return Group.objects.all()
 
-    def get_object(self, queryset=None):
+    def get_object(self, queryset: QuerySet[Group] = None) -> Group:
         """Retrieve group object, ensure the user is a member of the group."""
         obj = super().get_object(queryset)
         try:
@@ -31,14 +33,14 @@ class GroupDetail(generic.DetailView):
 
         return obj
 
-    def get_filter_set(self):
+    def get_filter_set(self) -> TaskFilter:
         """Generate a TaskFilter based on the current request."""
         return TaskFilter(
             self.request.GET,
             queryset=self.object.task_set.all()
         )
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict[str, Any]:
         """Return user'group data as contect data."""
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:

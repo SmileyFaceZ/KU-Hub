@@ -5,6 +5,7 @@ from kuhub.filters import PostFilter
 from kuhub.models import Post, Profile
 from kuhub.views.firebase_folder import FirebaseFolder
 from kuhub.views import ProfileSetting
+from typing import Any, Dict
 
 
 class BaseHubView(generic.ListView):
@@ -28,7 +29,7 @@ class BaseHubView(generic.ListView):
         self.filterset = PostFilter(self.request.GET, queryset=queryset)
         return self.filterset.qs
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict[str, Any]:
         """Get context data icon styles, profiles list, and form."""
         context = super().get_context_data(**kwargs)
 

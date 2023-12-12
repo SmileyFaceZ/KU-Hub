@@ -3,7 +3,9 @@ from django.utils.decorators import method_decorator
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.views import generic
+from django.db.models.query import QuerySet
 from kuhub.models import GroupEvent
+from typing import Any, Dict, Optional
 
 
 @method_decorator(login_required, name='dispatch')
@@ -13,11 +15,11 @@ class EventDetail(generic.DetailView):
     model = GroupEvent
     template_name = 'kuhub/event_detail.html'
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[GroupEvent]:
         """Retrieve all group event objects from the database."""
         return GroupEvent.objects.all()
 
-    def get_object(self, queryset=None):
+    def get_object(self, queryset: Optional[QuerySet] = None) -> GroupEvent:
         """Retrieve the specific group event object based on the query."""
         obj = super().get_object(queryset)
         is_user_in_group = obj.group.group_member.filter(
@@ -26,7 +28,7 @@ class EventDetail(generic.DetailView):
             raise Http404("You don't have permission to view this group.")
         return obj
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict[str, Any]:
         """Return user'group data as contect data."""
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:

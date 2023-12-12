@@ -3,7 +3,7 @@ import logging
 from django.db.utils import DataError
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, JsonResponse, Http404
+from django.http import HttpRequest, JsonResponse, Http404, HttpResponse
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from kuhub.forms import ProfileForm
@@ -29,7 +29,7 @@ class ProfileView(LoginRequiredMixin):
 
     @staticmethod
     @login_required
-    def profile_view(request: HttpRequest, username: str):
+    def profile_view(request: HttpRequest, username: str) -> HttpResponse:
         """Display the profile page for a given user.
 
         :param request: HttpRequest object.

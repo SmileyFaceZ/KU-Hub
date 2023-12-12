@@ -5,6 +5,8 @@ from kuhub.models import Post, Profile, UserFollower
 from kuhub.filters import PostFilter
 from kuhub.views.profile.profile_setting import ProfileSetting
 from kuhub.views.firebase_folder import FirebaseFolder
+from django.db.models.query import QuerySet
+from typing import Any, Dict
 
 
 class HomePageView(generic.ListView):
@@ -13,7 +15,7 @@ class HomePageView(generic.ListView):
     template_name = 'kuhub/home_page.html'
     context_object_name: str = 'followed_users_posts'
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         """Queryset of posts from users followed by current user."""
         if not self.request.user.is_authenticated:
             messages.info(self.request, "Please login first")
@@ -32,7 +34,7 @@ class HomePageView(generic.ListView):
             queryset=followed_users_posts)
         return self.filterset.qs
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict[str, Any]:
         """Return context data with like, dislike, profiles, and search."""
         context = super().get_context_data(**kwargs)
 

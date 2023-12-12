@@ -6,7 +6,7 @@ from django.contrib import messages
 from kuhub.forms import EventForm
 from kuhub.models import Group, GroupEvent, Note, Task
 from kuhub.calendar import create_event
-from django.http import HttpRequest, Http404
+from django.http import HttpRequest, Http404, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
 
@@ -15,7 +15,8 @@ class GroupEventController:
 
     @staticmethod
     @login_required
-    def group_event_create(request: HttpRequest, group_id: int):
+    def group_event_create(request: HttpRequest, group_id: int)\
+            -> HttpResponseRedirect:
         """To creates a group event based on user input.
 
         :param request: HttpRequest object.
@@ -54,7 +55,7 @@ class GroupEventController:
 
     @staticmethod
     def handle_valid_form(request: HttpRequest, form: EventForm, group: Group,
-                          group_id: int):
+                          group_id: int) -> HttpResponseRedirect:
         """To handles a valid form submission for a group event.
 
         :param request: HttpRequest object.
@@ -125,7 +126,7 @@ class GroupEventController:
 
     @staticmethod
     @login_required
-    def add_note(request: HttpRequest, group_id: int):
+    def add_note(request: HttpRequest, group_id: int) -> HttpResponseRedirect:
         """To adds a note to a specified group.
 
         :param request: The HttpRequest object.
@@ -148,7 +149,8 @@ class GroupEventController:
 
     @staticmethod
     @login_required
-    def delete_note(request: HttpRequest, note_id: int):
+    def delete_note(request: HttpRequest, note_id: int) \
+            -> HttpResponseRedirect:
         """To deletes a note based on the provided note ID.
 
         :param request: The HttpRequest object.
@@ -165,7 +167,7 @@ class GroupEventController:
 
     @staticmethod
     @login_required
-    def add_task(request: HttpRequest, group_id: int):
+    def add_task(request: HttpRequest, group_id: int) -> HttpResponseRedirect:
         """To adds a task to a specified group.
 
         :param request: The HttpRequest object.
@@ -199,7 +201,8 @@ class GroupEventController:
 
     @staticmethod
     @login_required
-    def delete_task(request: HttpRequest, note_id: int):
+    def delete_task(request: HttpRequest, note_id: int) \
+            -> HttpResponseRedirect:
         """To deletes a task based on the provided task ID.
 
         :param request: The HttpRequest object.
@@ -220,7 +223,8 @@ class GroupEventController:
 
     @staticmethod
     @login_required
-    def change_task_status(request: HttpRequest, task_id: int):
+    def change_task_status(request: HttpRequest, task_id: int) \
+            -> HttpResponseRedirect:
         """To changes the status of a task and redirects to the appropriate page.
 
         :param request: The HttpRequest object.
@@ -242,7 +246,8 @@ class GroupEventController:
 
     @staticmethod
     @login_required
-    def assign_task_in_event(request: HttpRequest, task_id: int):
+    def assign_task_in_event(request: HttpRequest, task_id: int)\
+            -> HttpResponseRedirect:
         """To assigns a task to an event and redirects to the group detail page.
 
         :param request: The HttpRequest object.
@@ -261,7 +266,8 @@ class GroupEventController:
 
     @staticmethod
     @login_required
-    def group_event_delete(request: HttpRequest, event_id: int):
+    def group_event_delete(request: HttpRequest, event_id: int)\
+            -> HttpResponseRedirect:
         """To deletes a group event based on the provided event ID.
 
         :param request: The HttpRequest object.
@@ -277,7 +283,8 @@ class GroupEventController:
 
     @staticmethod
     @login_required
-    def unassign_task(request: HttpRequest, task_id: int):
+    def unassign_task(request: HttpRequest, task_id: int) \
+            -> HttpResponseRedirect:
         """Unassigns a task from an event.
 
         :param request: The HttpRequest object.

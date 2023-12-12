@@ -3,6 +3,8 @@ from django.views import generic
 from kuhub.models import Group
 from kuhub.views.profile.profile_setting import ProfileSetting
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models.query import QuerySet
+from typing import Any, Dict
 
 
 class GroupView(LoginRequiredMixin, generic.ListView):
@@ -11,11 +13,11 @@ class GroupView(LoginRequiredMixin, generic.ListView):
     template_name = 'kuhub/group.html'
     context_object_name = 'group_list'
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Group]:
         """Return most 100 recent group posts."""
         return Group.objects.all().order_by('-create_date')[:100]
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict[str, Any]:
         """Return user'group data as contect data."""
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
